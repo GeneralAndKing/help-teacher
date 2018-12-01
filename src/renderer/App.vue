@@ -17,20 +17,25 @@
 </template>
 
 <style>
-/* #app {
-  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+#app {
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   text-align: center;
-} */
+}
 .header {
   -webkit-app-region: drag;
-  background-color: rgb(158, 5, 5);
+  background-color: rgb(198,47,47);
   padding: 0px;
   padding-right: 3px;
   padding-bottom: 2px;
+  line-height:30px;
+  box-shadow: 2px 2px 1px #888888;
+  color: #303133;
 }
 * {
   padding: 0px;
   margin: 0px;
+  
+  
 }
 </style>
 
