@@ -39,6 +39,21 @@ let rendererConfig = {
         test: /\.css$/,
         use: ['vue-style-loader', 'css-loader']
       },
+      // 单独的 styl 文件支持
+      {
+        test: /\.styl$/,
+        use: ['vue-style-loader', 'css-loader', 'stylus-loader']
+      },
+      // 内部的 styl 文件支持
+      {
+        test: /\.stylus$/,
+        use: ['vue-style-loader', 'css-loader', 'stylus-loader']
+      },
+      // pug 模板支持
+      {
+        test: /\.pug$/,
+        loader: 'pug-plain-loader'
+      },
       {
         test: /\.html$/,
         use: 'vue-html-loader'
@@ -61,7 +76,8 @@ let rendererConfig = {
             loaders: {
               sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
               scss: 'vue-style-loader!css-loader!sass-loader',
-              less: 'vue-style-loader!css-loader!less-loader'
+              less: 'vue-style-loader!css-loader!less-loader',
+              styl: 'vue-style-loader!css-loader!stylus-loader'
             }
           }
         }
