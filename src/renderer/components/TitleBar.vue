@@ -41,7 +41,6 @@ export default {
       var m = date.getMinutes(); //获取分钟
       var s = date.getSeconds(); //获取秒
       _this.time =
-        "当前时间:" +
         year +
         "年" +
         mon +

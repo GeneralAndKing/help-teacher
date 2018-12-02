@@ -1,5 +1,11 @@
 import { app, BrowserWindow,ipcMain} from 'electron'
 import webServer from "./webServer/server"
+import ClassDb from "./dbServer/classDb"
+import JobDb from "./dbServer/jobDb"
+import ClassToJobDb from "./dbServer/classToJobDb"
+global.ClassDb = ClassDb;
+global.JobDb = JobDb;
+global.ClassToJobDb = ClassToJobDb;
 global.webServer = new webServer();
 /**
  * Set `__static` path to static files in production
