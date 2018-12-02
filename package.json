@@ -15,6 +15,7 @@
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
     "dev": "cross-env BUILD_TARGET=web node .electron-vue/build.js && node .electron-vue/dev-runner.js",
+    "dev:web":"cross-env BUILD_TARGET=web node .electron-vue/build.js && node src/main/webServer/server-dev.js",
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
