@@ -1,24 +1,27 @@
-<template>
-  <el-row type="flex" justify="space-between">
-    <el-col class="left" :span="6">
-      <i class="el-icon-share">Help-Teather</i>
-    </el-col>
-    <el-col :span="6">
-      <h5>{{time}}</h5>
-    </el-col>
-    <el-col class="right" :span="6">
-      <el-button @click="minWin" type="warning" size="mini" icon="el-icon-minus" circle></el-button>
-      <el-button @click="maxWin" type="primary" size="mini" icon="el-icon-plus" circle></el-button>
-      <el-button @click="closeWin" type="danger" size="mini" icon="el-icon-close" circle></el-button>
-    </el-col>
-  </el-row>
+<template lang="pug">
+  el-row(type="flex" justify="space-between")
+    el-col(class="left" :span="6")
+      i(class="el-icon-share") Help-Teather
+    el-col(:span="6")
+      h5 {{time}}
+    el-col(class="right" :span="6")
+      el-button(@click="minWin" type="warning" size="mini" icon="el-icon-minus" circle)
+      el-button(@click="maxWin" type="primary" size="mini" icon="el-icon-plus" circle)
+      el-button(@click="closeWin" type="danger" size="mini" icon="el-icon-close" circle)
 </template>
 
 
-<style>
-.right {
-  -webkit-app-region: no-drag;
-}
+<style lang="stylus">
+section
+  width 100%
+
+#titleBar
+  float right
+  -webkit-app-region no-drag
+
+.right
+  -webkit-app-region no-drag
+
 </style>
 
 <script>

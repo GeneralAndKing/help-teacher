@@ -1,8 +1,12 @@
-<template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+<template lang="pug">
+  div#app
+    router-view
 </template>
+
+<style lang="stylus">
+  /* stylus */
+</style>
+
 
 <script>
   export default {
@@ -10,6 +14,3 @@
   }
 </script>
 
-<style>
-  /* CSS */
-</style>

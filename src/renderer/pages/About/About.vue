@@ -1,17 +1,14 @@
-<template>
-  <div>
-    <div id="descDiv">
-      <h3>electron + vue + element = cool desktop app</h3>
-      <p>如有问题请随时反馈到github，传送门在下面。欢迎star/fork。</p>
-      <el-button type="primary" @click="goGithub" plain>View On Github</el-button>
-    </div>
-  </div>
+<template lang="pug">
+  div
+    #descDiv
+      h3 electron + vue + element = cool desktop app
+      p 如有问题请随时反馈到github，传送门在下面。欢迎star/fork。
+      el-button(type="primary" @click="goGithub" plain) View On Github
 </template>
 
-<style>
-#descDiv {
-  text-align: left;
-}
+<style lang="stylus">
+#descDiv
+  text-align left
 </style>
 
 <script>
