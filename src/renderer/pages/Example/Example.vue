@@ -26,7 +26,7 @@
       el-footer
         el-button-group
           el-button(type="primary" icon="el-icon-arrow-left" v-if="active!=0" @click="prev") 上一步
-          el-button(icon="el-icon-arrow-right" v-if="active!=3" @click="next") 下一步
+          el-button(type="primary" icon="el-icon-arrow-right" v-if="active!=3" @click="next") 下一步
 
 </template>
 <style lang="stylus">

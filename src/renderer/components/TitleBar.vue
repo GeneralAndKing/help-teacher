@@ -15,9 +15,6 @@
 section
   width 100%
 
-#titleBar
-  float right
-  -webkit-app-region no-drag
 
 .right
   -webkit-app-region no-drag
@@ -35,6 +32,7 @@ export default {
   mounted: function(params) {
     let _this = this;
     setInterval(function() {
+
       var date = new Date();
       var year = date.getFullYear(); //获取当前年份
       var mon = date.getMonth() + 1; //获取当前月份

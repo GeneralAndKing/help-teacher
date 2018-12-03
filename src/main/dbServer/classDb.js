@@ -8,7 +8,7 @@ import path from 'path';
         id:201607010244
         name:睿哥
         sex:男
-        }
+        },
         {
         id:201607010244
         name:睿少
