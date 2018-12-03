@@ -17,7 +17,7 @@
 
   .header
     -webkit-app-region drag
-    background-color rgb(198,47,47)
+    background-color #409EFF
     padding 0px
     padding-right 3px
     padding-bottom 2px
