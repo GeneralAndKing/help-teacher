@@ -4,10 +4,11 @@
       el-header(class="header" height="30px")
         titlebar
       el-container
-        el-aside
+        el-aside(width="150px")
           sidebar
         el-main
           router-view
+    el-scrollbar
 </template>
 
 <style lang="stylus">
@@ -20,14 +21,15 @@
     background-color #409EFF
     padding 0px
     padding-right 3px
-    padding-bottom 2px
     line-height 30px
-    box-shadow 2px 2px 1px #888888
     color #303133
 
   *
     padding 0px
     margin 0px
+  html
+    Overflow hidden
+    
 
 </style>
 

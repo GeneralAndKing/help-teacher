@@ -2,6 +2,9 @@
   el-row(type="flex" justify="space-between")
     el-col(class="left" :span="6")
       i(class="el-icon-share") Help-Teather
+    el-button-group
+      el-button(@click='back' size="mini" icon="el-icon-arrow-left" type="info")
+      el-button(@click='advance' size="mini" icon="el-icon-arrow-right" type="info")
     el-col(class="center" :span="6")
       h5 {{time}}
     el-col(class="right" :span="6")
@@ -12,15 +15,20 @@
 
 
 <style lang="stylus">
-.center
-  text-align :center;
-.left
-  width :auto;
+.center {
+  text-align: center;
+  
+}
 
-.right
-  -webkit-app-region no-drag
-  width :auto
+.left {
+  width: auto;
+  -webkit-app-region: no-drag;
+}
 
+.right {
+  -webkit-app-region: no-drag;
+  width: auto;
+}
 </style>
 
 <script>
@@ -28,13 +36,12 @@ const { ipcRenderer: ipc } = require("electron");
 export default {
   data() {
     return {
-      time: 0
+      time: "2222年2月22日星期2 2:22:22"
     };
   },
   mounted: function(params) {
     let _this = this;
-    setInterval(function() {
-
+    setInterval(() => {
       var date = new Date();
       var year = date.getFullYear(); //获取当前年份
       var mon = date.getMonth() + 1; //获取当前月份

@@ -1,5 +1,5 @@
 <template lang="pug">
-  el-col(:span="18" id="sideBar")
+  el-col(id="sideBar")
     el-menu(router)
       el-menu-item(index="/")
         i(class="el-icon-menu") 主页
