@@ -2,9 +2,9 @@
   el-row(type="flex" justify="space-between")
     el-col(class="left" :span="6")
       i(class="el-icon-share") Help-Teather
-    el-button-group
-      el-button(@click='back' size="mini" icon="el-icon-arrow-left" type="info")
-      el-button(@click='advance' size="mini" icon="el-icon-arrow-right" type="info")
+    //- el-button-group
+    //-   el-button(@click='back' size="mini" icon="el-icon-arrow-left" type="info")
+    //-   el-button(@click='advance' size="mini" icon="el-icon-arrow-right" type="info")
     el-col(class="center" :span="6")
       h5 {{time}}
     el-col(class="right" :span="6")
@@ -22,7 +22,6 @@
 
 .left {
   width: auto;
-  -webkit-app-region: no-drag;
 }
 
 .right {

@@ -11,6 +11,8 @@ router.get('/getData', function (req, res, next) {
 	cursor.exec((error,docs) =>{
 		res.send(docs);
 	});
+	cursor.exec((error, docs) => {
+	})
 	
 });
 module.exports = router;

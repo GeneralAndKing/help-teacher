@@ -10,16 +10,17 @@
       el-main(class="basic")
         el-form(:model="server" label-width="80px" label-position="left")
           div(class="basicIndex" v-if="active===0")
-          div(class="basicData" v-if="active===1")
-            el-form-item(label="作业名称")
-              el-input(v-model="server.title" placeholder="请输入作业名称")
-            el-form-item(label="提交时间")
-              el-input-number(v-model="server.time" :min="10" :max="60" label="提交时间")
-            el-upload(drag action="https://jsonplaceholder.typicode.com/posts/")
-              i(class="el-icon-upload")
-              div(class="el-upload__text") 将execl拖到此处，或
-                em 点击提交
-              div(class="el-upload__tip" slot="tip") 只能提交execl文件
+          transition(name="el-fade-in")
+            div(class="basicData" v-if="active===1")
+              el-form-item(label="作业名称")
+                el-input(v-model="server.title" placeholder="请输入作业名称")
+              el-form-item(label="提交时间")
+                el-input-number(v-model="server.time" :min="10" :max="60" label="提交时间")
+              el-upload(drag action="https://jsonplaceholder.typicode.com/posts/")
+                i(class="el-icon-upload")
+                div(class="el-upload__text") 将execl拖到此处，或
+                  em 点击提交
+                div(class="el-upload__tip" slot="tip") 只能提交execl文件
           div(class="basicConfig" v-if="active===2")
           div(class="basicServer" v-if="active===3")
             el-button(@click="openServer" type="primary") 开启服务
@@ -41,8 +42,7 @@
 import { Loading } from "element-ui";
 import { runInNewContext } from "vm";
 import { clearInterval } from 'timers';
-const { ipcRenderer } = require("electron");
-const remote = require("electron").remote;
+const { ipcRenderer ,remote} = require("electron");
 const path = require("path");
 //接收主进程发来的消息
 // ipcRenderer.on("server-status", (event, data) => {
