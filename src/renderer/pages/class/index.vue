@@ -1,5 +1,7 @@
 <template lang="pug">
-  div
+  #gak-main
+    #gak-main-head
+      h1 Welcome
     el-upload(class="upload-demo" drag :on-change="fileChange" action="#"
       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       :auto-upload="false")
@@ -15,8 +17,8 @@
 
 <script>
 export default {
-    data:{
-
+    data() {
+      return {}
     },
     methods:{
         fileChange(file,fileList){
@@ -25,4 +27,6 @@ export default {
     }
 }
 </script>
-
+<style lang="stylus">
+  @import "../../styles/class/index"
+</style>

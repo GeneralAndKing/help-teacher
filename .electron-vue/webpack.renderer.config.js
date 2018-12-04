@@ -3,14 +3,14 @@
 process.env.BABEL_ENV = 'renderer'
 
 const path = require('path')
-const { dependencies } = require('../package.json')
+const {dependencies} = require('../package.json')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { VueLoaderPlugin } = require('vue-loader')
+const {VueLoaderPlugin} = require('vue-loader')
 
 /**
  * List of node_modules to include in webpack bundle
@@ -19,7 +19,7 @@ const { VueLoaderPlugin } = require('vue-loader')
  * that provide pure *.vue files that need compiling
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/webpack-configurations.html#white-listing-externals
  */
-let whiteListedModules = ['vue']
+let whiteListedModules = ['vue'];
 
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
@@ -39,14 +39,9 @@ let rendererConfig = {
         test: /\.css$/,
         use: ['vue-style-loader', 'css-loader']
       },
-      // 单独的 styl 文件支持
+      // styl 文件支持
       {
-        test: /\.styl$/,
-        use: ['vue-style-loader', 'css-loader', 'stylus-loader']
-      },
-      // 内部的 styl 文件支持
-      {
-        test: /\.stylus$/,
+        test: /\.styl(us)?$/,
         use: ['vue-style-loader', 'css-loader', 'stylus-loader']
       },
       // pug 模板支持
@@ -64,9 +59,20 @@ let rendererConfig = {
         exclude: /node_modules/
       },
       {
+        test: /\.scss$/,
+        use: ['vue-style-loader', 'css-loader', {
+          loader: 'sass-loader'
+        }]
+      },
+      {
+        test: /\.sass$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
+      },
+      {
         test: /\.node$/,
         use: 'node-loader'
       },
+      // .vue的配置
       {
         test: /\.vue$/,
         use: {
@@ -74,8 +80,8 @@ let rendererConfig = {
           options: {
             extractCSS: process.env.NODE_ENV === 'production',
             loaders: {
-              sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
-              scss: 'vue-style-loader!css-loader!sass-loader',
+              sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1&data=@import "./src/renderer/styles/_base_variable"',
+              scss: 'vue-style-loader!css-loader!sass-loader?data=@import "./src/renderer/styles/_base_variable"',
               less: 'vue-style-loader!css-loader!less-loader',
               styl: 'vue-style-loader!css-loader!stylus-loader'
             }
@@ -140,11 +146,13 @@ let rendererConfig = {
     path: path.join(__dirname, '../dist/electron')
   },
   resolve: {
+    // 别名，可以直接使用别名来代表设定的路径以及其他
     alias: {
       '@': path.join(__dirname, '../src/renderer'),
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['.js', '.vue', '.json', '.css', '.node']
+    // require时省略的扩展名，如：require('module') 不需要module.js
+    extensions: ['.js', '.vue', '.json', '.css', '.node', '.styl', '.scss']
   },
   target: 'electron-renderer'
 }

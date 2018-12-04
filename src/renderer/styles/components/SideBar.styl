@@ -1,0 +1,42 @@
+@import "../util"
+
+transparent-font(col)
+  background-color bg-transparent
+  color col
+
+#sideBar
+  height full-size
+  width full-size
+  text-align left
+  margin-right 0
+
+  .el-menu
+    @extend #sideBar
+    transparent-font menu-color
+    border none
+
+
+    .el-menu-item
+      transparent-font menu-color
+      font-size: normal-size;
+      &:hover
+        transparent-font menu-hover-color
+
+      i
+        width 100%
+        height 100%
+        text-align left
+        margin 0
+        line-height 3
+        color menu-color
+        border-bottom menu-color solid 0.5px
+        &:hover
+          color menu-hover-color
+        .mark
+          float right
+          sup
+            border none
+
+
+    .is-active
+      color menu-hover-color

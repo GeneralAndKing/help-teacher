@@ -1,0 +1,40 @@
+@import "util"
+
+*
+  padding 0
+  margin 0
+
+html
+  height full-size
+
+body
+  @extend html
+  background-image bg-color
+  background-repeat no-repeat
+  background-attachment fixed
+
+  #app
+    @extend html
+    font-family font-list
+    text-align center
+
+    #gak-container
+      @extend html
+      left 6%
+      right 6%
+      position absolute
+      padding-top 20px
+
+      .el-aside
+          @extend html
+
+      .el-container
+        @extend html
+
+
+
+
+
+
+
+

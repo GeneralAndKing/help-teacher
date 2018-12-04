@@ -1,23 +1,25 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-Vue.use(Router)
+
+Vue.use(Router);
 
 const routeOptions = [
-  { path: '/', component: 'Home'},
-  { path: '/home', component: 'Home' },
-  { path: '/about', component: 'About',name:'about' },
-  { path: '/example', component: 'Example' },
-  { path: '/tool', component: 'Tool' },
-  { path: '/student', component: 'Student' ,name:'student'},
-]
+  {path: '/', component: 'Home', name: 'home'},
+  {path: '/home', component: 'Home', name: 'home'},
+  {path: '/about', component: 'About', name: 'about'},
+  {path: '/server', component: 'Server', name: 'server'},
+  {path: '/tool', component: 'Tool', name: 'tool'},
+  {path: '/class', component: 'Class', name: 'class'},
+  {path: '/job', component: 'Job', name: 'job'},
+];
 
 const routes = routeOptions.map(route => {
   return {
     ...route,
-    component: () => import(`../pages/${route.component}/${route.component}.vue`)
+    component: () => import(`../pages/${route.name}/index.vue`)
   }
-})
+});
 
 export default new Router({
   routes: routes,

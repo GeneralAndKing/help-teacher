@@ -9,7 +9,7 @@ const BabiliWebpackPlugin = require('babili-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { VueLoaderPlugin } = require('vue-loader')
+const {VueLoaderPlugin} = require('vue-loader')
 
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
@@ -28,12 +28,7 @@ let webConfig = {
       },
       // 单独的 styl 文件支持
       {
-        test: /\.styl$/,
-        use: ['vue-style-loader', 'css-loader', 'stylus-loader']
-      },
-      // 内部的 styl 文件支持
-      {
-        test: /\.stylus$/,
+        test: /\.styl(us)?$/,
         use: ['vue-style-loader', 'css-loader', 'stylus-loader']
       },
       // pug 模板支持
@@ -42,13 +37,21 @@ let webConfig = {
         loader: 'pug-plain-loader'
       },
       {
+        test: /\.scss$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.sass$/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
+      },
+      {
         test: /\.html$/,
         use: 'vue-html-loader'
       },
       {
         test: /\.js$/,
         use: 'babel-loader',
-        include: [ path.resolve(__dirname, '../src/renderer') ],
+        include: [path.resolve(__dirname, '../src/renderer')],
         exclude: /node_modules/
       },
       {
@@ -116,7 +119,7 @@ let webConfig = {
       '@': path.join(__dirname, '../src/web'),
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['.js', '.vue', '.json', '.css']
+    extensions: ['.js', '.vue', '.json', '.css', '.styl', '.scss']
   },
   target: 'web'
 }
@@ -125,7 +128,7 @@ let webConfig = {
  * Adjust webConfig for production settings
  */
 if (process.env.NODE_ENV === 'production') {
-  webConfig.devtool = ''
+  webConfig.devtool = '';
 
   webConfig.plugins.push(
     new BabiliWebpackPlugin(),
