@@ -28,16 +28,18 @@ export default class ClasstDb {
         });
 
     }
-    createClassJson() {
+    static createClassJson() {
         return {
             className: null,
             students: [
-                {
-                    id: null,
-                    name: null,
-                    sex: null,
-                },
             ]
+        }
+    }
+    static createStudentJson($id,$name,$sex) {
+        return {
+            id: $id,
+            name: $name,
+            sex: $sex
         }
     }
     //插入班级数据
@@ -76,6 +78,6 @@ export default class ClasstDb {
 
     }
     findByStudentName(studentName) {
-        return this.db.find({ 'className': className ,'students.id':studentId});
+        return this.db.find({ 'className': className, 'students.id': studentId });
     }
 }

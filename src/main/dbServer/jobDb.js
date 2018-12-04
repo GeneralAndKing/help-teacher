@@ -27,16 +27,18 @@ export default class JobDb {
             filename: path.join(path.join(path.resolve("."), "/userData/job.db"))
         });
     }
-    createJobJson() {
+    static createJobJson() {
         return {
             jobName: null,
             jobContent: null,
             jobTypes: [
-                {
-                    type: null,
-                    state: null
-                }
             ]
+        }
+    }
+    static createJobTypeJson($type,$state) {
+        return {
+            type: $type,
+            state: $state
         }
     }
     insertJob(jobJson) {

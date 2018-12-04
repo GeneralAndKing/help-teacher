@@ -9,6 +9,7 @@ import jobDb from './jobDb'
     startTime:时间戳,
     stopTime:30分钟(计算时间戳),
     peopleNum:68(总人数),
+    status:1 or 2 or 3 or ...
     unfinishedPeoples:
     [
         {
@@ -25,6 +26,7 @@ import jobDb from './jobDb'
     ]
 }
 */
+//find 返回的都是游标 方便处理
 export default class ClassToJobDb {
     constructor() {
         this.jobDb = new jobDb();
@@ -34,21 +36,24 @@ export default class ClassToJobDb {
             filename: path.join(path.join(path.resolve("."), "/userData/classToJob.db"))
         });
     }
-    createClassToJobJson() {
+    static createClassToJobJson() {
         return {
             className:null,
             jobName:null,
             startTime:null,
             stopTime:null,
-            peopleNum:null,
+            peopleNum: null,
+            status: null,
             unfinishedPeoples:
             [
-                {
-                    name:null,
-                    id:null,
-                    sex:null
-                }
             ]
+        }
+    }
+    static createStudentJson($id,$name,$sex) {
+        return {
+            id: $id,
+            name: $name,
+            sex: $sex
         }
     }
     insertclassToJob(classToJobJson) {
