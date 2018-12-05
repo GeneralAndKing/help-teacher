@@ -1,10 +1,12 @@
 @import "../util"
 
+// 侧边栏设置背景方法
 transparent-font(col)
   background-color bg-transparent
   color col
 
 #sideBar
+  // 高宽占满
   height full-size
   width full-size
   text-align left
@@ -14,6 +16,7 @@ transparent-font(col)
     @extend #sideBar
     transparent-font menu-color
     border none
+    // 平滑滚动，似手机端=-=但似乎无法识别
     -webkit-overflow-scrolling touch
 
     .el-menu-item
@@ -40,6 +43,7 @@ transparent-font(col)
             border none
 
 
+    // 当前已经激活菜单的颜色固定
     .is-active
       i
         color menu-hover-color !important

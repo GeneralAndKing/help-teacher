@@ -5,11 +5,13 @@
   margin 0
   
 
+// 填充所有
 html
   height full-size
 
 body
   @extend html
+  // 设置背景
   background-image bg-color
   background-repeat no-repeat
   background-attachment fixed
@@ -20,12 +22,14 @@ body
     font-family font-list
     text-align center
 
+    // 主容器
     #gak-container
       height 95%
-      left 2%
-      right 5%
+      left 15%
+      right 15%
+      // 绝对定位
       position absolute
-      padding-top 20px
+      padding-top normal-padding
 
 
       .el-aside-hide
@@ -33,14 +37,16 @@ body
 
       .el-aside
         @extend html
+        // 侧边栏动画
         transition width fast-speed
-        opacity 1
+        // 滚动条隐藏
         overflow-x hidden
 
       .el-container
         @extend html
 
 
+    // 小屏幕时
     @media screen and (max-width: middle-size )
       #gak-container
         left 1%

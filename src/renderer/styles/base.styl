@@ -1,38 +1,49 @@
-@import "../util"
+@import "util"
+// 主要路由跳转区域
 #gak-main
+  // 高宽占满
   width full-size
   height full-size
   background-color white
 
+  // 头部
   #gak-main-head
+    // 背景颜色
     background linear-gradient(180deg, #d0edf5, #e1e5f0)
     height 2rem
+    // 相对于主容器布局
     position relative
 
+    // 设置标题
     #gak-main-head-title
       line-height 1
       font-size 1.125em
       float left
+      // 切换大小时过渡
       transition width slow-speed
       -webkit-transition width slow-speed
       width 100px
-      padding-left 60px
+      // 设置边距
+      padding-left normal-padding * 3
       padding-top 8px
 
+    // 头部显示与隐藏导航
     #gak-main-head-nav
+      // 相对于父容器绝对定位
       position absolute
       left 0
       font-size 20px
       margin 0.5rem
+      // 鼠标样式
       cursor pointer
+
       &:hover
         color white
 
+    // 小屏幕，标题居中
     @media screen and (max-width: small-size )
       #gak-main-head-title
         padding-left 0
         width 100%
 
-    @media screen and (mim-width: small-size )
-      #gak-main-head-nav
-        display none
+
