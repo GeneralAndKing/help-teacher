@@ -2,7 +2,7 @@
   #app
     title-bar
     el-container#gak-container
-      el-aside(v-bind:class="{'el-aside-hide': aside }")
+      el-aside(v-bind:class="{'el-aside-hide': aside }" style="width:150px")
         side-bar
       el-container
         transition(name="el-zoom-in-center" mode="out-in")
@@ -11,7 +11,6 @@
 
 <style lang="stylus">
   @import "styles/app"
-
 </style>
 
 <script>
@@ -21,7 +20,7 @@
   export default {
     data() {
       return {
-        aside: true
+        aside: false
       }
     },
     components: {
