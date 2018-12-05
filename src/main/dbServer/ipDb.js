@@ -13,5 +13,20 @@ export default class IpDb {
             inMemoryOnly: true
         });
     }
+    insertIpJson(IpJson) {
+        this.db.insert(IpJson, (error, doc) => {
+        });
+    }
+    insertStudent(address, studentJson) {
+        let classJson = this.db.find({ 'address': address });
+        classJson.students.insert(studentJson, (error, doc) => {
+        });
+    }
+    findByAddress(address) {
+        return this.db.find({ "address":address });
+    }
+    findByStudentId(studentId) {
+        return this.db.find({ "students.id": studentId });
+    }
 
 }
