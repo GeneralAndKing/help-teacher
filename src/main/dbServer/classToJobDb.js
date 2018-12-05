@@ -1,7 +1,5 @@
 import Datastore from 'nedb';
 import path from 'path';
-import classDb from './classDb'
-import jobDb from './jobDb'
 /*
 {
     className:2016计算机科学与技术,
@@ -29,8 +27,6 @@ import jobDb from './jobDb'
 //find 返回的都是游标 方便处理
 export default class ClassToJobDb {
     constructor() {
-        this.jobDb = new jobDb();
-        this.classDb = new classDb();
         this.db = new Datastore({
             autoload: true,
             filename: path.join(path.join(path.resolve("."), "/userData/classToJob.db"))
