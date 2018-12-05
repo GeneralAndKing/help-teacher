@@ -5,7 +5,9 @@ import router from './router'
 import 'element-ui/lib/theme-chalk/index.css'
 import Common from './utils/index'
 import GLOBAL from './utils/_global'
+import echarts from 'echarts'
 
+Vue.prototype.$echarts = echarts 
 
 Vue.use(ElementUI);
 Vue.prototype.global = GLOBAL;
