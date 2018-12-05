@@ -1,7 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      h1 homework
+      span#gak-main-head-title homework
 </template>
 <style lang="stylus">
   @import "../../styles/job/index.styl"

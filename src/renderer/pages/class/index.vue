@@ -1,7 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      h1 Welcome
+      span#gak-main-head-title Welcome
     el-upload(class="upload-demo" drag :on-change="fileChange" action="#"
       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       :auto-upload="false")

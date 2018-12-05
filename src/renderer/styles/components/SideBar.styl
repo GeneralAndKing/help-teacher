@@ -14,11 +14,13 @@ transparent-font(col)
     @extend #sideBar
     transparent-font menu-color
     border none
-
+    -webkit-overflow-scrolling touch
 
     .el-menu-item
       transparent-font menu-color
-      font-size: normal-size;
+      font-size  normal-size
+
+
       &:hover
         transparent-font menu-hover-color
 
@@ -39,4 +41,6 @@ transparent-font(col)
 
 
     .is-active
-      color menu-hover-color
+      i
+        color menu-hover-color !important
+

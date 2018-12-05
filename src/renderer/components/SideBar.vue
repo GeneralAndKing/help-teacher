@@ -3,7 +3,7 @@
     el-menu(router active-text-color="#ffffff")
       el-menu-item(index="/")
         i.el-icon-menu &nbsp;&nbsp;主页
-          el-badge.mark(:value="12" type="primary" :max="10" )
+          <!--el-badge.mark(:value="12" type="primary" :max="10" )-->
       el-menu-item(index="/class")
         i.el-icon-edit &nbsp;&nbsp;班级管理
       el-menu-item(index="/job")

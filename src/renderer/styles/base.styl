@@ -3,11 +3,20 @@
   width full-size
   height full-size
   background-color white
+
   #gak-main-head
-    background linear-gradient(180deg,#d0edf5,#e1e5f0)
+    background linear-gradient(180deg, #d0edf5, #e1e5f0)
     height 4em
-    h1
+
+    #gak-main-head-title
       line-height 2.5
-      text-align left
-      font-size 1.5rem
-      padding-left 2rem
+      font-size 1.125em
+      float left
+      transition width 2s
+      -webkit-transition width 2s
+      width 100px
+
+    @media screen and (max-width: small-size )
+      #gak-main-head-title
+        padding-left 0
+        width 100%

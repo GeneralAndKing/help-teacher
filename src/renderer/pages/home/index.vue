@@ -1,7 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      h1 Welcome
+      span#gak-main-head-title Welcome
 </template>
 <style lang="stylus">
   @import "../../styles/home/index.styl"

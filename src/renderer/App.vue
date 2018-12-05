@@ -5,7 +5,8 @@
       el-aside
         side-bar
       el-container
-        router-view
+        transition(name="el-zoom-in-center" mode="out-in")
+          router-view
 </template>
 
 <style lang="stylus">
