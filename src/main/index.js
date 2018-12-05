@@ -3,9 +3,12 @@ import webServer from "./webServer/server"
 import ClassDb from "./dbServer/classDb"
 import JobDb from "./dbServer/jobDb"
 import ClassToJobDb from "./dbServer/classToJobDb"
+import IpDb from "./dbServer/ipDb"
+
 global.ClassDb = ClassDb;
 global.JobDb = JobDb;
 global.ClassToJobDb = ClassToJobDb;
+global.ipDb = new IpDb();
 global.webServer = new webServer();
 /**
  * Set `__static` path to static files in production
