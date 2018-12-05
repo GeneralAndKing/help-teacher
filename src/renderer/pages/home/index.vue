@@ -1,6 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
+      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title Welcome
 </template>
 <style lang="stylus">
@@ -15,12 +16,7 @@ export default {
     };
   },
   methods: {
-    about(item, index) {
-      this.$router.push({ name: "about" });
-    },
-    student(item, index) {
-      this.$router.push({ name: "student" });
-    }
+
   }
 };
 </script>

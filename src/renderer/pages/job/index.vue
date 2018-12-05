@@ -1,6 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
+      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title homework
 </template>
 <style lang="stylus">

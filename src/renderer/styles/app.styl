@@ -26,6 +26,9 @@ body
       padding-top 20px
 
 
+      .el-aside-hide
+        width 0 !important
+
       .el-aside
         @extend html
         transition width 2s
@@ -34,10 +37,7 @@ body
       .el-container
         @extend html
 
-    @media screen and (max-width: small-size )
-      .el-aside
-        width 0 !important
-        opacity 0
+
     @media screen and (max-width: middle-size )
       #gak-container
         left 1%

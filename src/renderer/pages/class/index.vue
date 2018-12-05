@@ -1,7 +1,8 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      span#gak-main-head-title Welcome
+      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
+      span#gak-main-head-title Class
     el-upload(class="upload-demo" drag :on-change="fileChange" action="#"
       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
       :auto-upload="false")

@@ -1,7 +1,8 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      h1 Welcome
+      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
+      span#gak-main-head-title Server
       el-container
         el-header
           el-steps(:active="active" align-center)

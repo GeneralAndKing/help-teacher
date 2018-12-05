@@ -3,11 +3,12 @@ import ElementUI from 'element-ui'
 import App from './App.vue'
 import router from './router'
 import 'element-ui/lib/theme-chalk/index.css'
-
+import Common from './utils/index'
+import GLOBAL from './utils/_global'
 
 
 Vue.use(ElementUI);
-
+Vue.prototype.global = GLOBAL;
 Vue.prototype.$startLoading = function(loadStr) {
   return this.$loading({
     lock: true,
