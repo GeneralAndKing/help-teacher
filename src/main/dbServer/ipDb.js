@@ -23,7 +23,7 @@ export default class IpDb {
         });
     }
     findByAddress(address) {
-        return this.db.find({ "address":address });
+        return this.db.find({ "address": address });
     }
     findByStudentId(studentId) {
         return this.db.find({ "students.id": studentId });

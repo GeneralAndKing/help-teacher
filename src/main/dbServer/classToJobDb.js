@@ -9,7 +9,7 @@ import jobDb from './jobDb'
     startTime:时间戳,
     stopTime:30分钟(计算时间戳),
     peopleNum:68(总人数),
-    status:1 or 2 or 3 or ...
+    status: 0(未开启) 1(收取中) 2(收取完成)
     unfinishedPeoples:
     [
         {
@@ -63,6 +63,10 @@ export default class ClassToJobDb {
     deleteclassToJob(jobName, className) {
         this.db.remove({ "jobName": jobName, "className": className }, (error, doc) => {
         });
+    }
+
+    findByStatus(status) {
+        return this.db.find({ "status":status });
     }
     findByclassName(className) {
         return this.db.find({ "className":className });
