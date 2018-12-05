@@ -21,7 +21,7 @@
   export default {
     data() {
       return {
-        aside: false
+        aside: true
       }
     },
     components: {
