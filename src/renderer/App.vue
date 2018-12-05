@@ -2,7 +2,7 @@
   #app
     title-bar
     el-container#gak-container
-      el-aside
+      el-aside(width="200px")
         side-bar
       el-container
         router-view
