@@ -48,6 +48,7 @@
 </style>
 
 <script>
+const {ipcRenderer, remote} = require("electron");
   export default {
     data() {
       return {
@@ -63,180 +64,23 @@
         // 用这个参数来判断是新增还是编辑
         new: false,
         index: 0,
-        jobs: [
-          {
-            jobName: "第一次作业",
-            jobContent: "具体详情是做什么的具体详情是做什么的具体详情是做什么体详情是做什么的具体详情是做什么的具体详情是做什么体详情是做什么的具体详情是做什么的具体详情是做什么体详情是做什么的具体详情是做什么的具体详情是做什么的具体详情是做什么的具体详情是做什么的具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              },
-              {
-                type: "word",
-                state: "word格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第二次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "rar",
-                state: "rar格式"
-              },
-              {
-                type: "ppt",
-                state: "ppt格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第三次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第四次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第五次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }, {
-            jobName: "第六次作业",
-            jobContent: "具体详情是做什么的",
-            jobTypes: [
-              {
-                type: "excel",
-                state: "excel格式的作业"
-              }
-            ]
-          }
-        ]
+        jobs: []
       };
+    },
+    mounted(){
+      //保持环境
+      let _this=this;
+      let JobDb=remote.getGlobal("JobDb");
+      let jobDb=new JobDb();
+      jobDb.findAllJob().exec((error,jobs)=>{
+        for(const job of jobs){
+          _this.jobs.push({
+            jobName: job.jobName,
+            jobContent: job.jobContent,
+            jobTypes:job.jobTypes
+          })
+        }
+      })
     },
     methods: {
       /**
@@ -266,7 +110,11 @@
           type: 'warning',
           center: true
         }).then(() => {
+          let JobDb=remote.getGlobal("JobDb");
+          let jobDb=new JobDb();
           this.jobs.splice(this.jobs[key],1);
+          console.log(this.jobs[key].jobName)
+          jobDb.deleteJob(this.jobs[key].jobName);
           this.$message({
             type: 'success',
             message: '删除成功!',
