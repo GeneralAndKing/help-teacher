@@ -13,7 +13,6 @@
             .gak-job-foot 作业类型:
               span(v-for="(type) in job.jobTypes") &nbsp;{{type.type}}
 
-
 </template>
 <style lang="stylus" scoped>
   @import "../../styles/job/index.styl"

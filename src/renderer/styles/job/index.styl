@@ -2,11 +2,8 @@
 @import "../base"
 
 #gak-main-content-job
-  padding normal-padding
+  padding 0 normal-padding
   height 95%
-
-
-
 
   .gak-job
     background bg-color = linear-gradient(180deg, #4768dc, #AE6AB3)
@@ -15,6 +12,14 @@
     cursor pointer
     margin-right normal-padding
     margin-bottom normal-padding
+    margin-top normal-padding * 0.5
+    position relative
+    transform translateY(1)
+    transition all 800ms
+
+    &:hover
+      transform translateY(-10px)
+      -webkit-box-shadow 2px 10px 20px #474EFF
 
     .gak-job-head
       text-align left
