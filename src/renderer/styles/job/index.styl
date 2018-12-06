@@ -1,12 +1,34 @@
 @import "../util"
 @import "../base"
 
+.el-dropdown-menu
+  background bg-transparent !important
+  border none !important
+  box-shadow none !important
+  &:hover
+    background bg-transparent !important
+.el-dropdown-menu__item
+  &:hover
+    background bg-transparent !important
+
+.el-icon-caret-bottom
+  cursor pointer
+  border 1px solid
+  background-color success
+  color white
+  padding 2px
+  border-radius 2rem
+.el-dialog__wrapper
+  overflow hidden
 #gak-main-content-job
-  padding normal-padding
+  padding 0 normal-padding
   height 95%
+  position relative
 
-
-
+  #gak-main-content-menu
+    position absolute
+    right 10px
+    top 20px
 
   .gak-job
     background bg-color = linear-gradient(180deg, #4768dc, #AE6AB3)
@@ -15,6 +37,14 @@
     cursor pointer
     margin-right normal-padding
     margin-bottom normal-padding
+    margin-top normal-padding * 0.5
+    position relative
+    transform translateY(1)
+    transition all 800ms
+
+    &:hover
+      transform translateY(-10px)
+      -webkit-box-shadow 2px 10px 20px #474EFF
 
     .gak-job-head
       text-align left
@@ -25,6 +55,17 @@
         margin-top normal-padding
         text-align center
         font-weight normal
+
+    .gak-job-do
+      position absolute
+      right 0
+      top 0
+      margin-top 5px
+      margin-right 5px
+      .el-button
+        padding 3px
+        margin-left 5px
+        font-size 12px
 
     .gak-job-content
       margin-top 50px

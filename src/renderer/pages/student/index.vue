@@ -159,6 +159,8 @@
             message: '删除成功!',
             showClose: true
           });
+        }).catch(() => {
+
         });
       },
       hanldeSave(event) {
