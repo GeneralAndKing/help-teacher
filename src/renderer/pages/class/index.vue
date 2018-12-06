@@ -28,74 +28,26 @@
 
 <script>
   import {readClassXlsx} from "../../api/xlsx";
-
   const {ipcRenderer, remote} = require("electron");
   export default {
     data() {
       return {
         activeNames: ['2'],
-        tableData: [{
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 25
-        }, {
-          className: '王小虎',
-          studentNum: 77777
-        }, {
-          className: '王小虎',
-          studentNum: 66666
-        }, {
-          className: '王小虎',
-          studentNum: 55555
-        }, {
-          className: '王小虎',
-          studentNum: 4444
-        }, {
-          className: '王小虎',
-          studentNum: 33333
-        }, {
-          className: '王小虎',
-          studentNum: 22222
-        }, {
-          className: '王小虎',
-          studentNum: 11111
-        }]
+        tableData: []
       };
+    },
+    mounted(){
+      let ClassDb = remote.getGlobal('ClassDb');
+      let _this=this;
+      let classDb=new ClassDb();
+      classDb.findAllClass().exec((error,classJsons)=>{
+          for (const classJson of classJsons) {
+            _this.tableData.push({
+              "className":classJson.className,
+              "studentNum":classJson.students.length
+            })
+          }
+      });
     },
     methods: {
       fileChange(file, fileList) {

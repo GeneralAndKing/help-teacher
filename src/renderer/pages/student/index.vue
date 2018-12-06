@@ -50,7 +50,7 @@
 
 <script>
   import {Notification} from 'element-ui';
-
+  const {ipcRenderer, remote} = require("electron");
   export default {
     data() {
       return {
@@ -61,104 +61,30 @@
         }, {
           value: '女'
         }],
-        tableData: [{
-          id: '201607090211231231231232',
-          name: '王啊啊虎',
-          sex: '男',
-          edit: false
-        }, {
-          id: '201607090234',
-          name: '王2虎',
-          sex: '男',
-          edit: false
-        }, {
-          id: '201607090265',
-          name: '王3虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090218',
-          name: '王4虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090234',
-          name: '王2虎',
-          sex: '男',
-          edit: false
-        }, {
-          id: '201607090265',
-          name: '王3虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090218',
-          name: '王4虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090234',
-          name: '王2虎',
-          sex: '男',
-          edit: false
-        }, {
-          id: '201607090265',
-          name: '王3虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090218',
-          name: '王4虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090234',
-          name: '王2虎',
-          sex: '男',
-          edit: false
-        }, {
-          id: '201607090265',
-          name: '王3虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090218',
-          name: '王4虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090234',
-          name: '王2虎',
-          sex: '男',
-          edit: false
-        }, {
-          id: '201607090265',
-          name: '王3虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090218',
-          name: '王4虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090234',
-          name: '王2虎',
-          sex: '男',
-          edit: false
-        }, {
-          id: '201607090265',
-          name: '王3虎',
-          sex: '女',
-          edit: false
-        }, {
-          id: '201607090218',
-          name: '王4虎',
-          sex: '女',
-          edit: false
-        }],
+        tableData: [],
         search: ''
       };
+    },
+    mounted(){
+      let ClassDb = remote.getGlobal('ClassDb');
+      let _this=this;
+      let classDb=new ClassDb();
+      classDb.findByClassName(_this.className).exec((error,classJsons)=>{
+        let classJson=classJsons[0];
+        console.log(classJson.students)
+        let students=classJson.students;
+        console.log(students[0])
+        for(const student of students){
+          console.log(student)
+          _this.tableData.push({
+            id: student.id,
+            name: student.name,
+            sex: student.sex,
+            edit: false
+          })
+        };
+        });
+
     },
     methods: {
       edit(event) {
