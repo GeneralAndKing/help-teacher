@@ -15,7 +15,7 @@ import path from 'path';
             state:ppt格式的作业
         }
         ...
-    ],
+    ]
 }
 
 */
