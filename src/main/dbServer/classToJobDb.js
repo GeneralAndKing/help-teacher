@@ -1,7 +1,5 @@
 import Datastore from 'nedb';
 import path from 'path';
-import classDb from './classDb'
-import jobDb from './jobDb'
 /*
 {
     className:2016计算机科学与技术,
@@ -9,7 +7,7 @@ import jobDb from './jobDb'
     startTime:时间戳,
     stopTime:30分钟(计算时间戳),
     peopleNum:68(总人数),
-    status:1 or 2 or 3 or ...
+    status: 0(未开启) 1(收取中) 2(收取完成)
     unfinishedPeoples:
     [
         {
@@ -29,8 +27,6 @@ import jobDb from './jobDb'
 //find 返回的都是游标 方便处理
 export default class ClassToJobDb {
     constructor() {
-        this.jobDb = new jobDb();
-        this.classDb = new classDb();
         this.db = new Datastore({
             autoload: true,
             filename: path.join(path.join(path.resolve("."), "/userData/classToJob.db"))
@@ -63,6 +59,10 @@ export default class ClassToJobDb {
     deleteclassToJob(jobName, className) {
         this.db.remove({ "jobName": jobName, "className": className }, (error, doc) => {
         });
+    }
+
+    findByStatus(status) {
+        return this.db.find({ "status":status });
     }
     findByclassName(className) {
         return this.db.find({ "className":className });

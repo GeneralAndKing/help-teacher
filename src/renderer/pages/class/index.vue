@@ -14,7 +14,7 @@
               em 点击提交
             div(class="el-upload__tip" slot="tip") 只能上传excel文件
         el-collapse-item(title='查看班级', name='2')
-          el-table(:data='tableData', width="750", stripe)
+          el-table(:data='tableData', width="700", border)
             el-table-column(type='index', width='50', align="center")
             el-table-column(label='班级名称', prop='className', width='150', align="center")
             el-table-column(label='班级人数', prop='studentNum', width='150', align="center")

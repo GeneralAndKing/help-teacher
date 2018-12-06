@@ -16,8 +16,8 @@
           div(class="basicData" v-if="active===1")
             el-form-item(label="作业名称")
               el-input(v-model="server.title" placeholder="请输入作业名称")
-            el-form-item(label="提交时间")
-              el-input-number(v-model="server.time" :min="10" :max="60" label="提交时间")
+            el-form-item(label="时间(分钟)")
+              el-slider(v-model="server.time" show-input :min="10" :max="60" label="提交时间")
             el-upload(drag action="https://jsonplaceholder.typicode.com/posts/")
               i(class="el-icon-upload")
               div(class="el-upload__text") 将execl拖到此处，或
@@ -29,7 +29,7 @@
       el-footer
         el-button-group
           el-button(type="primary" icon="el-icon-arrow-left" v-if="active!=0" @click="prev") 上一步
-          el-button(icon="el-icon-arrow-right" v-if="active!=3" @click="next") 下一步
+          el-button(type="primary" icon="el-icon-arrow-right" v-if="active!=3" @click="next") 下一步
 
 </template>
 <style lang="stylus" scoped>
