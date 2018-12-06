@@ -14,19 +14,19 @@
             span 班级人数
           el-col(:span="5")
             span {{ studentNum }}
-        el-alert(title='双击班级名称可以编辑哦', type='info', close-text='知道了')
+        el-alert(title='Tip:双击班级名称可以编辑哦', type='success', close-text='知道了')
       #student-info
         el-table(:data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', height="250")
           el-table-column(type='index', width='40', align="center")
-          el-table-column(label='学号', width="160px")
+          el-table-column(label='学号', width="155px")
             template(slot-scope='scope')
               el-input(v-if="scope.row.edit", v-model='scope.row.id', clearable, show-overflow-tooltip="true")
               span(v-else) {{ scope.row.id }}
-          el-table-column(label='姓名', prop='name', width="120px")
+          el-table-column(label='姓名', prop='name', width="130px")
             template(slot-scope='scope')
               el-input(v-if="scope.row.edit", v-model='scope.row.name', clearable)
               span(v-else) {{ scope.row.name }}
-          el-table-column(label='性别', prop='sex', width="85px", sortable)
+          el-table-column(label='性别', prop='sex', width="80px", sortable)
             template(slot-scope='scope')
               //-
                 滑动方式选择，因影响排版无法使用
@@ -37,8 +37,8 @@
               el-tag(v-else, :type="scope.row.sex === '男' ? 'primary' : 'danger'", disable-transitions='') {{scope.row.sex}}
           el-table-column(align="center")
             template(slot='header', slot-scope='scope')
-              el-input(v-model='search', size='mini', placeholder='输入学号或姓名搜索', style="width:80%")
               el-button(type='primary', icon='el-icon-plus', circle, @click="hanldeSave")
+              el-input(v-model='search', size='mini', placeholder='输入学号或姓名搜索', style="width:80%;max-width:200px;float:right;", clearable)
             template(slot-scope='scope')
               el-button(size='mini', @click='handleEdit($event,scope.$index, scope.row)') 编辑
               el-button(size='mini', type='danger', @click='handleDelete(scope.$index, scope.row)') 删除
