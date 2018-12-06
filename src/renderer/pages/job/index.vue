@@ -52,7 +52,6 @@
     data() {
       return {
         dialogFormVisible: false,
-        deleteVisible:false,
         form: {
           jobName: "",
           jobContent: "",
@@ -259,14 +258,13 @@
        * @param job 编辑的元素
        */
       handleDelete: function (key, job) {
-        // this.deleteVisible = true;
         this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           center: true
         }).then(() => {
-          this.jobs.splice(this.jobs[key],1);
+          this.jobs.splice(this.jobs.indexOf(job), 1);
           this.$message({
             type: 'success',
             message: '删除成功!',

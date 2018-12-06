@@ -28,6 +28,7 @@
 
 <script>
   import {readClassXlsx} from "../../api/xlsx";
+
   const {ipcRenderer, remote} = require("electron");
   export default {
     data() {
@@ -36,17 +37,17 @@
         tableData: []
       };
     },
-    mounted(){
+    mounted() {
       let ClassDb = remote.getGlobal('ClassDb');
-      let _this=this;
-      let classDb=new ClassDb();
-      classDb.findAllClass().exec((error,classJsons)=>{
-          for (const classJson of classJsons) {
-            _this.tableData.push({
-              "className":classJson.className,
-              "studentNum":classJson.students.length
-            })
-          }
+      let _this = this;
+      let classDb = new ClassDb();
+      classDb.findAllClass().exec((error, classJsons) => {
+        for (const classJson of classJsons) {
+          _this.tableData.push({
+            "className": classJson.className,
+            "studentNum": classJson.students.length
+          })
+        }
       });
     },
     methods: {
@@ -59,12 +60,36 @@
         let classJson = results[1];
         if (flag) {
           this.tableData = classJson.students;
-          this.$notify({
-            title: "成功",
-            message: "导入信息成功",
-            type: "success",
-            position: 'bottom-right'
+          this.$prompt('请输入班级名称', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputPattern:  /\S/,
+            inputErrorMessage: '输入不能为空'
+          }).then(({value}) => {
+            classJson.clsasName = value;
+            localStorage.setItem('className', classJson.clsasName);
+            localStorage.setItem('studentNum', classJson.students.length);
+
+            // 这里才算真的导入成功
+            this.$notify({
+              title: "成功",
+              message: "班级" + value + "导入信息成功"  ,
+              type: "success",
+              position: 'bottom-right'
+            });
+            // 保存后跳转到学生界面
+            this.$router.push({
+              name: 'student'
+            });
+          }).catch(() => {
+            this.$notify({
+              title: '失败',
+              message: '您取消了保存',
+              type: 'warning',
+              position: 'bottom-right'
+            });
           });
+
         } else {
           this.$notify.error({
             title: "错误",
@@ -76,8 +101,8 @@
       handleStudent(index, row) {
         console.log(index, row);
         // 实现本地存储，使得跳转过去的页面刷新后数据依旧存在
-        localStorage.setItem('className',row.className);
-        localStorage.setItem('studentNum',row.studentNum);
+        localStorage.setItem('className', row.className);
+        localStorage.setItem('studentNum', row.studentNum);
         this.$router.push({
           name: 'student'
         })
@@ -91,6 +116,6 @@
     }
   };
 </script>
-<style lang="stylus" >
+<style lang="stylus">
   @import '../../styles/class/index';
 </style>

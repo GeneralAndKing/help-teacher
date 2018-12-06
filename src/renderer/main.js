@@ -7,7 +7,7 @@ import Common from './utils/index'
 import GLOBAL from './utils/_global'
 import echarts from 'echarts'
 
-Vue.prototype.$echarts = echarts 
+Vue.prototype.$echarts = echarts;
 
 Vue.use(ElementUI);
 Vue.prototype.global = GLOBAL;

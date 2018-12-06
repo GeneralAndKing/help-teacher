@@ -49,13 +49,14 @@
 </style>
 
 <script>
-  import {Notification} from 'element-ui';
   const {ipcRenderer, remote} = require("electron");
   export default {
     data() {
       return {
         className: localStorage.className,
         studentNum: localStorage.studentNum,
+        // 是否有一行正在编辑的标识符
+        flag: false,
         options: [{
           value: '男'
         }, {
@@ -65,34 +66,32 @@
         search: ''
       };
     },
-    mounted(){
+    mounted() {
       let ClassDb = remote.getGlobal('ClassDb');
-      let _this=this;
-      let classDb=new ClassDb();
-      classDb.findByClassName(_this.className).exec((error,classJsons)=>{
-        let classJson=classJsons[0];
-        console.log(classJson.students)
-        let students=classJson.students;
-        console.log(students[0])
-        for(const student of students){
-          console.log(student)
+      let _this = this;
+      let classDb = new ClassDb();
+      classDb.findByClassName(_this.className).exec((error, classJsons) => {
+        let classJson = classJsons[0];
+        let students = classJson.students;
+        for (const student of students) {
           _this.tableData.push({
             id: student.id,
             name: student.name,
             sex: student.sex,
             edit: false
           })
-        };
-        });
-
+        }
+      });
     },
     methods: {
+      // 标题编辑
       edit(event) {
         const target = event.target;
         const oldHtml = target.innerHTML;
         const newDiv = document.createElement('div');
         newDiv.classList.add("el-input");
         const newInput = document.createElement('input');
+        let _this = this;
         newInput.type = "text";
         newInput.value = oldHtml;
         newInput.classList.add("el-input__inner");
@@ -109,7 +108,7 @@
           } else {
             target.innerHTML = this.value;
             localStorage.className = target.innerHTML;
-            Notification.success({
+            _this.$notify({
               title: '成功',
               message: '您已成功修改班级名称',
               type: 'success',
@@ -126,50 +125,74 @@
       handleEdit(event, index, row) {
         if (row.edit) {
           // 编辑的保存事件
-          Notification.success({
+          this.$notify({
             title: '成功',
             message: '保存成功',
             type: 'success',
             duration: 2000,
             offset: 100
           });
+          // 保存成功，此时没有正在编辑的
+          this.flag = false;
         }
-        if (row.new){
+        // 如果当前有一行正在编辑
+        if (this.flag) {
+          this.$notify({
+            title: '警告',
+            message: '请先完成您当前的编辑',
+            type: 'warning'
+          });
+          return;
+        }
+        if (row.new) {
           // 添加数据保存事件
           row.new = false;
         }
         row.edit = !row.edit;
         if (row.edit) {
+          // 点击编辑的时候，修改文字，同时标识符为 true
+          this.flag = true;
           event.target.innerHTML = "保存";
         } else {
+          // 点击保存的时候，修改文字，由于前面已经修改过，并且是在前面判断的，所以不能在此处修改标识符
           event.target.innerHTML = "编辑";
         }
       },
       handleDelete(index, row) {
         // 删除事件
-        this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          this.tableData.splice(index,1);
-          this.$message({
-            type: 'success',
-            message: '删除成功!',
-            showClose: true
-          });
-        }).catch(() => {
-
+        this.tableData.splice(this.tableData.indexOf(row), 1);
+        this.$message({
+          type: 'success',
+          message: '删除成功!',
+          showClose: true
         });
       },
       hanldeSave(event) {
-        this.tableData.unshift({
-          id: '',
-          name: '',
-          sex: '男',
-          edit: true,
-          new: true
+        // 如果他有一行正在编辑
+        if (this.flag) {
+          this.$notify({
+            title: '警告',
+            message: '请先完成您当前的编辑',
+            type: 'warning'
+          });
+        } else {
+          this.tableData.unshift({
+            id: '',
+            name: '',
+            sex: '男',
+            edit: true,
+            new: true
+          });
+          // 此时一行在编辑
+          this.flag = true;
+        }
+      },
+      hanldeAllSave: function (event) {
+        this.$notify({
+          title: '警告',
+          message: '测试测试测试',
+          type: 'warning',
+          position: 'bottom-right'
         });
       }
     }
