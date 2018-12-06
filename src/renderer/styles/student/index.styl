@@ -1,0 +1,36 @@
+@import "../util"
+@import "../base"
+
+#gak-main-content
+  padding normal-padding
+  height full-size
+
+  #class-info
+    .el-col
+      & > span
+        line-height 2.5
+        white-space nowrap
+        text-overflow ellipsis
+        text-align left
+        width 100%
+        font-size normal-size
+        display inline-block
+
+      #click-tip
+        color placeholder-font
+        text-align left
+        font-size placeholder-size
+
+  #student-info
+    height full-size
+
+    & > div
+      height 85% !important
+
+    th
+      button
+        width: 30px;
+        padding: 2px;
+        height: 30px;
+        float: right;
+        margin-top: 5px;

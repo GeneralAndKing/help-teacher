@@ -8,7 +8,7 @@
         el-button(type="primary" @click="goGithub" plain) View On Github
 </template>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 #descDiv
   text-align left
 </style>

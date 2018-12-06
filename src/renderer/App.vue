@@ -9,7 +9,7 @@
           router-view(@changeSide="aside=!aside")
 </template>
 
-<style lang="stylus">
+<style lang="stylus" >
   @import "styles/app"
 </style>
 

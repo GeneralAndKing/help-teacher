@@ -32,7 +32,7 @@
           el-button(icon="el-icon-arrow-right" v-if="active!=3" @click="next") 下一步
 
 </template>
-<style lang="stylus">
+<style lang="stylus" scoped>
   @import "../../styles/server/index"
 
 </style>

@@ -12,6 +12,7 @@ const routeOptions = [
   {path: '/tool', component: 'Tool', name: 'tool'},
   {path: '/class', component: 'Class', name: 'class'},
   {path: '/job', component: 'Job', name: 'job'},
+  {path: '/student', component: 'Student', name: 'student'}
 ];
 
 const routes = routeOptions.map(route => {

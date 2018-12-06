@@ -4,7 +4,7 @@
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title Welcome
 </template>
-<style lang="stylus">
+<style lang="stylus" scoped>
   @import "../../styles/home/index.styl"
 </style>
 

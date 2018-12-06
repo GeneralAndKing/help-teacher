@@ -4,7 +4,7 @@
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title homework
 </template>
-<style lang="stylus">
+<style lang="stylus" scoped>
   @import "../../styles/job/index.styl"
 </style>
 

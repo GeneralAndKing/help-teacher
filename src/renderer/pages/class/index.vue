@@ -3,7 +3,7 @@
     #gak-main-head
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title Class
-    el-scrollbar#gak-main-content
+    el-scrollbar#gak-main-content-class
       el-collapse(v-model='activeNames', value=2)
         el-collapse-item(title='新增班级', name='1')
           el-upload(class="upload-demo" drag :on-change="fileChange" action="#"
@@ -14,7 +14,7 @@
               em 点击提交
             div(class="el-upload__tip" slot="tip") 只能上传excel文件
         el-collapse-item(title='查看班级', name='2')
-          el-table(:data='tableData', width="700", stripe)
+          el-table(:data='tableData', width="750", stripe)
             el-table-column(type='index', width='50', align="center")
             el-table-column(label='班级名称', prop='className', width='150', align="center")
             el-table-column(label='班级人数', prop='studentNum', width='150', align="center")
@@ -33,7 +33,7 @@
   export default {
     data() {
       return {
-        activeNames: ['1'],
+        activeNames: ['2'],
         tableData: [{
           className: '王小虎',
           studentNum: 25
@@ -123,6 +123,12 @@
       },
       handleStudent(index, row) {
         console.log(index, row);
+        // 实现本地存储，使得跳转过去的页面刷新后数据依旧存在
+        localStorage.setItem('className',row.className);
+        localStorage.setItem('studentNum',row.studentNum);
+        this.$router.push({
+          name: 'student'
+        })
       },
       handleHomework(index, row) {
         console.log(index, row);
@@ -133,6 +139,6 @@
     }
   };
 </script>
-<style lang="stylus">
+<style lang="stylus" >
   @import '../../styles/class/index';
 </style>
