@@ -77,7 +77,7 @@ export default class ClasstDb {
         return this.db.find();
 
     }
-    findByStudentName(studentName) {
+    findByStudentId(className,studentId) {
         return this.db.find({ 'className': className, 'students.id': studentId });
     }
 }

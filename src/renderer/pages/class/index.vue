@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import {readClassXlsx} from "../../api/xlsx";
+  const {readClassXlsx}=require("../../api/xlsx");
 
   const {ipcRenderer, remote} = require("electron");
   export default {

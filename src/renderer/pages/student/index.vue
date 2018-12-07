@@ -10,7 +10,13 @@
           el-col(:span="4")
             span 班级名称
           el-col(:span="10")
-            span(@dblclick="edit") {{ className }}
+            div(v-if='classNameEdit')
+              td
+                el-input(v-model="className" size="medium")
+              td
+                el-button(type="warning" size="medium" @click="saveClassName") 保存
+            span(@dblclick="edit" v-else) {{ className }}
+            
           el-col(:span="5")
             span 班级人数
           el-col(:span="5")
@@ -29,20 +35,17 @@
               span(v-else) {{ scope.row.name }}
           el-table-column(label='性别', prop='sex', width="80px", sortable)
             template(slot-scope='scope')
-              //-
-                滑动方式选择，因影响排版无法使用
-                el-switch(v-if="scope.row.edit", style='display: block', v-model='scope.row.sex', active-color='#13ce66', inactive-color='#ff4949',
-                active-text='男', inactive-text='女',active-value='男',inactive-value="女")
               el-select(v-if="scope.row.edit", v-model='scope.row.sex', placeholder='请选择')
                 el-option(v-for='item in options', :key='item.value', :label='item.value', :value='item.value')
               el-tag(v-else, :type="scope.row.sex === '男' ? 'primary' : 'danger'", disable-transitions='') {{scope.row.sex}}
           el-table-column(align="center")
             template(slot='header', slot-scope='scope')
-              el-button(type='primary', icon='el-icon-plus', circle, @click="hanldeSave")
+              el-button(type='primary', icon='el-icon-plus', circle, @click="handleAdd")
               el-input(v-model='search', size='mini', placeholder='输入学号或姓名搜索', style="width:80%;max-width:200px;float:right;", clearable)
             template(slot-scope='scope')
-              el-button(size='mini', @click='handleEdit($event,scope.$index, scope.row)') 编辑
-              el-button(size='mini', type='danger', @click='handleDelete(scope.$index, scope.row)') 删除
+              el-button(size='mini', @click='handleSave($event,scope.$index, scope.row)' v-if='scope.row.edit') 保存
+              el-button(size='mini', @click='handleEdit($event,scope.$index, scope.row)' v-if='!scope.row.edit') 编辑
+              el-button(size='mini', type='danger', @click='handleDelete(scope.$index, scope.row)' :disabled='isEdit&&!scope.row.edit') 删除
 
 </template>
 <style lang="stylus" scoped>
@@ -51,20 +54,22 @@
 
 <script>
   const {ipcRenderer, remote} = require("electron");
+  const {verifyStudent}=require("../../api/judge");
   export default {
     data() {
       return {
         className: localStorage.className,
         studentNum: localStorage.studentNum,
         // 是否有一行正在编辑的标识符
-        flag: false,
+        isEdit: false,
+        classNameEdit:false,
         options: [{
           value: '男'
         }, {
           value: '女'
         }],
         tableData: [],
-        search: ''
+        search: '',
       };
     },
     mounted() {
@@ -79,131 +84,116 @@
             id: student.id,
             name: student.name,
             sex: student.sex,
-            edit: false
           })
         }
       });
     },
+    beforeRouteLeave(to,from,next){
+      next(false)
+      if(this.isEdit){
+        this.$confirm('还有数据未保存，是否离开', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          next(); 
+        });
+      }
+      else{
+       next(); 
+      }
+    },
     methods: {
       // 标题编辑
       edit(event) {
-        const target = event.target;
-        const oldHtml = target.innerHTML;
-        const newDiv = document.createElement('div');
-        newDiv.classList.add("el-input");
-        const newInput = document.createElement('input');
-        let _this = this;
-        newInput.type = "text";
-        newInput.value = oldHtml;
-        newInput.classList.add("el-input__inner");
-        newDiv.appendChild(newInput);
-        let parentNode = target.parentNode;
-        parentNode.appendChild(newInput);
-        parentNode.removeChild(target);
-        newInput.focus();
-        // 监听焦点移出事件
-        newInput.onblur = function () {
-          // 判断是否改变
-          if (this.value === oldHtml) {
-            target.innerHTML = oldHtml;
-          } else {
-            target.innerHTML = this.value;
-            localStorage.className = target.innerHTML;
-            _this.$notify({
-              title: '成功',
-              message: '您已成功修改班级名称',
-              type: 'success',
-              duration: 2000,
-              offset: 100,
-              position: 'bottom-right'
-            });
-          }
-          let newParent = this.parentNode;
-          newParent.removeChild(this);
-          newParent.appendChild(target);
-          // 更新缓存
-        };
+        let _this=this;
+        _this.classNameEdit=true;
+        _this.isEdit=true;
+      },
+      saveClassName(event){
+        let _this=this;
+        _this.classNameEdit=false;
+        _this.isEdit=false;
       },
       handleEdit(event, index, row) {
-        if (row.edit) {
-          // 编辑的保存事件
-          this.$notify({
-            title: '成功',
-            message: '保存成功',
-            type: 'success',
-            duration: 2000,
-            offset: 100,
-            position: 'bottom-right'
-          });
-          // 保存成功，此时没有正在编辑的
-          this.flag = false;
+        //判断是否在编辑
+        if(!this.isEdit){
+          row.edit = true;
+          this.$set(this.tableData,index,row);
+          this.isEdit=true;
         }
-        // 如果当前有一行正在编辑
-        if (this.flag) {
+        else{
           this.$notify({
             title: '警告',
             message: '请先完成您当前的编辑',
             type: 'warning',
             position: 'bottom-right'
           });
-          return;
         }
-        if (row.new) {
-          // 添加数据保存事件
-          row.new = false;
-        }
-        row.edit = !row.edit;
-        if (row.edit) {
-          // 点击编辑的时候，修改文字，同时标识符为 true
-          this.flag = true;
-          event.target.innerHTML = "保存";
-        } else {
-          // 点击保存的时候，修改文字，由于前面已经修改过，并且是在前面判断的，所以不能在此处修改标识符
-          event.target.innerHTML = "编辑";
-        }
+        
       },
       handleDelete(index, row) {
-        // 如果此行在编辑，修改标识符
-        if (row.edit){
-          this.flag = false;
-        }
-        // 删除事件
-        this.tableData.splice(this.tableData.indexOf(row), 1);
+        this.isEdit=false;
+        this.$set(this.tableData, index);
+        this.tableData.splice(index, 1);
         this.$message({
           type: 'success',
           message: '删除成功!',
           showClose: true
         });
       },
-      hanldeSave(event) {
-        // 如果他有一行正在编辑
-        if (this.flag) {
+      handleSave(event, index, row) {
+        if(this.isEdit){
+          if(!verifyStudent(row.id,row.name,row.sex)){
+            this.$notify({
+              title: '警告',
+              message: '你输入的数据有误!',
+              type: 'warning',
+              position: 'bottom-right'
+            });
+            return;
+          }
+          // let _this=this;
+          // let ClassDb=remote.getGlobal("ClassDb");
+          // let classDb=new ClassDb();
+          // classDb.updateStudent(_this.className,{
+          //   "id":row.id,
+          //   "name": row.name,
+          //   "sex": row.sex,
+          // });
+          row.edit=false;
+          this.$set(this.tableData,index,row);
+          this.isEdit=false;
+        }
+        else{
           this.$notify({
             title: '警告',
             message: '请先完成您当前的编辑',
             type: 'warning',
             position: 'bottom-right'
           });
-        } else {
-          this.tableData.unshift({
-            id: '',
-            name: '',
-            sex: '男',
-            edit: true,
-            new: true
-          });
-          // 此时一行在编辑
-          this.flag = true;
         }
       },
-      hanldeAllSave: function (event) {
-        this.$notify({
-          title: '警告',
-          message: '测试测试测试',
-          type: 'warning',
-          position: 'bottom-right'
-        });
-      }
+      handleAdd(){
+        if(!this.isEdit){
+            this.tableData.unshift({
+              id: '',
+              name: '',
+              sex: '',
+              edit: true,
+            });
+          this.isEdit=true;
+        }
+        else{
+          this.$notify({
+            title: '警告',
+            message: '请先完成您当前的编辑',
+            type: 'warning',
+            position: 'bottom-right'
+          });
+        }
+      },
     }
   };
 </script>
