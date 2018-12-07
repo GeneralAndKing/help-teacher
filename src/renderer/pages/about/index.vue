@@ -1,7 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1);")
+      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title Welcome
         h3 electron + vue + element = cool desktop app
@@ -15,7 +15,7 @@
 </style>
 
 <script>
-const shell = require('electron').shell
+const shell = require('electron').shell;
 export default {
   data() {
     return {
