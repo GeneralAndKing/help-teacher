@@ -4,3 +4,27 @@
 #gak-main-server
   height 95%
   padding normal-padding
+  overflow hidden
+  .el-main
+    overflow hidden
+    padding-bottom 0
+    .gak-text-placeholder
+      padding-left 10px
+      #gak-job-create
+        margin-left 10px
+        padding-bottom 2px
+        color primary
+        cursor pointer
+        &:hover
+          border-bottom solid 1px
+          //text-decoration underline
+
+.slide-fade-enter-active
+  transition all 0.5s ease
+
+.slide-fade-leave-active
+  transition all 0.5s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+
+.slide-fade-enter, .slide-fade-leave-to
+  transform translateX(50px)
+  opacity 0

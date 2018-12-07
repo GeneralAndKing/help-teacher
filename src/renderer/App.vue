@@ -5,7 +5,7 @@
       el-aside(v-bind:class="{'el-aside-hide': aside }" style="width:150px")
         side-bar
       el-container
-        transition(name="el-zoom-in-center" mode="out-in")
+        transition(name="el-zoom-in-center", mode="out-in")
           router-view(@changeSide="aside=!aside")
 </template>
 

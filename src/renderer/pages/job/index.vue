@@ -1,7 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1);")
+      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title homework
     el-scrollbar#gak-main-content-job
@@ -12,16 +12,12 @@
           el-form-item(label='作业描述')
             el-input( type="textarea", autosize, v-model='form.jobContent', autocomplete='off', clearable)
           el-form-item(label='文档限制')
-            br
-            template( v-for='(type,index) in form.jobTypes')
-              el-tag(closable, :disable-transitions='false', @close='handleClose(type)') {{ type.type }}
-            el-input.input-new-tag(v-if='inputVisible', v-model='inputValue', ref='saveTagInput', size='small',
-            @keyup.enter.native='handleInputConfirm', @blur='handleInputConfirm')
-            el-button.button-new-tag(v-else='', size='small', @click='showInput') + New Type
+            br/
+            el-select.gak-text-left(v-model='form.select', multiple, filterable, allow-create, default-first-option, placeholder='请选择或输入类型', style="width: 100%;")
+              el-option(v-for='(select, index) in types', :key="index", :label='select.name', :value='select.name')
         .dialog-footer(slot='footer')
           el-button(@click='dialogFormVisible = false') 取 消
           el-button(type='primary', @click='handleSubmit') 确 定
-
 
       el-dropdown#gak-main-content-menu(trigger='click')
         span.el-dropdown-link
@@ -40,8 +36,8 @@
             .gak-job-head 作业:
               .gak-job-title {{ job.jobName }}
             .gak-job-content  {{ job.jobContent }}
-            .gak-job-foot 作业类型:
-              span(v-for="(type) in job.jobTypes") &nbsp;{{type.type}}
+            .gak-job-fovalueot.gak-text-left 作业类型:
+              span(v-for="(type, index) in job.jobTypes", :key="index") &nbsp;{{type.type}}
 
 </template>
 <style lang="stylus" scoped>
@@ -49,35 +45,45 @@
 </style>
 
 <script>
-const {ipcRenderer, remote} = require("electron");
+  const {ipcRenderer, remote} = require("electron");
   export default {
     data() {
       return {
         dialogFormVisible: false,
+        types: [{
+          name: "word"
+        }, {
+          name: "excel"
+        }, {
+          name: "ppt"
+        }, {
+          name: "rar"
+        }, {
+          name: "zip"
+        }],
         form: {
           jobName: "",
           jobContent: "",
-          jobTypes: []
+          jobTypes: [],
+          select:[]
         },
-        inputVisible: false,
-        inputValue: '',
         // 用这个参数来判断是新增还是编辑
         new: false,
         index: 0,
         jobs: []
       };
     },
-    mounted(){
+    mounted() {
       //保持环境
-      let _this=this;
-      let JobDb=remote.getGlobal("JobDb");
-      let jobDb=new JobDb();
-      jobDb.findAllJob().exec((error,jobs)=>{
-        for(const job of jobs){
+      let _this = this;
+      let JobDb = remote.getGlobal("JobDb");
+      let jobDb = new JobDb();
+      jobDb.findAllJob().exec((error, jobs) => {
+        for (const job of jobs) {
           _this.jobs.push({
             jobName: job.jobName,
             jobContent: job.jobContent,
-            jobTypes:job.jobTypes
+            jobTypes: job.jobTypes
           })
         }
       })
@@ -110,8 +116,8 @@ const {ipcRenderer, remote} = require("electron");
           center: true
         }).then(() => {
           this.jobs.splice(this.jobs.indexOf(job), 1);
-          let JobDb=remote.getGlobal("JobDb");
-          let jobDb=new JobDb();
+          let JobDb = remote.getGlobal("JobDb");
+          let jobDb = new JobDb();
           // this.jobs.splice(this.jobs[key],1);
           console.log(this.jobs[key].jobName);
           jobDb.deleteJob(this.jobs[key].jobName);
@@ -124,37 +130,6 @@ const {ipcRenderer, remote} = require("electron");
         });
       },
       /**
-       * 删除编辑/新增时的作业上交类型
-       *
-       * @param type 作业上交类型
-       */
-      handleClose: function (type) {
-        this.form.jobTypes.splice(this.form.jobTypes.indexOf(type), 1);
-      },
-      /**
-       * 显示作业上交类型输入框
-       */
-      showInput: function () {
-        this.inputVisible = true;
-        this.$nextTick(() => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
-      },
-      /**
-       * 提交作业上交类型输入值
-       */
-      handleInputConfirm: function () {
-        let inputValue = this.inputValue;
-        if (inputValue) {
-          this.form.jobTypes.push({
-            type: inputValue,
-            state: inputValue + "格式的作业"
-          });
-        }
-        this.inputVisible = false;
-        this.inputValue = '';
-      },
-      /**
        * 关闭对话框时
        */
       dialogClose: function () {
@@ -165,6 +140,14 @@ const {ipcRenderer, remote} = require("electron");
        * 保存或更新作业
        */
       handleSubmit: function () {
+        // 数据封装
+        this.form.jobTypes = [];
+        this.form.select.forEach(ele => {
+          this.form.jobTypes.push({
+            type: ele,
+            state: ele + "格式的作业"
+          })
+        });
         if (this.new) {
           // 此时为更新作业
           this.jobs[this.index] = this.form;
@@ -175,7 +158,7 @@ const {ipcRenderer, remote} = require("electron");
             position: 'bottom-right'
           });
         } else {
-          // 此时为保存作业
+          // 此时为保存作业，先进行数据封装
           this.jobs.unshift(this.form);
           this.$notify({
             title: "成功",
