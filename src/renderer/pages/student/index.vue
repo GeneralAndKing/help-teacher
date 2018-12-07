@@ -1,6 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
+      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title Student
     #gak-main-content
@@ -113,7 +114,8 @@
               message: '您已成功修改班级名称',
               type: 'success',
               duration: 2000,
-              offset: 100
+              offset: 100,
+              position: 'bottom-right'
             });
           }
           let newParent = this.parentNode;
@@ -130,7 +132,8 @@
             message: '保存成功',
             type: 'success',
             duration: 2000,
-            offset: 100
+            offset: 100,
+            position: 'bottom-right'
           });
           // 保存成功，此时没有正在编辑的
           this.flag = false;
@@ -140,7 +143,8 @@
           this.$notify({
             title: '警告',
             message: '请先完成您当前的编辑',
-            type: 'warning'
+            type: 'warning',
+            position: 'bottom-right'
           });
           return;
         }
@@ -159,6 +163,10 @@
         }
       },
       handleDelete(index, row) {
+        // 如果此行在编辑，修改标识符
+        if (row.edit){
+          this.flag = false;
+        }
         // 删除事件
         this.tableData.splice(this.tableData.indexOf(row), 1);
         this.$message({
@@ -173,7 +181,8 @@
           this.$notify({
             title: '警告',
             message: '请先完成您当前的编辑',
-            type: 'warning'
+            type: 'warning',
+            position: 'bottom-right'
           });
         } else {
           this.tableData.unshift({
