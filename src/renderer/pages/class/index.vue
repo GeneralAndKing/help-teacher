@@ -52,24 +52,23 @@
     },
     methods: {
       fileChange(file, fileList) {
-        console.log(this.tableData);
-        file.name = "123";
         fileList.pop(-1);
         let results = readClassXlsx(file.raw.path);
         let flag = results[0];
         let classJson = results[1];
         if (flag) {
-          this.tableData = classJson.students;
           this.$prompt('请输入班级名称', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             inputPattern:  /\S/,
             inputErrorMessage: '输入不能为空'
           }).then(({value}) => {
-            classJson.clsasName = value;
-            localStorage.setItem('className', classJson.clsasName);
+            classJson.className = value;
+            let ClassDb = remote.getGlobal('ClassDb');
+            let classDb = new ClassDb();
+            classDb.insertClass(classJson);
+            localStorage.setItem('className', classJson.className);
             localStorage.setItem('studentNum', classJson.students.length);
-
             // 这里才算真的导入成功
             this.$notify({
               title: "成功",
@@ -111,7 +110,29 @@
         console.log(index, row);
       },
       handleDelete(index, row) {
-        console.log(index, row);
+        let _this=this;
+        let ClassDb = remote.getGlobal('ClassDb');
+        let classDb = new ClassDb();
+        classDb.deleteClass(row.className);
+        this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          classDb.deleteClass(row.className);
+          _this.tableData.splice(index,1);
+          this.$notify({
+              title: "成功",
+              message: "班级" + row.className + "删除成功"  ,
+              type: "success",
+              position: 'bottom-right'
+            });
+        }).catch(() => {
+
+        });
+
+        
       }
     }
   };
