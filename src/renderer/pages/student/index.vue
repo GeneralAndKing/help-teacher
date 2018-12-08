@@ -156,7 +156,6 @@ export default {
           studentId = _this.oldStudentId;
         }
         let callBack = function(error, docs) {
-          console.log(error);
           if (error) {
             error(_this, "删除失败");
           } else {

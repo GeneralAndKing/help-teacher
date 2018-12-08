@@ -94,7 +94,6 @@ export default {
       }
     },
     handleStudent(index, row) {
-      console.log(index, row);
       // 实现本地存储，使得跳转过去的页面刷新后数据依旧存在
       localStorage.setItem("className", row.className);
       localStorage.setItem("studentNum", row.studentNum);
@@ -103,7 +102,6 @@ export default {
       });
     },
     handleHomework(index, row) {
-      console.log(index, row);
     },
     handleDelete(index, row) {
       let _this = this;
