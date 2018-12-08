@@ -1,5 +1,6 @@
-import Datastore from 'nedb';
-import path from 'path';
+
+const path = require('path')
+const Datastore = require("nedb");
 /*
 {
     className:2016级计算机科学与技术2班,
@@ -21,63 +22,56 @@ import path from 'path';
 */
 //find 返回的都是游标 方便处理
 export default class ClasstDb {
-    constructor() {
-        this.db = new Datastore({
-            autoload: true,
-            filename: path.join(path.join(path.resolve("."), "/userData/class.db"))
-        });
+  constructor() {
+    this.db = new Datastore({
+      autoload: true,
+      filename: path.join(path.join(path.resolve("."), "/userData/class.db"))
+    });
+    this.db.ensureIndex({ fieldName: 'className', unique: true, sparse: true });
+    this.db.loadDatabase();
 
+  }
+  static createClassJson() {
+    return {
+      className: null,
+      students: [
+      ]
     }
-    static createClassJson() {
-        return {
-            className: null,
-            students: [
-            ]
-        }
+  }
+  static createStudentJson($id, $name, $sex) {
+    return {
+      id: $id,
+      name: $name,
+      sex: $sex
     }
-    static createStudentJson($id,$name,$sex) {
-        return {
-            id: $id,
-            name: $name,
-            sex: $sex
-        }
-    }
-    //插入班级数据
-    insertClass(classJson) {
-        this.db.insert(classJson, (error, doc) => {
-        });
-    }
-    insertStudent(className, studentJson) {
-        let classJson = this.db.find({ 'className': className });
-        classJson.students.insert(studentJson, (error, doc) => {
-        });
-    }
-    updateClass(classJson) {
-        this.db.update({ 'className': classJson.className }, classJson, (error, doc) => {
-        });
-    }
-    updateStudent(className, studentJson) {
-        let classJson = this.db.find({ 'className': className });
-        classJson.update({ 'id': studentJson.id }, studentJson, (error, doc) => {
-        });
-    }
-    deleteClass(className) {
-        this.db.remove({ 'className': className }, (error, doc) => {
-        });
-    }
-    deleteStudent(className, studentId) {
-        let classJson = this.db.find({ 'className': className });
-        classJson.remove({ 'id': studentId }, (error, doc) => {
-        });
-    }
-    findByClassName(className) {
-        return this.db.find({ className: className });
-    }
-    findAllClass() {
-        return this.db.find();
-
-    }
-    findByStudentId(className,studentId) {
-        return this.db.find({ 'className': className, 'students.id': studentId });
-    }
+  }
+  //插入班级数据
+  insertClass(classJson,callBack) {
+    return this.db.insert(classJson,callBack);
+  }
+  insertStudent(className, studentJson, callBack) {
+    return this.db.update({ 'className': className }, { $push: { students: studentJson } }, callBack);
+  }
+  updateClassName(oldClassName,className,callBack) {
+    return this.db.update({ 'className': oldClassName }, { 'className': className }, {},callBack);
+  }
+  updateStudent(className, oldStudentId, studentJson, callBack) {
+    this.db.update({ 'className': className }, { $pull: { students: { id: oldStudentId } } });
+    return this.insertStudent(className, studentJson, callBack);
+  }
+  deleteClass(className,callBack) {
+    return this.db.remove({ 'className': className },callBack);
+  }
+  deleteStudent(className, studentId,callBack) {
+    return this.db.update({ 'className': className }, { $pull: { students: { id: studentId } } },callBack);
+  }
+  findByClassName(className) {
+    return this.db.find({ className: className });
+  }
+  findAllClass() {
+    return this.db.find({});
+  }
+  findByStudentId(className, studentId) {
+    return this.db.find({ 'className': className, 'students.id': studentId });
+  }
 }

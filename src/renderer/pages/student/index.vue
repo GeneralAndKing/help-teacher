@@ -23,7 +23,7 @@
             span {{ studentNum }}
         el-alert(title='Tip:双击班级名称可以编辑哦', type='success', close-text='知道了')
       #student-info
-        el-table(:data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', height="250")
+        el-table(:data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', height="250" border v-loading="loading")
           el-table-column(type='index', width='40', align="center")
           el-table-column(label='学号', width="155px")
             template(slot-scope='scope')
@@ -48,152 +48,196 @@
               el-button(size='mini', type='danger', @click='handleDelete(scope.$index, scope.row)' :disabled='isEdit&&!scope.row.edit') 删除
 
 </template>
-<style lang="stylus" scoped>
-  @import "../../styles/student/index.styl"
-</style>
 
 <script>
-  const {ipcRenderer, remote} = require("electron");
-  const {verifyStudent}=require("../../api/judge");
-  export default {
-    data() {
-      return {
-        className: localStorage.className,
-        studentNum: localStorage.studentNum,
-        // 是否有一行正在编辑的标识符
-        isEdit: false,
-        classNameEdit:false,
-        options: [{
-          value: '男'
-        }, {
-          value: '女'
-        }],
-        tableData: [],
-        search: '',
-      };
-    },
-    mounted() {
-      let ClassDb = remote.getGlobal('ClassDb');
-      let _this = this;
-      let classDb = new ClassDb();
-      classDb.findByClassName(_this.className).exec((error, classJsons) => {
-        let classJson = classJsons[0];
-        let students = classJson.students;
-        for (const student of students) {
-          _this.tableData.push({
-            id: student.id,
-            name: student.name,
-            sex: student.sex,
-          })
+const { ipcRenderer, remote } = require("electron");
+const { verifyStudent, verifyStudentUnique } = require("../../api/judge");
+const { getClassDb } = require("../../api/db");
+const { error, success, warning } = require("../../api/message");
+export default {
+  data() {
+    return {
+      className: localStorage.className,
+      studentNum: localStorage.studentNum,
+      // 是否有一行正在编辑的标识符
+      isEdit: false,
+      classNameEdit: false,
+      oldStudentId: null,
+      oldClassName: null,
+      options: [
+        {
+          value: "男"
+        },
+        {
+          value: "女"
         }
+      ],
+      tableData: [],
+      search: "",
+      loading:true
+    };
+  },
+  mounted() {
+    let _this = this;
+    let classDb = getClassDb();
+    classDb.findByClassName(_this.className).exec((error, classJsons) => {
+      let classJson = classJsons[0];
+      let students = classJson.students;
+      for (const student of students) {
+        _this.tableData.push({
+          id: student.id,
+          name: student.name,
+          sex: student.sex,
+          edit: false
+        });
+      }
+      _this.loading=false;
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    next(false);
+    if (this.isEdit) {
+      this.$confirm("还有数据未保存，是否离开", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true
+      }).then(() => {
+        next();
       });
-    },
-    beforeRouteLeave(to,from,next){
-      next(false)
-      if(this.isEdit){
-        this.$confirm('还有数据未保存，是否离开', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          next(); 
-        });
-      }
-      else{
-       next(); 
-      }
-    },
-    methods: {
-      // 标题编辑
-      edit(event) {
-        let _this=this;
-        _this.classNameEdit=true;
-        _this.isEdit=true;
-      },
-      saveClassName(event){
-        let _this=this;
-        _this.classNameEdit=false;
-        _this.isEdit=false;
-      },
-      handleEdit(event, index, row) {
-        //判断是否在编辑
-        if(!this.isEdit){
-          row.edit = true;
-          this.$set(this.tableData,index,row);
-          this.isEdit=true;
-        }
-        else{
-          this.$notify({
-            title: '警告',
-            message: '请先完成您当前的编辑',
-            type: 'warning',
-            position: 'bottom-right'
-          });
-        }
-        
-      },
-      handleDelete(index, row) {
-        this.isEdit=false;
-        this.$set(this.tableData, index);
-        this.tableData.splice(index, 1);
-        this.$message({
-          type: 'success',
-          message: '删除成功!',
-          showClose: true
-        });
-      },
-      handleSave(event, index, row) {
-        if(this.isEdit){
-          if(!verifyStudent(row.id,row.name,row.sex)){
-            this.$notify({
-              title: '警告',
-              message: '你输入的数据有误!',
-              type: 'warning',
-              position: 'bottom-right'
-            });
-            return;
-          }
-          // let _this=this;
-          // let ClassDb=remote.getGlobal("ClassDb");
-          // let classDb=new ClassDb();
-          // classDb.updateStudent(_this.className,{
-          //   "id":row.id,
-          //   "name": row.name,
-          //   "sex": row.sex,
-          // });
-          row.edit=false;
-          this.$set(this.tableData,index,row);
-          this.isEdit=false;
-        }
-        else{
-          this.$notify({
-            title: '警告',
-            message: '请先完成您当前的编辑',
-            type: 'warning',
-            position: 'bottom-right'
-          });
-        }
-      },
-      handleAdd(){
-        if(!this.isEdit){
-            this.tableData.unshift({
-              id: '',
-              name: '',
-              sex: '',
-              edit: true,
-            });
-          this.isEdit=true;
-        }
-        else{
-          this.$notify({
-            title: '警告',
-            message: '请先完成您当前的编辑',
-            type: 'warning',
-            position: 'bottom-right'
-          });
-        }
-      },
+    } else {
+      next();
     }
-  };
+  },
+  methods: {
+    // 标题编辑
+    edit(event) {
+      let _this = this;
+      _this.classNameEdit = true;
+      _this.isEdit = true;
+      _this.oldClassName = _this.className;
+    },
+    saveClassName(event) {
+      let _this = this;
+      let callBack = function(error, docs) {
+        if (error) {
+          error(_this, "修改错误");
+        } else {
+          _this.classNameEdit = false;
+          _this.isEdit = false;
+          _this.oldClassName = null;
+          success(_this, "修改成功");
+        }
+      };
+      let classDb = getClassDb();
+      classDb.updateClassName(_this.oldClassName, _this.className, callBack);
+    },
+    handleEdit(event, index, row) {
+      //判断是否在编辑
+      if (!this.isEdit) {
+        row.edit = true;
+        this.$set(this.tableData, index, row);
+        this.oldStudentId=row.id;
+        this.isEdit = true;
+      } else {
+        warning(_this, "请先完成您当前的编辑");
+      }
+    },
+    handleDelete(index, row) {
+      //删除操作
+      let _this = this;
+      //判断数据是否不可以直接删除
+      if (_this.oldStudentId != null || !row.edit) {
+        let studentId;
+        if (!row.edit) {
+          studentId = row.id;
+        } else {
+          studentId = _this.oldStudentId;
+        }
+        let callBack = function(error, docs) {
+          console.log(error);
+          if (error) {
+            error(_this, "删除失败");
+          } else {
+            _this.isEdit = false;
+            _this.tableData.splice(index, 1);
+            _this.oldStudent = null;
+            success(_this, "删除成功");
+          }
+        };
+        let classDb = getClassDb();
+        classDb.deleteStudent(_this.className, row.id, callBack);
+      } else {
+        _this.isEdit = false;
+        _this.tableData.splice(index, 1);
+        _this.oldStudent = null;
+        success(_this, "删除成功");
+      }
+    },
+    handleSave(event, index, row) {
+      if (this.isEdit) {
+        let oldStudents = [...this.tableData];
+        oldStudents.splice(index, 1);
+        oldStudents.push(row);
+        if (
+          !(
+            verifyStudent(row.id, row.name, row.sex) &&
+            verifyStudentUnique(oldStudents)
+          )
+        ) {
+          warning(_this, "你输入的数据有误");
+          return;
+        }
+        let _this = this;
+        let callBack = function(error, docs) {
+          if (error) {
+            error(_this, "操作错误");
+          } else {
+            row.edit = false;
+            _this.isEdit = false;
+            _this.oldStudent = null;
+          }
+        };
+        let newStudent = {
+          id: row.id,
+          name: row.name,
+          sex: row.sex
+        };
+        let classDb = getClassDb();
+
+        //更新操作
+        if (_this.oldStudent != null) {
+          classDb.updateStudent(
+            _this.className,
+            _this.oldStudent,
+            newStudent,
+            callBack
+          );
+        }
+        //插入操作
+        else {
+          classDb.insertStudent(_this.className, newStudent, callBack);
+        }
+      } else {
+        warning(_this, "请先完成您当前的编辑");
+      }
+    },
+    handleAdd() {
+      if (!this.isEdit) {
+        this.tableData.unshift({
+          id: "",
+          name: "",
+          sex: "",
+          edit: true
+        });
+        this.isEdit = true;
+      } else {
+        warning(_this, "请先完成您当前的编辑");
+      }
+    }
+  }
+};
 </script>
+<style lang="stylus" scoped>
+@import '../../styles/student/index.styl';
+</style>

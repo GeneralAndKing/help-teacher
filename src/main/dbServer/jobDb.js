@@ -6,16 +6,7 @@ jobs: [
     {
       jobName: "第一次作业",
       jobContent: "具体详情是做什么的",
-      jobTypes: [
-        {
-          type: "excel",
-          state: "excel格式的作业"
-        },
-        {
-          type: "ppt",
-          state: "ppt格式的作业"
-        }
-      ]
+      jobTypes: ["excel","ppt"]
     },
     {
       jobName: "第二次作业",
