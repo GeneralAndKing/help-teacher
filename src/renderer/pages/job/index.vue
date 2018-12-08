@@ -5,7 +5,7 @@
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title homework
     el-scrollbar#gak-main-content-job
-      el-dialog(title='作业', :visible.sync='dialogFormVisible', top="20px", @close="dialogClose")
+      el-dialog(title='作业', :visible.sync='dialogFormVisible', top="20px")
         el-form(:model='form')
           el-form-item(label='作业名称')
             el-input(v-model='form.jobName', autocomplete='off', clearable)
@@ -13,8 +13,8 @@
             el-input( type="textarea", autosize, v-model='form.jobContent', autocomplete='off', clearable)
           el-form-item(label='文档限制')
             br/
-            el-select.gak-text-left(v-model='form.select', multiple, filterable, allow-create, default-first-option, placeholder='请选择或输入类型', style="width: 100%;")
-              el-option(v-for='(select, index) in types', :key="index", :label='select.name', :value='select.name')
+            el-select.gak-text-left(v-model='form.jobTypes', multiple, filterable, allow-create, default-first-option, placeholder='请选择或输入类型', style="width: 100%;")
+              el-option(v-for='(select, index) in types', :key="index", :label='select', :value='select')
         .dialog-footer(slot='footer')
           el-button(@click='dialogFormVisible = false') 取 消
           el-button(type='primary', @click='handleSubmit') 确 定
@@ -37,7 +37,7 @@
               .gak-job-title {{ job.jobName }}
             .gak-job-content  {{ job.jobContent }}
             .gak-job-fovalueot.gak-text-left 作业类型:
-              span(v-for="(type, index) in job.jobTypes", :key="index") &nbsp;{{type.type}}
+              span(v-for="(type, index) in job.jobTypes", :key="index") &nbsp;{{type}}
 
 </template>
 <style lang="stylus" scoped>
@@ -45,39 +45,28 @@
 </style>
 
 <script>
-const { getJobDb } = require("../../api/db");
+  const {getJobDb} = require("../../api/db");
   const {ipcRenderer, remote} = require("electron");
+  const {error, success, warning} = require("../../api/message");
   export default {
     data() {
       return {
         dialogFormVisible: false,
-        types: [{
-          name: "word"
-        }, {
-          name: "excel"
-        }, {
-          name: "ppt"
-        }, {
-          name: "rar"
-        }, {
-          name: "zip"
-        }],
+        types: ["word", "excel", "ppt", "rar", "zip"],
         form: {
           jobName: "",
           jobContent: "",
-          jobTypes: [],
-          select:[]
+          jobTypes: []
         },
         // 用这个参数来判断是新增还是编辑
         new: false,
-        index: 0,
         jobs: []
       };
     },
     mounted() {
       //保持环境
       let _this = this;
-      let jobDb=getJobDb();
+      let jobDb = getJobDb();
       jobDb.findAllJob().exec((error, jobs) => {
         for (const job of jobs) {
           _this.jobs.push({
@@ -99,8 +88,7 @@ const { getJobDb } = require("../../api/db");
         this.form = job;
         this.dialogFormVisible = true;
         // 此时为编辑
-        this.new = true;
-        this.index = key;
+        this.new = false;
       },
       /**
        * 删除事件
@@ -109,73 +97,51 @@ const { getJobDb } = require("../../api/db");
        * @param job 编辑的元素
        */
       handleDelete: function (key, job) {
-        this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+        let _this = this;
+        _this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           center: true
         }).then(() => {
-          this.jobs.splice(this.jobs.indexOf(job), 1);
+          _this.jobs.splice(this.jobs.indexOf(job), 1);
           let JobDb = remote.getGlobal("JobDb");
           let jobDb = new JobDb();
-          // this.jobs.splice(this.jobs[key],1);
-          console.log(this.jobs[key].jobName);
-          jobDb.deleteJob(this.jobs[key].jobName);
-          this.$message({
-            type: 'success',
-            message: '删除成功!',
-            showClose: true
-          });
+          jobDb.deleteJob(_this.jobs[key].jobName);
+          success(_this, "删除成功");
         }).catch(() => {
         });
       },
-      /**
-       * 关闭对话框时
-       */
-      dialogClose: function () {
-        this.new = false;
-        this.index = 0;
-      },
+
       /**
        * 保存或更新作业
        */
       handleSubmit: function () {
-        // 数据封装
-        this.form.jobTypes = [];
-        this.form.select.forEach(ele => {
-          this.form.jobTypes.push({
-            type: ele,
-            state: ele + "格式的作业"
-          })
-        });
-        if (this.new) {
-          // 此时为更新作业
-          this.jobs[this.index] = this.form;
-          this.$notify({
-            title: "成功",
-            message: "更新信息成功",
-            type: "success",
-            position: 'bottom-right'
-          });
-        } else {
+        let _this = this;
+        if (_this.new) {
           // 此时为保存作业，先进行数据封装
-          this.jobs.unshift(this.form);
-          this.$notify({
-            title: "成功",
-            message: "更新信息成功",
-            type: "success",
-            position: 'bottom-right'
-          });
+          _this.jobs.unshift(_this.form);
+          success(_this, "保存信息成功");
+        } else {
+          // 此时为更新作业
+          // _this.jobs[_this.index] = _this.form;
+          success(_this, "更新信息成功");
         }
-        this.dialogFormVisible = false;
+        _this.dialogFormVisible = false;
       },
+      /**
+       * 右侧添加按钮的事件
+       */
       handleAdd: function () {
-        this.form = {
+        // 此时为添加
+        let _this = this;
+        _this.new = true;
+        _this.form = {
           jobName: "",
           jobContent: "",
           jobTypes: []
         };
-        this.dialogFormVisible = true;
+        _this.dialogFormVisible = true;
       }
     }
   };

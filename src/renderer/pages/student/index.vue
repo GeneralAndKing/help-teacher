@@ -224,6 +224,7 @@ export default {
       }
     },
     handleAdd() {
+
       if (!this.isEdit) {
         this.tableData.unshift({
           id: "",
