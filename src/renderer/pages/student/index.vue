@@ -94,21 +94,22 @@ export default {
       _this.loading=false;
     });
   },
-  beforeRouteLeave(to, from, next) {
-    next(false);
-    if (this.isEdit) {
-      this.$confirm("还有数据未保存，是否离开", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        center: true
-      }).then(() => {
-        next();
-      });
-    } else {
-      next();
-    }
-  },
+  // beforeRouteLeave(to, from, next) {
+  //   console.log(to,from,next);
+  //   next(false);
+  //   if (this.isEdit) {
+  //     this.$confirm("还有数据未保存，是否离开", "提示", {
+  //       confirmButtonText: "确定",
+  //       cancelButtonText: "取消",
+  //       type: "warning",
+  //       center: true
+  //     }).then(() => {
+  //       next();
+  //     });
+  //   } else {
+  //     next();
+  //   }
+  // },
   methods: {
     // 标题编辑
     edit(event) {
@@ -161,7 +162,7 @@ export default {
           } else {
             _this.isEdit = false;
             _this.tableData.splice(index, 1);
-            _this.oldStudent = null;
+            _this.oldStudentId = null;
             success(_this, "删除成功");
           }
         };
@@ -170,7 +171,7 @@ export default {
       } else {
         _this.isEdit = false;
         _this.tableData.splice(index, 1);
-        _this.oldStudent = null;
+        _this.oldStudentId = null;
         success(_this, "删除成功");
       }
     },
@@ -195,7 +196,7 @@ export default {
           } else {
             row.edit = false;
             _this.isEdit = false;
-            _this.oldStudent = null;
+            _this.oldStudentId = null;
           }
         };
         let newStudent = {
@@ -206,10 +207,10 @@ export default {
         let classDb = getClassDb();
 
         //更新操作
-        if (_this.oldStudent != null) {
+        if (_this.oldStudentId != null) {
           classDb.updateStudent(
             _this.className,
-            _this.oldStudent,
+            _this.oldStudentId,
             newStudent,
             callBack
           );

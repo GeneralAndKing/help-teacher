@@ -46,24 +46,24 @@ export default class ClasstDb {
     }
   }
   //插入班级数据
-  insertClass(classJson,callBack) {
-    return this.db.insert(classJson,callBack);
+  insertClass(classJson, callBack) {
+    this.db.insert(classJson, callBack);
   }
   insertStudent(className, studentJson, callBack) {
-    return this.db.update({ 'className': className }, { $push: { students: studentJson } }, callBack);
+    this.db.update({ 'className': className }, { $push: { students: studentJson } }, callBack);
   }
-  updateClassName(oldClassName,className,callBack) {
-    return this.db.update({ 'className': oldClassName }, { 'className': className }, {},callBack);
+  updateClassName(oldClassName, className, callBack) {
+    this.db.update({ 'className': oldClassName }, { 'className': className }, {}, callBack);
   }
   updateStudent(className, oldStudentId, studentJson, callBack) {
     this.db.update({ 'className': className }, { $pull: { students: { id: oldStudentId } } });
-    return this.insertStudent(className, studentJson, callBack);
+    this.insertStudent(className, studentJson, callBack);
   }
-  deleteClass(className,callBack) {
-    return this.db.remove({ 'className': className },callBack);
+  deleteClass(className, callBack) {
+    this.db.remove({ 'className': className }, callBack);
   }
-  deleteStudent(className, studentId,callBack) {
-    return this.db.update({ 'className': className }, { $pull: { students: { id: studentId } } },callBack);
+  deleteStudent(className, studentId, callBack) {
+    this.db.update({ 'className': className }, { $pull: { students: { id: studentId } } }, callBack);
   }
   findByClassName(className) {
     return this.db.find({ className: className });

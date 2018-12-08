@@ -5,9 +5,9 @@ import JobDb from "./dbServer/jobDb"
 import ClassToJobDb from "./dbServer/classToJobDb"
 import IpDb from "./dbServer/ipDb"
 
-global.ClassDb = ClassDb;
-global.JobDb = JobDb;
-global.ClassToJobDb = ClassToJobDb;
+global.classDb = new ClassDb();
+global.jobDb = new JobDb();
+global.classToJobDb = new ClassToJobDb();
 global.ipDb = new IpDb();
 global.webServer = new webServer();
 /**

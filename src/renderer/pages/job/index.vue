@@ -45,6 +45,7 @@
 </style>
 
 <script>
+const { getJobDb } = require("../../api/db");
   const {ipcRenderer, remote} = require("electron");
   export default {
     data() {
@@ -76,8 +77,7 @@
     mounted() {
       //保持环境
       let _this = this;
-      let JobDb = remote.getGlobal("JobDb");
-      let jobDb = new JobDb();
+      let jobDb=getJobDb();
       jobDb.findAllJob().exec((error, jobs) => {
         for (const job of jobs) {
           _this.jobs.push({

@@ -11,16 +11,7 @@ jobs: [
     {
       jobName: "第二次作业",
       jobContent: "具体详情是做什么的",
-      jobTypes: [
-        {
-          type: "excel",
-          state: "excel格式的作业"
-        },
-        {
-          type: "ppt",
-          state: "ppt格式的作业"
-        }
-      ]
+      jobTypes: ["execl","ppt"]
     }
   ]
 }
@@ -49,40 +40,36 @@ export default class JobDb {
     }
   }
 
-  insertJob(jobJson) {
-    this.db.insert(jobJson, (error, doc) => {
-    });
+  insertJob(jobJson, callBack) {
+    this.db.insert(jobJson, callBack)
   }
 
-  insertJobType(jobName, jobTypeJson) {
-    let jobJson = this.db.find({"jobName": jobName});
-    jobJson.jobTypes.insert(jobTypeJson, (error, doc) => {
-    });
+  insertJobType(jobName, jobType, callBack) {
+    this.db.update({ 'jobName': jobName }, { $push: { jobTypes: jobType } }, callBack);
   }
 
-  updateJob(jobJson) {
-    this.db.update({'jobName': jobJson.jobName}, jobJson, (error, doc) => {
-    });
+  updateJob(oldJobName, jobJson, callBack) {
+    this.db.update({ 'jobName': oldJobName }, jobJson, callBack);
   }
 
   updatejobType(jobName, jobTypeJson) {
-    let jobJson = this.db.find({'jobName': jobName});
-    jobJson.update({'type': jobTypeJson.type}, jobTypeJson, (error, doc) => {
+    let jobJson = this.db.find({ 'jobName': jobName });
+    jobJson.update({ 'type': jobTypeJson.type }, jobTypeJson, (error, doc) => {
     });
   }
 
   deleteJob(jobName) {
-    this.db.remove({"jobName": jobName}, (error, doc) => {
+    this.db.remove({ "jobName": jobName }, (error, doc) => {
     });
   }
 
   deleteJobType(jobName, type) {
-    this.db.remove({"jobName": jobName, "jobTypes.type": type}, (error, doc) => {
+    this.db.remove({ "jobName": jobName, "jobTypes.type": type }, (error, doc) => {
     });
   }
 
   findByJobName(jobName) {
-    return this.db.find({"jobName": jobName});
+    return this.db.find({ "jobName": jobName });
   }
 
   findAllJob() {

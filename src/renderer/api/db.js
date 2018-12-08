@@ -1,16 +1,13 @@
 const { remote } = require("electron");
 
 const getClassDb = () => {
-    let ClassDb = remote.getGlobal("ClassDb");
-    return new ClassDb();
+    return remote.getGlobal("classDb");
 }
 const getJobDb = () => {
-    let JobDb = remote.getGlobal("JobDb");
-    return new JobDb();
+    return remote.getGlobal("jobDb");
 }
 const getClassToJobDb = () => {
-    let ClassToJobDb = remote.getGlobal("ClassToJobDb");
-    return new ClassToJobDb();
+    return remote.getGlobal("classToJobDb");
 }
 export {
     getClassDb, getJobDb, getClassToJobDb
