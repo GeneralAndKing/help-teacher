@@ -23,6 +23,24 @@ import path from 'path';
         ...
     ]
 }
+
+ classToJob: [{
+    className: "2016计算机科学与技术",
+    jobName: "作业名字",
+    startTime: "时间戳",
+    stopTime: 30,
+    peopleNum: 68,
+    status: 0,
+    unfinishedPeoples:[{
+        name: "樊总",
+        id: "201607010244",
+        sex: "男"
+      },{
+        name: "睿总",
+        id: "201607010244",
+        sex: "男"
+      }]
+}]
 */
 //find 返回的都是游标 方便处理
 export default class ClassToJobDb {

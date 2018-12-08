@@ -35,8 +35,9 @@
               el-button(type='danger', icon='el-icon-close', @click="handleDelete(key, job)", circle,  size="mini")
             .gak-job-head 作业:
               .gak-job-title {{ job.jobName }}
-            .gak-job-content  {{ job.jobContent }}
-            .gak-job-fovalueot.gak-text-left 作业类型:
+            .gak-job-content.gak-text-hidden  {{ job.jobContent }}
+            .gak-job-footer.gak-text-left.gak-text-hidden
+              span 类型:
               span(v-for="(type, index) in job.jobTypes", :key="index") &nbsp;{{type}}
 
 </template>

@@ -51,9 +51,9 @@
 
 <script>
 const { ipcRenderer, remote } = require("electron");
-const { verifyStudent, verifyStudentUnique } = require("../../api/judge");
-const { getClassDb } = require("../../api/db");
-const { error, success, warning } = require("../../api/message");
+const { verifyStudent, verifyStudentUnique } = require("../../../api/judge");
+const { getClassDb } = require("../../../api/db");
+const { error, success, warning } = require("../../../api/message");
 export default {
   data() {
     return {
@@ -240,5 +240,5 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
-@import '../../styles/student/index.styl';
+@import '../../../styles/class/student/index.styl';
 </style>
