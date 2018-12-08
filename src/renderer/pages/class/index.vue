@@ -101,7 +101,13 @@ export default {
         name: "student"
       });
     },
-    handleHomework(index, row) {},
+    handleHomework(index, row) {
+      localStorage.setItem("className", row.className);
+      localStorage.setItem("studentNum", row.studentNum);
+      this.$router.push({
+        name: "class-job"
+      });
+    },
     handleDelete(index, row) {
       let _this = this;
       let ClassDb = remote.getGlobal("ClassDb");
