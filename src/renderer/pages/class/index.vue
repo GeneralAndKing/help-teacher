@@ -31,13 +31,13 @@
 const { readClassXlsx } = require("../../api/xlsx");
 const { verifyStudentUnique } = require("../../api/judge");
 const { getClassDb } = require("../../api/db");
-const { error, success,warning } = require("../../api/message");
+const { error, success, warning } = require("../../api/message");
 const { ipcRenderer, remote } = require("electron");
 export default {
   data() {
     return {
       activeNames: ["2"],
-      tableData: [],
+      tableData: []
     };
   },
   mounted() {
@@ -70,8 +70,8 @@ export default {
           .then(({ value }) => {
             classJson.className = value;
             let classDb = getClassDb();
-            let callBack = function(error, docs) {
-              if (error) {
+            let callBack = function(e, docs) {
+              if (e) {
                 error(_this, "导入数据失败");
               } else {
                 localStorage.setItem("className", classJson.className);
@@ -101,8 +101,7 @@ export default {
         name: "student"
       });
     },
-    handleHomework(index, row) {
-    },
+    handleHomework(index, row) {},
     handleDelete(index, row) {
       let _this = this;
       let ClassDb = remote.getGlobal("ClassDb");
@@ -115,8 +114,8 @@ export default {
           center: true
         })
         .then(() => {
-          let callBack = function(error, docs) {
-            if (error) {
+          let callBack = function(e, docs) {
+            if (e) {
               error(_this, "删除失败");
             } else {
               _this.tableData.splice(index, 1);

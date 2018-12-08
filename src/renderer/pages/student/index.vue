@@ -74,7 +74,7 @@ export default {
       ],
       tableData: [],
       search: "",
-      loading:true
+      loading: true
     };
   },
   mounted() {
@@ -91,7 +91,7 @@ export default {
           edit: false
         });
       }
-      _this.loading=false;
+      _this.loading = false;
     });
   },
   // beforeRouteLeave(to, from, next) {
@@ -120,8 +120,9 @@ export default {
     },
     saveClassName(event) {
       let _this = this;
-      let callBack = function(error, docs) {
-        if (error) {
+      let callBack = function(e, docs) {
+        if (e) {
+          console.log(e);
           error(_this, "修改错误");
         } else {
           _this.classNameEdit = false;
@@ -138,7 +139,7 @@ export default {
       if (!this.isEdit) {
         row.edit = true;
         this.$set(this.tableData, index, row);
-        this.oldStudentId=row.id;
+        this.oldStudentId = row.id;
         this.isEdit = true;
       } else {
         warning(_this, "请先完成您当前的编辑");
@@ -155,8 +156,8 @@ export default {
         } else {
           studentId = _this.oldStudentId;
         }
-        let callBack = function(error, docs) {
-          if (error) {
+        let callBack = function(e, docs) {
+          if (e) {
             error(_this, "删除失败");
           } else {
             _this.isEdit = false;
@@ -189,8 +190,9 @@ export default {
           return;
         }
         let _this = this;
-        let callBack = function(error, docs) {
-          if (error) {
+        let callBack = function(e, docs) {
+          console.log(e);
+          if (e) {
             error(_this, "操作错误");
           } else {
             row.edit = false;
@@ -223,7 +225,6 @@ export default {
       }
     },
     handleAdd() {
-
       if (!this.isEdit) {
         this.tableData.unshift({
           id: "",

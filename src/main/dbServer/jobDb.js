@@ -23,6 +23,8 @@ export default class JobDb {
       autoload: true,
       filename: path.join(path.join(path.resolve("."), "/userData/job.db"))
     });
+    this.db.ensureIndex({ fieldName: 'jobName', unique: true, sparse: true });
+    this.db.loadDatabase();
   }
 
   static createJobJson() {
@@ -58,9 +60,8 @@ export default class JobDb {
     });
   }
 
-  deleteJob(jobName) {
-    this.db.remove({ "jobName": jobName }, (error, doc) => {
-    });
+  deleteJob(jobName, callBack) {
+    this.db.remove({ "jobName": jobName }, callBack);
   }
 
   deleteJobType(jobName, type) {

@@ -40,109 +40,155 @@
               span(v-for="(type, index) in job.jobTypes", :key="index") &nbsp;{{type}}
 
 </template>
-<style lang="stylus" scoped>
-  @import "../../styles/job/index.styl"
-</style>
+
 
 <script>
-  const {getJobDb} = require("../../api/db");
-  const {ipcRenderer, remote} = require("electron");
-  const {error, success, warning} = require("../../api/message");
-  export default {
-    data() {
-      return {
-        dialogFormVisible: false,
-        types: ["word", "excel", "ppt", "rar", "zip"],
-        form: {
-          jobName: "",
-          jobContent: "",
-          jobTypes: []
-        },
-        // 用这个参数来判断是新增还是编辑
-        new: false,
-        jobs: []
-      };
-    },
-    mounted() {
-      //保持环境
-      let _this = this;
-      let jobDb = getJobDb();
-      jobDb.findAllJob().exec((error, jobs) => {
-        for (const job of jobs) {
-          _this.jobs.push({
-            jobName: job.jobName,
-            jobContent: job.jobContent,
-            jobTypes: job.jobTypes
-          })
-        }
-      })
-    },
-    methods: {
-      /**
-       * 编辑事件
-       *
-       * @param key 编辑的数组的元素角标
-       * @param job 编辑的元素
-       */
-      handleEdit: function (key, job) {
-        this.form = job;
-        this.dialogFormVisible = true;
-        // 此时为编辑
-        this.new = false;
+const { getJobDb } = require("../../api/db");
+const { ipcRenderer, remote } = require("electron");
+const { error, success, warning } = require("../../api/message");
+const { verifyJob } = require("../../api/judge");
+export default {
+  data() {
+    return {
+      dialogFormVisible: false,
+      types: ["word", "excel", "ppt", "rar", "zip"],
+      form: {
+        jobName: "",
+        jobContent: "",
+        jobTypes: []
       },
-      /**
-       * 删除事件
-       *
-       * @param key 编辑的数组的元素角标
-       * @param job 编辑的元素
-       */
-      handleDelete: function (key, job) {
-        let _this = this;
-        _this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          _this.jobs.splice(this.jobs.indexOf(job), 1);
-          let JobDb = remote.getGlobal("JobDb");
-          let jobDb = new JobDb();
-          jobDb.deleteJob(_this.jobs[key].jobName);
-          success(_this, "删除成功");
-        }).catch(() => {
+      // 用这个参数来判断是新增还是编辑
+      oldJob: null,
+      jobs: []
+    };
+  },
+  mounted() {
+    //保持环境
+    let _this = this;
+    let jobDb = getJobDb();
+    jobDb.findAllJob().exec((error, jobs) => {
+      for (const job of jobs) {
+        _this.jobs.push({
+          jobName: job.jobName,
+          jobContent: job.jobContent,
+          jobTypes: job.jobTypes
         });
-      },
+      }
+    });
+  },
+  methods: {
+    /**
+     * 编辑事件
+     *
+     * @param key 编辑的数组的元素角标
+     * @param job 编辑的元素
+     */
+    handleEdit: function(key, job) {
+      this.form = job;
+      this.oldJob = job;
+      this.dialogFormVisible = true;
+    },
+    /**
+     * 删除事件
+     *
+     * @param key 编辑的数组的元素角标
+     * @param job 编辑的元素
+     */
+    handleDelete: function(key, job) {
+      let _this = this;
+      let callBack = function(e, docs) {
+        if (e) {
+          error(_this, "删除信息失败");
+        } else {
+          _this.jobs.splice(key, 1);
+          success(_this, "删除信息成功");
+        }
+      };
+      let jobDb = getJobDb();
+      jobDb.deleteJob(job.jobName, callBack);
+      // _this
+      //   .$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
+      //     confirmButtonText: "确定",
+      //     cancelButtonText: "取消",
+      //     type: "warning",
+      //     center: true
+      //   })
+      //   .then(() => {
+      //     let callBack = function(e, docs) {
+      //       if (e) {
+      //         error(_this, "删除信息失败");
+      //       } else {
+      //         _this.jobs.splice(this.jobs.indexOf(job), 1);
+      //         success(_this, "删除信息成功");
+      //       }
+      //     };
+      //     jobDb.deleteJob(job.jobName, callBack);
+      //   })
+      //   .catch(() => {});
+    },
 
-      /**
-       * 保存或更新作业
-       */
-      handleSubmit: function () {
-        let _this = this;
-        if (_this.new) {
+    /**
+     * 保存或更新作业
+     */
+    handleSubmit: function() {
+      let _this = this;
+      if (
+        verifyJob(
+          _this.form.jobName,
+          _this.form.jobContent,
+          _this.form.jobTypes
+        )
+      ) {
+        if (_this.oldJob == null) {
           // 此时为保存作业，先进行数据封装
-          _this.jobs.unshift(_this.form);
-          success(_this, "保存信息成功");
+
+          let callBack = function(e, docs) {
+            console.log(e);
+            if (e) {
+              error(_this, "保存信息失败");
+            } else {
+              _this.jobs.unshift(_this.form);
+              success(_this, "保存信息成功");
+            }
+            _this.oldJob = null;
+          };
+          let jobDb = getJobDb();
+          jobDb.insertJob(_this.form, callBack);
         } else {
           // 此时为更新作业
-          // _this.jobs[_this.index] = _this.form;
-          success(_this, "更新信息成功");
+          let callBack = function(e, docs) {
+            if (e) {
+              _this.form = _this.oldJob;
+              error(_this, "更新信息失败");
+            } else {
+              success(_this, "更新信息成功");
+            }
+            _this.oldJob = null;
+          };
+          let jobDb = getJobDb();
+          jobDb.updateJob(_this.oldJob.jobName, _this.form, callBack);
         }
         _this.dialogFormVisible = false;
-      },
-      /**
-       * 右侧添加按钮的事件
-       */
-      handleAdd: function () {
-        // 此时为添加
-        let _this = this;
-        _this.new = true;
-        _this.form = {
-          jobName: "",
-          jobContent: "",
-          jobTypes: []
-        };
-        _this.dialogFormVisible = true;
+      } else {
+        error(_this, "信息有误,无法保存");
       }
+    },
+    /**
+     * 右侧添加按钮的事件
+     */
+    handleAdd: function() {
+      // 此时为添加
+      let _this = this;
+      _this.form = {
+        jobName: "",
+        jobContent: "",
+        jobTypes: []
+      };
+      _this.dialogFormVisible = true;
     }
-  };
+  }
+};
 </script>
+<style lang="stylus" scoped>
+@import '../../styles/job/index.styl';
+</style>
