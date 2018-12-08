@@ -19,7 +19,6 @@ const readClassXlsx = (filePath) => {
             }
         }
         catch (error) {
-            console.log(error);
             return [false, null];
         }
         for (const studentData of classData.data) {

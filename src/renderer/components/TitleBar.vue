@@ -53,15 +53,12 @@ export default {
   },
   methods: {
     closeWin: function() {
-      console.log("click close button");
       ipc.send("close");
     },
     minWin: function() {
-      console.log("click min button");
       ipc.send("hide-window");
     },
     maxWin: function() {
-      console.log("click max button");
       ipc.send("max-window");
     }
   }

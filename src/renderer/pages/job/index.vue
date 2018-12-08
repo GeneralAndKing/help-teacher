@@ -119,7 +119,6 @@ const { getJobDb } = require("../../api/db");
           let JobDb = remote.getGlobal("JobDb");
           let jobDb = new JobDb();
           // this.jobs.splice(this.jobs[key],1);
-          console.log(this.jobs[key].jobName);
           jobDb.deleteJob(this.jobs[key].jobName);
           this.$message({
             type: 'success',
