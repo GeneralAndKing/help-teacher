@@ -29,37 +29,18 @@ export default {
   name: "ClassJob",
   data() {
     return {
-      classToJobs: [
-        {
-          className: "2016计算机科学与技术",
-          jobName: "作业名字",
-          startTime: "时间戳",
-          stopTime: 30,
-          studentNum: 68,
-          status: 1,
-          unfinishedStudents: [
-            {
-              name: "樊总",
-              id: "201607010244",
-              sex: "男"
-            },
-            {
-              name: "睿总",
-              id: "201607010244",
-              sex: "男"
-            }
-          ]
-        }
-      ]
+      classToJobs: []
     };
   },
   mounted() {
     //保持环境
     let _this = this;
     let classToJobDb = getClassToJobDb();
-    classToJobDb.findByclassName().exec((error, classToJobJsons) => {
-      _this.classToJobs.concat(classToJobJsons);
-    });
+    classToJobDb
+      .findByClassName(_this.$route.params.className)
+      .exec((error, classToJobJsons) => {
+        _this.classToJobs = classToJobJsons;
+      });
   },
   methods: {
     /**
@@ -79,7 +60,7 @@ export default {
         }
       };
       let classToJobDb = getClassToJobDb();
-      classToJobDb.deleteclassToJob(
+      classToJobDb.deleteClassToJob(
         classToJob.jobName,
         classToJob.className,
         callBack

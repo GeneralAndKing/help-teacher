@@ -57,8 +57,8 @@ const { error, success, warning } = require("@/api/message");
 export default {
   data() {
     return {
-      className: localStorage.className,
-      studentNum: localStorage.studentNum,
+      className: null,
+      studentNum: null,
       // 是否有一行正在编辑的标识符
       isEdit: false,
       classNameEdit: false,
@@ -76,6 +76,11 @@ export default {
       search: "",
       loading: true
     };
+  },
+  created() {
+    let _this = this;
+    _this.className = _this.$route.params.className;
+    _this.studentNum = _this.$route.params.studentNum;
   },
   mounted() {
     let _this = this;

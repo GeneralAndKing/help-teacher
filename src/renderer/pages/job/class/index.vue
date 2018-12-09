@@ -27,7 +27,7 @@
 <script>
 const { readClassXlsx } = require("@/api/xlsx");
 const { verifyStudentUnique } = require("@/api/judge");
-const { getClassDb } = require("@/api/db");
+const { getClassDb, getClassToJobDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
 const { ipcRenderer, remote } = require("electron");
 export default {
@@ -40,11 +40,14 @@ export default {
   },
   mounted() {
     let _this = this;
-    let classDb = getClassDb();
-    classDb.findAllClass().exec((error, classToJobJsons) => {
-      _this.classToJobs.concat(classToJobJsons);
-      _this.loading = false;
-    });
+    let classToJobDb = getClassToJobDb();
+    classToJobDb
+      .findByJobName(_this.$route.params.jobName)
+      .exec((error, classToJobJsons) => {
+        console.log(classToJobJsons);
+        _this.classToJobs = classToJobJsons;
+        _this.loading = false;
+      });
   },
   methods: {
     handleDelete: function(index, classToJob) {
@@ -58,7 +61,7 @@ export default {
         }
       };
       let classToJobDb = getClassToJobDb();
-      classToJobDb.deleteclassToJob(
+      classToJobDb.deleteClassToJob(
         classToJob.jobName,
         classToJob.className,
         callBack
