@@ -24,13 +24,18 @@ const verifyStudent = ($id, $name, $sex) => {
 }
 
 const verifyJob = ($jobName, $jobContent, $jobTypes) => {
-  console.log($jobName, $jobContent, $jobTypes);
   if ($jobName == undefined || $jobContent == undefined || $jobTypes == undefined || $jobName.length <= 0 || $jobContent.length <= 0 || $jobTypes <= 0) {
     return false;
   }
   return true;
 }
 
+const verifyNull = ($arg) => {
+  if ($arg == undefined || $arg == '' || $arg == null) {
+    return false;
+  }
+  return true;
+}
 export {
-  verifyStudent, verifyStudentUnique, verifyJob
+  verifyStudent, verifyStudentUnique, verifyJob,verifyNull
 }

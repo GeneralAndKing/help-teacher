@@ -14,7 +14,7 @@ const routeOptions = [
   // 以后可以使用子路由代替，时间紧，退而求次
   {path: '/class/student', component: 'Student', name: 'student', dir: 'class/student'},
   {path: '/class/job', component: 'ClassJob', name: 'class-job', dir: 'class/job'},
-  {path: '/class/job/info', component: 'ClassJobInfo', name: 'class-job-info', dir: 'class/job/info'},
+  {path: '/info', component: 'ClassJobInfo', name: 'class-job-info', dir: 'info'},
   {path: '/job', component: 'Job', name: 'job', dir: 'job'},
   {path: '/job/class', component: 'JobClass', name: 'job-class', dir: 'job/class'}
 ];

@@ -47,7 +47,7 @@ export default {
     });
   },
   methods: {
-    handleDelete(index, classToJob) {
+    handleDelete: function(index, classToJob) {
       let _this = this;
       let callBack = function(error, docs) {
         if (error) {
@@ -65,10 +65,18 @@ export default {
       );
       success(_this, "删除成功");
     },
-    handleInfo(index, row) {}
+    handleInfo: function(index, classToJob) {
+      let _this = this;
+      _this.$router.push({
+        name: "class-job-info",
+        params: {
+          classToJob: classToJob
+        }
+      });
+    }
   }
 };
 </script>
 <style lang="stylus">
-  @import '../../../styles/job/class/index.styl';
+@import '../../../styles/job/class/index.styl';
 </style>
