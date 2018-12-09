@@ -94,17 +94,19 @@ export default {
       }
     },
     handleStudent(index, row) {
+      let _this = this;
       // 实现本地存储，使得跳转过去的页面刷新后数据依旧存在
       localStorage.setItem("className", row.className);
       localStorage.setItem("studentNum", row.studentNum);
-      this.$router.push({
+      _this.$router.push({
         name: "student"
       });
     },
     handleHomework(index, row) {
+      let _this = this;
       localStorage.setItem("className", row.className);
       localStorage.setItem("studentNum", row.studentNum);
-      this.$router.push({
+      _this.$router.push({
         name: "class-job"
       });
     },
