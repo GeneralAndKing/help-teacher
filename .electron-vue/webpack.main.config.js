@@ -49,7 +49,9 @@ let mainConfig = {
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
-    new BundleAnalyzerPlugin()
+    new BundleAnalyzerPlugin({
+      openAnalyzer: false
+    })
   ],
   resolve: {
     extensions: ['.js', '.json', '.node']
