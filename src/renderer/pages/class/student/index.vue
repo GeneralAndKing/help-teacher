@@ -94,22 +94,22 @@ export default {
       _this.loading = false;
     });
   },
-  // beforeRouteLeave(to, from, next) {
-  //   console.log(to,from,next);
-  //   next(false);
-  //   if (this.isEdit) {
-  //     this.$confirm("还有数据未保存，是否离开", "提示", {
-  //       confirmButtonText: "确定",
-  //       cancelButtonText: "取消",
-  //       type: "warning",
-  //       center: true
-  //     }).then(() => {
-  //       next();
-  //     });
-  //   } else {
-  //     next();
-  //   }
-  // },
+  beforeRouteLeave(to, from, next) {
+    console.log(to, from, next);
+    next(false);
+    if (this.isEdit) {
+      this.$confirm("还有数据未保存，是否离开", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true
+      }).then(() => {
+        next();
+      });
+    } else {
+      next();
+    }
+  },
   methods: {
     // 标题编辑
     edit(event) {
@@ -135,12 +135,13 @@ export default {
       classDb.updateClassName(_this.oldClassName, _this.className, callBack);
     },
     handleEdit(event, index, row) {
+      let _this = this;
       //判断是否在编辑
-      if (!this.isEdit) {
+      if (!_this.isEdit) {
         row.edit = true;
-        this.$set(this.tableData, index, row);
-        this.oldStudentId = row.id;
-        this.isEdit = true;
+        _this.$set(_this.tableData, index, row);
+        _this.oldStudentId = row.id;
+        _this.isEdit = true;
       } else {
         warning(_this, "请先完成您当前的编辑");
       }
@@ -176,8 +177,9 @@ export default {
       }
     },
     handleSave(event, index, row) {
-      if (this.isEdit) {
-        let oldStudents = [...this.tableData];
+      let _this = this;
+      if (_this.isEdit) {
+        let oldStudents = [..._this.tableData];
         oldStudents.splice(index, 1);
         oldStudents.push(row);
         if (
@@ -189,7 +191,6 @@ export default {
           warning(_this, "你输入的数据有误");
           return;
         }
-        let _this = this;
         let callBack = function(e, docs) {
           console.log(e);
           if (e) {
@@ -225,14 +226,15 @@ export default {
       }
     },
     handleAdd() {
-      if (!this.isEdit) {
-        this.tableData.unshift({
+      let _this = this;
+      if (!_this.isEdit) {
+        _this.tableData.unshift({
           id: "",
           name: "",
           sex: "",
           edit: true
         });
-        this.isEdit = true;
+        _this.isEdit = true;
       } else {
         warning(_this, "请先完成您当前的编辑");
       }
