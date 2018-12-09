@@ -1,7 +1,7 @@
-import xlsx from "node-xlsx"
+const xlsx = require("node-xlsx");
 const { verifyStudent } = require("./judge");
 const { remote } = require("electron");
-let ClassDb = remote.getGlobal('ClassDb');
+let classDb = remote.getGlobal('classDb');
 
 /*
     参数:filepath
@@ -9,7 +9,7 @@ let ClassDb = remote.getGlobal('ClassDb');
 */
 const readClassXlsx = (filePath) => {
     let xlsxData = xlsx.parse(filePath);
-    let classJson = ClassDb.createClassJson();
+    let classJson = classDb.createClassJson();
     let students = [];
     for (const classData of xlsxData) {
         try {

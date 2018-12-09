@@ -1,4 +1,4 @@
-import { app, BrowserWindow,ipcMain} from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import webServer from "./webServer/server"
 import ClassDb from "./dbServer/classDb"
 import JobDb from "./dbServer/jobDb"
@@ -23,13 +23,13 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
    */
   mainWindow = new BrowserWindow({
     minHeight: 600,
-    minWidth:800,
+    minWidth: 800,
     height: 600,
     useContentSize: true,
     width: 800,
@@ -42,7 +42,7 @@ function createWindow () {
     mainWindow = null
   })
 
-
+  mainWindow.webContents.openDevTools();
 
   ipcMain.on('close', e => {
     mainWindow.close()
