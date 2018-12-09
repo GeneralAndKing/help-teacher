@@ -45,10 +45,10 @@
 
 
 <script>
-const { getJobDb } = require("../../api/db");
+const { getJobDb } = require("@/api/db");
 const { ipcRenderer, remote } = require("electron");
-const { error, success, warning } = require("../../api/message");
-const { verifyJob } = require("../../api/judge");
+const { error, success, warning } = require("@/api/message");
+const { verifyJob } = require("@/api/judge");
 export default {
   data() {
     return {

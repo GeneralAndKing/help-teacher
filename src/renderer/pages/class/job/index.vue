@@ -21,9 +21,9 @@
 
 </template>
 <script>
-const { getJobDb, getClassToJobDb } = require("../../../api/db");
+const { getJobDb, getClassToJobDb } = require("@/api/db");
 const { ipcRenderer, remote } = require("electron");
-const { error, success, warning } = require("../../../api/message");
+const { error, success, warning } = require("@/api/message");
 export default {
   name: "ClassJob",
   data() {

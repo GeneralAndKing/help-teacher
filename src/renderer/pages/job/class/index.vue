@@ -1,7 +1,7 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1);")
+      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title Class
     el-scrollbar#gak-main-content-class
@@ -25,10 +25,10 @@
 </template>
 
 <script>
-  const {readClassXlsx} = require("../../../api/xlsx");
-  const {verifyStudentUnique} = require("../../../api/judge");
-  const {getClassDb} = require("../../../api/db");
-  const {error, success, warning} = require("../../../api/message");
+  const {readClassXlsx} = require("@/api/xlsx");
+  const {verifyStudentUnique} = require("@/api/judge");
+  const {getClassDb} = require("@/api/db");
+  const {error, success, warning} = require("@/api/message");
   const {ipcRenderer, remote} = require("electron");
   export default {
     data() {

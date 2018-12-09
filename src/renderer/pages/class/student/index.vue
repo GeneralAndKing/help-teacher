@@ -51,9 +51,9 @@
 
 <script>
 const { ipcRenderer, remote } = require("electron");
-const { verifyStudent, verifyStudentUnique } = require("../../../api/judge");
-const { getClassDb } = require("../../../api/db");
-const { error, success, warning } = require("../../../api/message");
+const { verifyStudent, verifyStudentUnique } = require("@/api/judge");
+const { getClassDb } = require("@/api/db");
+const { error, success, warning } = require("@/api/message");
 export default {
   data() {
     return {
