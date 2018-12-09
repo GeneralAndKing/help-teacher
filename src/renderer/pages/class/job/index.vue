@@ -37,7 +37,7 @@
           jobName: "作业名字",
           startTime: "时间戳",
           stopTime: 30,
-          peopleNum: 68,
+          studentNum: 68,
           status: 0,
           unfinishedPeoples:[{
             name: "樊总",

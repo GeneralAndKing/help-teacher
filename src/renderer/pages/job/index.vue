@@ -30,15 +30,16 @@
       template(v-for='(job, key) in jobs')
         el-col(:span='8')
           el-card.gak-job(shadow="hover")
-            .gak-job-do
-              el-button(type='primary', icon='el-icon-edit', @click="handleEdit(key, job)", circle, size="mini")
-              el-button(type='danger', icon='el-icon-close', @click="handleDelete(key, job)", circle,  size="mini")
-            .gak-job-head 作业:
-              .gak-job-title {{ job.jobName }}
-            .gak-job-content.gak-text-hidden  {{ job.jobContent }}
-            .gak-job-footer.gak-text-left.gak-text-hidden
-              span 类型:
-              span(v-for="(type, index) in job.jobTypes", :key="index") &nbsp;{{type}}
+            .el-card__body(style="padding:0;", @click="handleJob(key, job)")
+              .gak-job-do
+                el-button(type='primary', icon='el-icon-edit', @click="handleEdit(key, job)", circle, size="mini")
+                el-button(type='danger', icon='el-icon-close', @click="handleDelete(key, job)", circle,  size="mini")
+              .gak-job-head 作业:
+                .gak-job-title {{ job.jobName }}
+              .gak-job-content.gak-text-hidden  {{ job.jobContent }}
+              .gak-job-footer.gak-text-left.gak-text-hidden
+                span 类型:
+                span(v-for="(type, index) in job.jobTypes", :key="index") &nbsp;{{type}}
 
 </template>
 
@@ -186,6 +187,13 @@ export default {
         jobTypes: []
       };
       _this.dialogFormVisible = true;
+    },
+    handleJob: function (key, job) {
+      let _this = this;
+      localStorage.setItem("className", job.className);
+      _this.$router.push({
+        name: "job-class"
+      });
     }
   }
 };
