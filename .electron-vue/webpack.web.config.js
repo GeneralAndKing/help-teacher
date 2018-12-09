@@ -37,14 +37,6 @@ let webConfig = {
         loader: 'pug-plain-loader'
       },
       {
-        test: /\.scss$/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader']
-      },
-      {
-        test: /\.sass$/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
-      },
-      {
         test: /\.html$/,
         use: 'vue-html-loader'
       },
@@ -61,8 +53,6 @@ let webConfig = {
           options: {
             extractCSS: true,
             loaders: {
-              sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
-              scss: 'vue-style-loader!css-loader!sass-loader',
               less: 'vue-style-loader!css-loader!less-loader',
               styl: 'vue-style-loader!css-loader!stylus-loader'
             }
