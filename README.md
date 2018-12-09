@@ -106,7 +106,6 @@
     	    "name":"睿少",
 	        "sex":"男"
         }
-        // ....
     ]
 }
 ```
@@ -125,7 +124,6 @@
             "type":"ppt",
             "state":"ppt格式的作业"
         }
-        // ...
     ]
 }
 ```
@@ -137,7 +135,7 @@
     "startTime":"时间戳",
     "stopTime":"30分钟(计算时间戳)",
     "peopleNum":"68(总人数)",
-    "unfinishedPeoples":
+    "unfinishedStudents":
     [
         {
         	"id":"201607010244",
@@ -149,7 +147,6 @@
             "name":"睿总",
             "sex":"男"
         }
-        // ...
     ]
 }
 ```

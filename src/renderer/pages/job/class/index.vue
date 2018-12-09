@@ -42,7 +42,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 2,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -58,7 +58,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 2,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -74,7 +74,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 2,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -90,7 +90,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 2,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -106,7 +106,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 0,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -122,7 +122,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 1,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -138,7 +138,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 2,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -154,7 +154,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 2,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -170,7 +170,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 2,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
@@ -186,7 +186,7 @@
           stopTime: 30,
           studentNum: 68,
           status: 2,
-          unfinishedPeoples: [{
+          unfinishedStudents: [{
             name: "樊总",
             id: "201607010244",
             sex: "男"
