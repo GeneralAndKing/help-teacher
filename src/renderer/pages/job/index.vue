@@ -188,11 +188,13 @@ export default {
       };
       _this.dialogFormVisible = true;
     },
-    handleJob: function (key, job) {
+    handleJob: function(key, job) {
       let _this = this;
-      localStorage.setItem("className", job.className);
       _this.$router.push({
-        name: "job-class"
+        name: "job-class",
+        params: {
+          jobName: job.jobName
+        }
       });
     }
   }

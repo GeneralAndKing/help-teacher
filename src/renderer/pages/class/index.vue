@@ -74,13 +74,15 @@ export default {
               if (e) {
                 error(_this, "导入数据失败");
               } else {
-                localStorage.setItem("className", classJson.className);
-                localStorage.setItem("studentNum", classJson.students.length);
                 // 这里才算真的导入成功
                 success(_this, "导入信息成功");
                 // 保存后跳转到学生界面
                 _this.$router.push({
-                  name: "student"
+                  name: "student",
+                  params: {
+                    className: row.className,
+                    studentNum: row.studentNum
+                  }
                 });
               }
             };
@@ -96,18 +98,21 @@ export default {
     handleStudent(index, row) {
       let _this = this;
       // 实现本地存储，使得跳转过去的页面刷新后数据依旧存在
-      localStorage.setItem("className", row.className);
-      localStorage.setItem("studentNum", row.studentNum);
       _this.$router.push({
-        name: "student"
+        name: "student",
+        params: {
+          className: row.className,
+          studentNum: row.studentNum
+        }
       });
     },
     handleHomework(index, row) {
       let _this = this;
-      localStorage.setItem("className", row.className);
-      localStorage.setItem("studentNum", row.studentNum);
       _this.$router.push({
-        name: "class-job"
+        name: "class-job",
+        params: {
+          className: row.className
+        }
       });
     },
     handleDelete(index, row) {

@@ -70,17 +70,17 @@ export default class ClassToJobDb {
             sex: $sex
         }
     }
-    insertclassToJob(classToJobJson, callBack) {
+    insertClassToJob(classToJobJson, callBack) {
         this.db.insert(classToJobJson, callBack);
     }
-    deleteclassToJob(jobName, className, callBack) {
+    deleteClassToJob(jobName, className, callBack) {
         this.db.remove({ "jobName": jobName, "className": className }, callBack);
     }
 
     findByStatus(status) {
         return this.db.find({ "status": status });
     }
-    findByclassName(className) {
+    findByClassName(className) {
         return this.db.find({ "className": className });
     }
     findByJobName(jobName) {
