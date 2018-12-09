@@ -54,20 +54,11 @@ export default class JobDb {
     this.db.update({ 'jobName': oldJobName }, jobJson, callBack);
   }
 
-  updatejobType(jobName, jobTypeJson) {
-    let jobJson = this.db.find({ 'jobName': jobName });
-    jobJson.update({ 'type': jobTypeJson.type }, jobTypeJson, (error, doc) => {
-    });
-  }
 
   deleteJob(jobName, callBack) {
     this.db.remove({ "jobName": jobName }, callBack);
   }
 
-  deleteJobType(jobName, type) {
-    this.db.remove({ "jobName": jobName, "jobTypes.type": type }, (error, doc) => {
-    });
-  }
 
   findByJobName(jobName) {
     return this.db.find({ "jobName": jobName });

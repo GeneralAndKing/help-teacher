@@ -8,7 +8,7 @@ import path from 'path';
     stopTime:30分钟(计算时间戳),
     studentNum:68(总人数),
     status: 0(未开启) 1(收取中) 2(收取完成)
-    unfinishedPeoples:
+    unfinishedStudents:
     [
         {
             name:樊总,
@@ -31,7 +31,7 @@ import path from 'path';
     stopTime: 30,
     studentNum: 68,
     status: 0,
-    unfinishedPeoples:[{
+    unfinishedStudents:[{
         name: "樊总",
         id: "201607010244",
         sex: "男"
@@ -52,41 +52,39 @@ export default class ClassToJobDb {
     }
     static createClassToJobJson() {
         return {
-            className:null,
-            jobName:null,
-            startTime:null,
-            stopTime:null,
+            className: null,
+            jobName: null,
+            startTime: null,
+            stopTime: null,
             peopleNum: null,
             status: null,
-            unfinishedPeoples:
-            [
-            ]
+            unfinishedStudents:
+                [
+                ]
         }
     }
-    static createStudentJson($id,$name,$sex) {
+    static createStudentJson($id, $name, $sex) {
         return {
             id: $id,
             name: $name,
             sex: $sex
         }
     }
-    insertclassToJob(classToJobJson) {
-        this.db.insert(classToJobJson, (error, doc) => {
-        });
+    insertclassToJob(classToJobJson, callBack) {
+        this.db.insert(classToJobJson, callBack);
     }
-    deleteclassToJob(jobName, className) {
-        this.db.remove({ "jobName": jobName, "className": className }, (error, doc) => {
-        });
+    deleteclassToJob(jobName, className, callBack) {
+        this.db.remove({ "jobName": jobName, "className": className }, callBack);
     }
 
     findByStatus(status) {
-        return this.db.find({ "status":status });
+        return this.db.find({ "status": status });
     }
     findByclassName(className) {
-        return this.db.find({ "className":className });
+        return this.db.find({ "className": className });
     }
     findByJobName(jobName) {
-        return this.db.find({ "jobName":jobName });
+        return this.db.find({ "jobName": jobName });
     }
     findByClassNameAndJobName(className, jobName) {
         return this.db.find({ "jobName": jobName, "className": className });
@@ -94,13 +92,11 @@ export default class ClassToJobDb {
     findAllClassToJob() {
         return this.db.find();
     }
-    updateClassAndJob(classToJobJson) {
-        this.db.update({"className":classToJobJson.className,"jobName":classToJobJson.jobName},classToJobJson, (error, doc) => {
-        });
+    updateClassAndJob(oldJobName, oldClassName, classToJobJson, callBack) {
+        this.db.update({ "className": oldClassName, "jobName": oldJobName }, classToJobJson, callBack);
     }
-    deleteUnfinishedPeople(jobName, className, studentId) {
-        this.db.remove({ "jobName": jobName, "className": className,"unfinishedPeoples.id":studentId}, (error, doc) => {
-        });
+    deleteUnfinishedStudent(jobName, className, studentId, callBack) {
+        this.db.update({ "jobName": jobName, "className": className }, { $pull: { unfinishedStudents: { id: studentId } } }, callBack);
     }
 
 }
