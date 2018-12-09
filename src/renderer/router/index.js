@@ -11,9 +11,11 @@ const routeOptions = [
   {path: '/server', component: 'Server', name: 'server', dir: 'server'},
   {path: '/tool', component: 'Tool', name: 'tool', dir: 'tool'},
   {path: '/class', component: 'Class', name: 'class', dir: 'class'},
-  {path: '/job', component: 'Job', name: 'job', dir: 'job'},
+  // 以后可以使用子路由代替，时间紧，退而求次
   {path: '/class/student', component: 'Student', name: 'student', dir: 'class/student'},
-  {path: '/class/job', component: 'ClassJob', name: 'class-job', dir: 'class/job'}
+  {path: '/class/job', component: 'ClassJob', name: 'class-job', dir: 'class/job'},
+  {path: '/job', component: 'Job', name: 'job', dir: 'job'},
+  {path: '/job/class', component: 'JobClass', name: 'job-class', dir: 'job/class'}
 ];
 
 const routes = routeOptions.map(route => {

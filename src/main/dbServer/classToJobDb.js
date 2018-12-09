@@ -6,7 +6,7 @@ import path from 'path';
     jobName:作业名字,
     startTime:时间戳,
     stopTime:30分钟(计算时间戳),
-    peopleNum:68(总人数),
+    studentNum:68(总人数),
     status: 0(未开启) 1(收取中) 2(收取完成)
     unfinishedPeoples:
     [
@@ -29,7 +29,7 @@ import path from 'path';
     jobName: "作业名字",
     startTime: "时间戳",
     stopTime: 30,
-    peopleNum: 68,
+    studentNum: 68,
     status: 0,
     unfinishedPeoples:[{
         name: "樊总",
