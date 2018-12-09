@@ -30,11 +30,11 @@
       template(v-for='(job, key) in jobs')
         el-col(:span='8')
           el-card.gak-job(shadow="hover")
-            .el-card__body(style="padding:0;", @click="handleJob(key, job)")
-              .gak-job-do
-                el-button(type='primary', icon='el-icon-edit', @click="handleEdit(key, job)", circle, size="mini")
-                el-button(type='danger', icon='el-icon-close', @click="handleDelete(key, job)", circle,  size="mini")
-              .gak-job-head 作业:
+            .gak-job-do
+              el-button(type='primary', icon='el-icon-edit', @click="handleEdit(key, job)", circle, size="mini")
+              el-button(type='danger', icon='el-icon-close', @click="handleDelete(key, job)", circle,  size="mini")
+            #gak-job-content(@click="handleJob(key, job)", align="left") 作业:
+              .gak-job-head
                 .gak-job-title {{ job.jobName }}
               .gak-job-content.gak-text-hidden  {{ job.jobContent }}
               .gak-job-footer.gak-text-left.gak-text-hidden
