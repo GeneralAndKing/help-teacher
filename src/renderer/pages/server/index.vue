@@ -164,6 +164,7 @@
         if (this.active++ > 2) {
           this.active = 0;
         }
+        console.log(this.form);
       },
       createJob: function () {
         this.$router.push({
