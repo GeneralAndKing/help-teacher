@@ -25,207 +25,50 @@
 </template>
 
 <script>
-  const {readClassXlsx} = require("@/api/xlsx");
-  const {verifyStudentUnique} = require("@/api/judge");
-  const {getClassDb} = require("@/api/db");
-  const {error, success, warning} = require("@/api/message");
-  const {ipcRenderer, remote} = require("electron");
-  export default {
-    data() {
-      return {
-        loading: true,
-        search: '',
-        classToJobs: [{
-          className: "2016软件工程",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 2,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016啊萨斯的",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 2,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016计浮动浮动术",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 2,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016计算机科学与技术",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 2,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016计算机科学与技术",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 0,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016计算机科学与技术",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 1,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016计算机科学与技术",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 2,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016计算机科学与技术",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 2,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016计算机科学与技术",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 2,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        },{
-          className: "2016计算机科学与技术",
-          jobName: "作业名字",
-          startTime: "2018年12月12日",
-          stopTime: 30,
-          studentNum: 68,
-          status: 2,
-          unfinishedPeoples: [{
-            name: "樊总",
-            id: "201607010244",
-            sex: "男"
-          }, {
-            name: "睿总",
-            id: "201607010244",
-            sex: "男"
-          }]
-        }]
+const { readClassXlsx } = require("@/api/xlsx");
+const { verifyStudentUnique } = require("@/api/judge");
+const { getClassDb } = require("@/api/db");
+const { error, success, warning } = require("@/api/message");
+const { ipcRenderer, remote } = require("electron");
+export default {
+  data() {
+    return {
+      loading: true,
+      search: "",
+      classToJobs: []
+    };
+  },
+  mounted() {
+    let _this = this;
+    let classDb = getClassDb();
+    classDb.findAllClass().exec((error, classToJobJsons) => {
+      _this.classToJobs.concat(classToJobJsons);
+      _this.loading = false;
+    });
+  },
+  methods: {
+    handleDelete(index, classToJob) {
+      let _this = this;
+      let callBack = function(error, docs) {
+        if (error) {
+          error(_this, "删除失败");
+        } else {
+          _this.classToJobs.splice(classToJob, 1);
+          success(_this, "删除成功");
+        }
       };
+      let classToJobDb = getClassToJobDb();
+      classToJobDb.deleteclassToJob(
+        classToJob.jobName,
+        classToJob.className,
+        callBack
+      );
+      success(_this, "删除成功");
     },
-    mounted() {
-      // let _this = this;
-      // let classDb = getClassDb();
-      // classDb.findAllClass().exec((error, classJsons) => {
-      //   for (const classJson of classJsons) {
-      //     _this.tableData.push({
-      //       className: classJson.className,
-      //       studentNum: classJson.students.length
-      //     });
-      //   }
-      // });
-      setTimeout(() => {
-        this.loading = false;
-      }, 1000)
-    },
-    methods: {
-      handleDelete(index, row) {
-        let _this = this;
-        // let ClassDb = remote.getGlobal("ClassDb");
-        // let classDb = new ClassDb();
-        success(_this, "删除成功");
-      },
-      handleInfo(index, row){
-
-      }
-    }
-  };
+    handleInfo(index, row) {}
+  }
+};
 </script>
 <style lang="stylus">
-  @import '../../../styles/job/class/index.styl';
+@import '../../../styles/job/class/index.styl';
 </style>
