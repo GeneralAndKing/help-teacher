@@ -4,7 +4,9 @@ import App from './App.vue'
 import router from './router'
 import 'element-ui/lib/theme-chalk/index.css'
 import echarts from 'echarts'
+import VueCountdown from '@chenfengyuan/vue-countdown';
 
+Vue.component(VueCountdown.name, VueCountdown);
 Vue.prototype.$echarts = echarts;
 
 Vue.use(ElementUI);
