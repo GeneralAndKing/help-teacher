@@ -75,7 +75,7 @@ def loggingerror(str=None, e=None):
 
 def hostlog(arg, *args):
     for value in arg:
-        print(value)
+        print(value,end="")
 
 
 

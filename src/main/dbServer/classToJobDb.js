@@ -50,7 +50,7 @@ export default class ClassToJobDb {
             filename: path.join(path.join(path.resolve("."), "/userData/classToJob.db"))
         });
     }
-    static createClassToJobJson() {
+    createClassToJobJson() {
         return {
             className: null,
             jobName: null,
@@ -63,7 +63,7 @@ export default class ClassToJobDb {
                 ]
         }
     }
-    static createStudentJson($id, $name, $sex) {
+    createStudentJson($id, $name, $sex) {
         return {
             id: $id,
             name: $name,

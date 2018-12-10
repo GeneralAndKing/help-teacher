@@ -27,7 +27,7 @@ export default class JobDb {
     this.db.loadDatabase();
   }
 
-  static createJobJson() {
+  createJobJson() {
     return {
       jobName: null,
       jobContent: null,
@@ -35,7 +35,7 @@ export default class JobDb {
     }
   }
 
-  static createJobTypeJson($type, $state) {
+  createJobTypeJson($type, $state) {
     return {
       type: $type,
       state: $state

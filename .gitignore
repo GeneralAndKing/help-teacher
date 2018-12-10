@@ -1,9 +1,11 @@
 dist/electron/*
 dist/web/*
 node_modules/
+build/help-teacher-win32-x64/*
 userData/
 npm-debug.log
 npm-debug.log.*
+/AutoRunner/__pycache__
 thumbs.db
 !.gitkeep
 .idea

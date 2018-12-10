@@ -42,7 +42,7 @@ function createWindow() {
     mainWindow = null
   })
 
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools('detach');
 
   ipcMain.on('close', e => {
     mainWindow.close()

@@ -19,9 +19,9 @@ from util import hostlog,logs,init_logging,init_png,logginginfo,loggingerror,log
 import logging
 def create_driver(options=None):
     try:
-        userProfile = os.getcwd() + r"\nwjs"
-        browserpath = userProfile + r"\nw.exe"
-        driverpath = userProfile + r"\driver.exe"
+        userProfile = os.path.dirname(os.path.dirname(__file__)) + r"\build\help-teacher-win32-x64"
+        browserpath = userProfile + r"\help-teacher.exe"
+        driverpath = os.path.dirname(__file__) + r"\chromedriver.exe"
         chrome_options = webdriver.ChromeOptions()
         chrome_options.binary_location = browserpath
         # chrome_options.add_argument("--disk-cache-dir={}".format(userProfile))
@@ -389,213 +389,33 @@ class Browserlib(object):
                 i-=1
 
 
-entrances_baidu = [('https://www.baidu.com/', '//input[@id="kw"]'),
-                   ('http://www.duba.com/?un_369374_254561','//input[@id="search_keyword"]'),
-                   ('http://hao.7654.com/?chno=7654dh_155878','//input[@id="J_search_input"]'),
-                   ('http://www.919yi.cn/?id=527032','//input[@id="search-input"]'),
-                   ('http://hao.7654.com/?chno=7654dh_155878','//input[@id="J_search_input"]'),
-                   ('http://www.919yi.cn/?id=527032','//input[@id="search-input"]'),
-                   ('http://hao.7654.com/?chno=7654dh_155878','//input[@id="J_search_input"]'),
-                   ('https://www.hao123.com/', '//input[@id="search-input"]'),
-                   ('http://i.maxthon.cn/', '//input[@id="header-search-box"]'),
-                   ('http://www.3456.cc/', '//input[@id="searchbox"]'),
-                   ('http://www.114la.com/', '//input[@id="tsrcInp"]'),
-                   ('http://www.uc123.com/', '//input[@id="J_searchKeyword"]'),
-                   ('http://i.firefoxchina.cn/', '//input[@id="search-key"]'),
-                   ('http://www.baidu.com/index.php?tn=request_25_pg', '//input[@id="kw"]'),
-                   ('http://www.baidu.com/index.php?tn=02049043_6_pg', '//input[@id="kw"]'),
-                   ('http://www.baidu.com/index.php?tn=77092190_pg', '//input[@id="kw"]'),
-                   ('http://www.baidu.com/index.php?tn=02049043_6_pg', '//input[@id="kw"]'),
-                   ('http://www.baidu.com/index.php?tn=tn=02049043_33_pg', '//input[@id="kw"]'),
-                   ('http://www.baidu.com/?tn=39042058_21_oem_dg', '//input[@id="kw"]'),
-                   ('http://www.baidu.com/?tn=47018152_dg', '//input[@id="kw"]'),
-                   ('http://www.baidu.com/index.php?tn=mswin_oem_dg', '//input[@id="kw"]')
-                   ]
 
 
-entrances_baidu_mobile = [('https://m.baidu.com/', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m1.baidu.com/', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m2.baidu.com/', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m.baidu.com/?tn=sitehao123', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m.baidu.com/?tn=93078054_p', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m1.baidu.com/?tn=93078054_pg', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m2.baidu.com/?tn=93078054_pg', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m2.baidu.com/?tn=sitehao123', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m3.baidu.com/?tn=sitehao123', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m.baidu.com/?from=8', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m2.baidu.com/?from=8', '//input[@id="index-kw" or @id="kw"]'),
-               ('https://m3.baidu.com/?from=8', '//input[@id="index-kw" or @id="kw"]')]
 class Task(Browserlib):
-    def random_input(self,click):
-        click.send_keys()
-        random_keyword=random.choice(random_keyword_list)
-        self.input_human(click,random_keyword)
-
-    def random_move_on_body(self):
-        random_sleep(1,2)
-        self.scroll_to_bottom_human()
-        self.scroll_to_top_human()
-    @log_time_delta
-    def do_baidu_drop_down(self):
-        self.drivertype=driver_type.get("PC")
-        # keyword1 = self.task['baidu_wd']
-        # keyword2 = self.task['second_keyword']
-        keyword1="帮站"
-        keyword2="帮站seo"
-        keyword2=keyword2.replace(keyword1,"")
-        err = 5
-        while err>0:
-            self.close_windows()
-            try:
-                entryurl, kwxpath = entrances_baidu[0]
-                logginginfo("kwxpath: {0}, keyword: {1}".format(kwxpath, keyword1))
-                self.open_url(entryurl)
-                keywordinput=self.find_display_element(kwxpath)
-                self.input_clear_human(keywordinput)
-                self.random_input(keywordinput)
-                self.random_move_on_body()
-                keywordinput =self.find_display_element(entrances_baidu[0][1])
-                self.input_clear_human(keywordinput)
-                self.input_human(keywordinput,keyword1)
-                random_sleep(0.5,1)
-                self.input_human(keywordinput,keyword2)
-                logginginfo("title: {0} \n url: {1}".format(self.driver.title, self.driver.current_url))
-                results = self.find_display_elements('h3',BY.TAG_NAME)
-                results.extend(self.find_display_elements('c-span4',BY.CLASS_NAME))
-                self.random_move_on_body()
-                count = random.randint(1, 1)
-                while count > 0:
-                    result = random.choice(results)
-                    logginginfo("click {0}".format(result.text))
-                    self.click_human(result)
-                    self.switch_last_window()
-                    logginginfo("title: {0} \n url: {1}".format(self.driver.title, self.driver.current_url))
-                    self.random_move_on_body()
-                    random_sleep(20, 40)
-                    count -= 1
-                return task_state.get("SUCCEED")
-            except Exception as _:
-                err -= 1
-        else:
-            return task_state.get("ERROR")
-
-
-
+    studentfile=os.path.dirname(__file__)+r'\student.xlsx'
+    className="测试1班" +'\n'
 
     @log_time_delta
-    def do_baiduzs(self):
-        self.drivertype = driver_type.get("PC")
-        keyword = "帮站效果好"
-        err = 5
-        entryurl="http://www.baidu.com/gaoji/advanced.html"
-        kwxpath='//input[@id="keyword"]'
-        randomxpath='//input[@name="q4"]'
-        intxpath='//input[@name="q3"]'
-        while err >0:
-            self.close_windows()
-            try:
-                logging.info("kwxpath: {0}, keyword: {1}".format(kwxpath, keyword))
-                self.open_url(entryurl)
-                keywordinput = self.find_display_element(intxpath)
-                self.input_clear(keywordinput)
-                self.input(keywordinput,random.randint(100,500))
-                keywordinput =self.find_display_element(randomxpath)
-                self.input_clear(keywordinput)
-                self.input(keywordinput,random.choice(random_keyword_list))
-                keywordinput =self.find_display_element(kwxpath)
-                self.input_clear(keywordinput)
-                self.input_human(keywordinput,keyword)
-                logging.info("title: {0} \n url: {1}".format(self.driver.title, self.driver.current_url))
-                self.switch_last_window()
-                results = self.find_display_elements('//div[@title="搜索热点"]/parent::div/table/tbody[1]/tr/td')
-                # results.extend(self.find_display_elements("百度快照",BY.LINK_TEXT))
-                result = random.choice(results)
-                self.random_move_on_body()
-                logging.info('click {0}'.format(result.text))
-                self.click_human(result)
-                self.switch_last_window()
-                logging.info("title: {0} \n url: {1}".format(self.driver.title, self.driver.current_url))
-                self.random_move_on_body()
-                random_sleep(10, 20)
-                return 0
-            except Exception as _:
-                err -= 1
-        else:
-            return
+    def uploadClassFile(self):
+        #点击班级管理
+        sidBar=self.find_display_element('//*[@id="sideBar"]/ul/li[2]')
+        self.click(sidBar)
+        elements=self.find_display_elements('el-collapse-item__header',BY.CLASS_NAME)
+        self.click(elements[0])
 
-    def do_mobilezs(self):
-        self.drivertype=driver_type.get("MOBILE")
-        keyword = "帮站效果好"
-        err = 5
-        while err>0:
-            try:
-                self.close_windows()
-                entryurl, kwxpath = random.choice(entrances_baidu_mobile)
-                logging.info("entryurl: {0}, kwxpath: {1}, keyword: {2}".format(entryurl, kwxpath, keyword))
-                self.open_url(entryurl)
-                keywordinput = self.find_display_element(kwxpath)
-                self.input_clear(keywordinput)
-                self.input_human(keywordinput,keyword)
-                self.random_move_on_body()
-                try:
-                    div_click=self.find_display_element("page-banner_5",BY.CLASS_NAME)
-                    self.click(div_click)
-                except:
-                    pass
-                gaoji=self.find_display_element('//div[@class="return-link"]//a[@class="ft-span advanced-filter c-blocka"]')
-                self.click_human(gaoji)
-                zhandian=self.find_display_element('//div[@class="filter-panel-site-row c-row filter-panel-gap"][2]//div[4]')
-                self.click(zhandian)
-                time=self.find_display_element('//div[@class="filter-panel-time-row c-row filter-panel-gap"]//div[1]')
-                self.click(time)
-                click=self.find_display_element('//div[@class="c-span6 filter-panel-confirm"]')
-                self.click(click)
-                self.random_move_on_body()
-                results=[]
-                try:
-                    results.extend(self.find_display_elements('//div[@class="c-span6"]'))
-                except:
-                    results.extend(self.find_display_elements('//div[@id="relativewords"]//div[@class="rw-list"]//a'))
-                result=random.choice(results)
-                self.click(result)
-                results = self.find_display_elements('//div[contains(@class, "c-result")]//a[.//span[contains(@class, "c-showurl")]]')
-                self.random_move_on_body()
-                count = 1
-                while count > 0:
-                    n = random.randint(0, 0)
-                    result = results[n]
-                    div = result.find_element_by_xpath("ancestor::div[contains(@class, 'c-container')]")
-                    title = div.find_element_by_tag_name("a")
-                    logging.info('click 【YES】on [{0}/{1}]\n title: [{2}]'.format(count, n + 1, title.text))
-                    self.click(result)
-                    random_sleep(1, 3)
-                    self.random_move_on_body()
-                    count -= 1
-                    return task_state.get("SUCCEED")
-            except:
-                logging.error("err + 1 now err = {0}".format(err))
-                err-=1
-        else:
-            return task_state.get("ERROR")
+        #上传学生文件
+        element=self.find_element('file',BY.NAME)
+        self.input(element,self.studentfile)
+        #查找班级名称输入
+        element=self.find_display_element('el-input__inner',BY.CLASS_NAME)
+        self.input_human(element,self.className)
 
 
 if __name__=="__main__":
-    pass
-    WIDTH = 320
-    HEIGHT = 640
-    PIXEL_RATIO = 3.0
-    UA = 'Mozilla/5.0 (Linux; Android 4.1.1; GT-N7100 Build/JRO03C) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/35.0.1916.138 Mobile Safari/537.36 T7/6.3'
-    driver = create_driver()
-    item=Task(driver)
-    # item.vheight=HEIGHT
-    # item.vwidth=WIDTH
-    item.do_baidu_drop_down()
-    # t.double_tap(ele).perform()
-    item.scroll_to_bottom_human()
-    item.scroll_to_top_human()
-    from selenium.webdriver.common.alert import Alert
-
-    Alert(driver).send_keys(Keys.SPACE)
+    driver=create_driver()
+    task=Task(driver)
+    task.switch_last_window()
+    task.uploadClassFile()
 
 
 
