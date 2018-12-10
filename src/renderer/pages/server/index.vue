@@ -15,7 +15,7 @@
           el-form(:model="form" label-width="80px" label-position="left")
             transition(name="slide-fade", mode="out-in")
               .basicStart(v-if="active===0", :key="0")
-                el-alert.gak-text-left(title="开始使用", type="success", description="您只需要简单的散三步即可开启本次作业的收取！现在，请选择您要开启的作业。")
+                el-alert.gak-text-left(title="开始使用", type="success", description="您只需要简单的三步即可开启本次作业的收取！现在，请选择您要开启的作业。")
                 el-form-item.gak-text-left(label="作业")
                   el-select(v-model="form.jobName", placeholder="请选择")
                     el-option(v-for="jobJson in jobJsons", :key="jobJson.jobName", :label="jobJson.jobName", :value="jobJson.jobName")

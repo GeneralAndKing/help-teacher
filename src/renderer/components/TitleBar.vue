@@ -1,8 +1,8 @@
 <template lang="pug">
   el-row#titleBar(type="flex" justify="space-between")
     .left
-      i(class="el-icon-share")
-      | Help-Teather
+      i(class="el-icon-sold-out")
+      |&nbsp;el-icon-goods
     h5 {{time}}
     .right
       el-button(@click="minWin" type="warning" size="mini" icon="el-icon-minus" circle)
@@ -23,32 +23,18 @@ export default {
       time: "2222年2月22日星期2 2:22:22"
     };
   },
-  mounted: function(params) {
+  mounted: function() {
     let _this = this;
     setInterval(() => {
-      var date = new Date();
-      var year = date.getFullYear(); //获取当前年份
-      var mon = date.getMonth() + 1; //获取当前月份
-      var da = date.getDate(); //获取当前日
-      var day = date.getDay(); //获取当前星期几
-      var h = date.getHours(); //获取小时
-      var m = date.getMinutes(); //获取分钟
-      var s = date.getSeconds(); //获取秒
-      _this.time =
-        year +
-        "年" +
-        mon +
-        "月" +
-        da +
-        "日" +
-        "星期" +
-        day +
-        " " +
-        h +
-        ":" +
-        m +
-        ":" +
-        s;
+      let date = new Date();
+      let year = date.getFullYear(); //获取当前年份
+      let mon = date.getMonth() + 1; //获取当前月份
+      let da = date.getDate(); //获取当前日
+      let day = date.getDay(); //获取当前星期几
+      let h = date.getHours(); //获取小时
+      let m = date.getMinutes(); //获取分钟
+      let s = date.getSeconds(); //获取秒
+      _this.time = year + "年" + mon + "月" + da + "日" + "星期" + day + " " + h + ":" + m + ":" + s;
     }, 1000);
   },
   methods: {
