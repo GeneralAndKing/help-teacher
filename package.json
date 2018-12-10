@@ -40,6 +40,7 @@
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
+    "@chenfengyuan/vue-countdown": "^1.0.1",
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",

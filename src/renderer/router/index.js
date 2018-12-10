@@ -11,6 +11,7 @@ const routeOptions = [
   {path: '/server', component: 'Server', name: 'server', dir: 'server'},
   {path: '/tool', component: 'Tool', name: 'tool', dir: 'tool'},
   {path: '/class', component: 'Class', name: 'class', dir: 'class'},
+  {path: '/monitor', component: 'Monitor', name: 'monitor', dir: 'monitor'},
   // 以后可以使用子路由代替，时间紧，退而求次
   {path: '/class/student', component: 'Student', name: 'student', dir: 'class/student'},
   {path: '/class/job', component: 'ClassJob', name: 'class-job', dir: 'class/job'},
