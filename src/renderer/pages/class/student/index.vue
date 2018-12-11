@@ -3,7 +3,7 @@
     #gak-main-head
       i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title Student
+      span#gak-main-head-title 学生管理
     #gak-main-content
       #class-info
         el-row(:gutter="10")

@@ -1,8 +1,8 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
+      i.el-icon-arrow-left.gak-main-head-back(v-if="$parent.aside", @click="$emit('changeSide')")
+      i.el-icon-arrow-right.gak-main-head-back(v-else, @click="$emit('changeSide')")
       span#gak-main-head-title Welcome
         h3 electron + vue + element = cool desktop app
         p 如有问题请随时反馈到github，传送门在下面。欢迎star/fork。

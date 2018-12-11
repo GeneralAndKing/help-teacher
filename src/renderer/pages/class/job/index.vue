@@ -3,7 +3,7 @@
     #gak-main-head
       i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title homework
+      span#gak-main-head-title 作业详情
     el-scrollbar#gak-main-content-job
       template(v-for='(classToJob, key) in classToJobs')
         el-col(:span='8')

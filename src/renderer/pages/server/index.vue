@@ -3,7 +3,7 @@
     #gak-main-head
       i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title Server
+      span#gak-main-head-title 服务
     #gak-main-server
       el-container
         el-header

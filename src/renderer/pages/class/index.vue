@@ -3,7 +3,7 @@
     #gak-main-head
       i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title Class
+      span#gak-main-head-title 班级管理
     el-scrollbar#gak-main-content-class
       el-collapse(v-model='activeNames', value=2)
         el-collapse-item(title='新增班级', name='1')
