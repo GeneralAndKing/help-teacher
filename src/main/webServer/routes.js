@@ -65,6 +65,7 @@ router.get('/getUnfinishedStudents',function(req,res,next){
         res.json(docs[0].unfinishedStudents);
     });
 });
+
 //获取get数据
 router.post('/submitHomework',function(req,res,next){
     let cursor = classToJobDb.findByStatus(1);
