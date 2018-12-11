@@ -1,10 +1,11 @@
 import Datastore from 'nedb';
-import path from 'path';
 /* 
 {
     address:102.102.3.1,
-    students:[],
-}
+    id:201607010,
+    name:樊国睿
+    sex:男
+},
 */
 
 export default class IpDb {
@@ -13,20 +14,17 @@ export default class IpDb {
             inMemoryOnly: true
         });
     }
-    insertIpJson(IpJson) {
-        this.db.insert(IpJson, (error, doc) => {
-        });
+    insertIpJson(IpJson, callBack) {
+        this.db.insert(IpJson, callBack);
     }
-    insertStudent(address, studentJson) {
-        let classJson = this.db.find({ 'address': address });
-        classJson.students.insert(studentJson, (error, doc) => {
-        });
+    deleteStudent(studentId, callBack) {
+        this.db.remove({ 'id': studentId }, callBack);
     }
     findByAddress(address) {
         return this.db.find({ "address": address });
     }
-    findByStudentId(studentId) {
-        return this.db.find({ "students.id": studentId });
+    findAllAddress() {
+        return this.db.find();
     }
 
 }

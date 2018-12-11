@@ -30,14 +30,14 @@ export default class ClasstDb {
     this.db.loadDatabase();
 
   }
-  static createClassJson() {
+  createClassJson() {
     return {
       className: null,
       students: [
       ]
     }
   }
-  static createStudentJson($id, $name, $sex) {
+  createStudentJson($id, $name, $sex) {
     return {
       id: $id,
       name: $name,
