@@ -23,7 +23,7 @@
             span {{ studentNum }}
         el-alert(title='Tip:双击班级名称可以编辑哦', type='success', close-text='知道了')
       #student-info
-        el-table(:data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', height="250" border v-loading="loading")
+        el-table(:data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', height="250", border, v-loading="loading")
           el-table-column(type='index', width='40', align="center")
           el-table-column(label='学号', width="155px")
             template(slot-scope='scope')
