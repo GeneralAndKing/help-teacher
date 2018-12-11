@@ -5,7 +5,7 @@
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
       span#gak-main-head-title 实时监控
     el-scrollbar#gak-main-monitor
-      el-tabs(v-model='activeName')
+      el-tabs(v-model='activeName', @tab-click="tabChange")
         el-tab-pane(label='作业信息', name='first')
           #gak-main-monitor-tip
             el-alert.gak-text-left(:title="title", type="success", :closable="false",
@@ -56,9 +56,8 @@
                 template(slot-scope='scope')
                   span(v-if="scope.row.address != null") {{ scope.row.address }}
                   span(v-else) 无数据
-        el-tab-pane(label='数据可视', name='fourth')
-
-
+        el-tab-pane.gak-text-center(label='数据可视', name='fourth')
+          #gak-main-monitor-chart(style='width: 600px;height:400px;')
 
 
 </template>
@@ -81,7 +80,7 @@
         finishedShow: true,
         tableData: [],
         className: "2016级软件工程二班",
-        jobName:"作业名字",
+        jobName: "作业名字",
         startTime: "时间戳",
         stopTime: 30,
         finishedStudents: [
@@ -185,23 +184,112 @@
             name: "睿萨达发哥",
             sex: "男"
           }
-        ]
+        ],
+        option: {
+          title: {
+            text: 'IP 地址上传整图',
+            subtext: '通过此数据，您可以查看到某个ip地址下上传的作业数量。'
+          },
+          tooltip: {
+            trigger: "item",
+            formatter: "{a} : {c}"
+          },
+          xAxis: {
+            axisLabel: {
+              interval: 0
+            },
+            axisTick: {
+              show: false
+            },
+            axisLine: {
+              show: false
+            },
+            z: 10,
+            // x 轴的数据
+            data: ["10.0.0.1", "10.2.1.2", "10.5.23.1", "10.24.15.112", "10.52.121.44", "10.62.20.25"]
+          },
+          color: ['#39b0f2'],
+          yAxis: {
+            axisLine: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              textStyle: {
+                color: '#999'
+              }
+            }
+          },
+          dataZoom: [
+            {
+              type: 'inside'
+            }
+          ],
+          series: [{
+            name: '上传量',
+            type: 'bar',
+            itemStyle: {
+              normal: {color: 'rgba(0,0,0,0.05)'}
+            },
+            // 阴影数据
+            data: [20, 20, 20, 20, 20, 20],
+            radius: "100%",
+            barGap: '-100%',
+            barCategoryGap: '40%',
+            center: ["80%", "80%"]
+          }, {
+            type: 'bar',
+            itemStyle: {
+              normal: {
+                color: ''
+              },
+              emphasis: {
+                color: ''
+              }
+            },
+            // y 轴的数据
+            data: [5, 1, 2, 10, 2, 5]
+          }],
+          charts: null
+        },
       }
     },
     watch: {
       finishedShow: function (newFinished, oldFinished) {
         let _this = this;
-        console.log("new:" + newFinished);
         if (newFinished) {
           _this.tableData = _this.finishedStudents;
         } else {
           _this.tableData = _this.unfinishedStudents;
         }
       }
-  },
+    },
     mounted: function () {
       let _this = this;
       _this.tableData = _this.finishedStudents;
+      let myChart = _this.$echarts.init(
+        document.getElementById("gak-main-monitor-chart")
+      );
+      _this.charts = myChart;
+      _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
+        0, 0, 0, 1,
+        [
+          {offset: 0, color: '#83bff6'},
+          {offset: 0.5, color: '#188df0'},
+          {offset: 1, color: '#188df0'}
+        ]
+      );
+      _this.option.series[1].itemStyle.emphasis.color = new _this.$echarts.graphic.LinearGradient(
+        0, 0, 0, 1,
+        [
+          {offset: 0, color: '#2378f7'},
+          {offset: 0.7, color: '#2378f7'},
+          {offset: 1, color: '#83bff6'}
+        ]
+      );
+      myChart.setOption(_this.option);
     },
     methods: {
       transform: function (props) {
@@ -220,7 +308,25 @@
         _this.status = !_this.status;
         _this.disabled = true;
       },
+      /**
+       * 切换显示
+       */
       switchChange: function () {
+
+      },
+      /**
+       *
+       */
+      tabChange: function (item) {
+        // 加载图标
+        let _this = this;
+        console.log("aaaa");
+        console.log(item);
+        if (item.index === "3"){
+          // 重置动画效果
+          _this.charts.clear();
+          _this.charts.setOption(_this.option);
+        }
       }
     }
   }
