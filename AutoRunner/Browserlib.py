@@ -396,7 +396,7 @@ class Task(Browserlib):
     className="测试1班" +'\n'
 
     @log_time_delta
-    def uploadClassFile(self):
+    def uploadClassFileAndChangeStudent(self):
         #点击班级管理
         sidBar=self.find_display_element('//*[@id="sideBar"]/ul/li[2]')
         self.click(sidBar)
@@ -410,12 +410,20 @@ class Task(Browserlib):
         element=self.find_display_element('el-input__inner',BY.CLASS_NAME)
         self.input_human(element,self.className)
 
+        self.scroll_to_bottom_human()
+        self.scroll_to_top_human()
+
+        element=self.find_display_element('//*[@id="student-info"]/div/div[2]/table/thead/tr/th[5]/div/div/input')
+        self.input_human(element,)
+
+
+
 
 if __name__=="__main__":
     driver=create_driver()
     task=Task(driver)
     task.switch_last_window()
-    task.uploadClassFile()
+    task.uploadClassFileAndChangeStudent()
 
 
 

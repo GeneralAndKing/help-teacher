@@ -100,7 +100,6 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
-    console.log(to, from, next);
     next(false);
     if (this.isEdit) {
       this.$confirm("还有数据未保存，是否离开", "提示", {
@@ -108,9 +107,11 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
         center: true
-      }).then(() => {
-        next();
-      });
+      })
+        .then(() => {
+          next();
+        })
+        .catch(() => {});
     } else {
       next();
     }
@@ -154,32 +155,43 @@ export default {
     handleDelete(index, row) {
       //删除操作
       let _this = this;
-      //判断数据是否不可以直接删除
-      if (_this.oldStudentId != null || !row.edit) {
-        let studentId;
-        if (!row.edit) {
-          studentId = row.id;
-        } else {
-          studentId = _this.oldStudentId;
-        }
-        let callBack = function(e, docs) {
-          if (e) {
-            error(_this, "删除失败");
+      _this
+        .$confirm("还有数据未保存，是否离开", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+          center: true
+        })
+        .then(() => {
+          if (_this.oldStudentId != null || !row.edit) {
+            let studentId;
+            if (!row.edit) {
+              studentId = row.id;
+            } else {
+              studentId = _this.oldStudentId;
+            }
+            let callBack = function(e, docs) {
+              if (e) {
+                error(_this, "删除失败");
+              } else {
+                _this.isEdit = false;
+                _this.tableData.splice(index, 1);
+                _this.oldStudentId = null;
+                success(_this, "删除成功");
+              }
+            };
+            let classDb = getClassDb();
+            classDb.deleteStudent(_this.className, row.id, callBack);
           } else {
             _this.isEdit = false;
             _this.tableData.splice(index, 1);
             _this.oldStudentId = null;
             success(_this, "删除成功");
           }
-        };
-        let classDb = getClassDb();
-        classDb.deleteStudent(_this.className, row.id, callBack);
-      } else {
-        _this.isEdit = false;
-        _this.tableData.splice(index, 1);
-        _this.oldStudentId = null;
-        success(_this, "删除成功");
-      }
+        })
+        .catch(() => {});
+
+      //判断数据是否不可以直接删除
     },
     handleSave(event, index, row) {
       let _this = this;
@@ -197,7 +209,6 @@ export default {
           return;
         }
         let callBack = function(e, docs) {
-          console.log(e);
           if (e) {
             error(_this, "操作错误");
           } else {
