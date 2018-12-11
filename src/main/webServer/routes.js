@@ -8,7 +8,7 @@ const path = require('path');
 //设置上传文件保存的路径
 router.use(mutipart({uploadDir:'./upload/temp'}));
 //创建文件夹
-function mkdirsSync(dirname, mode){
+let mkdirsSync = function(dirname, mode){
     console.log(dirname);
     if(fs.existsSync(dirname)){
         return true;
@@ -18,13 +18,21 @@ function mkdirsSync(dirname, mode){
             return true;
         }
     }
-}
+};
 mkdirsSync("./upload/temp");
 mkdirsSync("./upload/finally");
 
 //获取主页面内容
 router.get('/getData', function (req, res, next) {
     let cursor = classToJobDb.findByStatus(1);
+    let ip = function getClientIp(req) {
+        return req.ip||
+            req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+    };
+    console.log(ip(req));
     console.log(cursor);
     cursor.exec((error,docs) =>{
         res.json(docs);
@@ -75,6 +83,14 @@ router.post('/submitHomework',function(req,res,next){
         if(className || jobName){
             console.log('name:'+className);
             console.log('job:'+jobName);
+            //获取客户端ip地址
+            let ip = function getClientIp(req) {
+                return req.ip||
+                    req.headers['x-forwarded-for'] ||
+                    req.connection.remoteAddress ||
+                    req.socket.remoteAddress ||
+                    req.connection.socket.remoteAddress;
+            };
             let StudentId = req.body.StudentId;
             let fileTempPath = req.body.fileTempPath;
             let arr = fileTempPath.split('.');
