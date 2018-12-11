@@ -3,7 +3,7 @@
     #gak-main-head
       i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title Server
+      span#gak-main-head-title 服务
     #gak-main-server
       el-container
         el-header
@@ -103,6 +103,7 @@ export default {
       for (const classJson of _this.classJsons) {
         if (classJson.className == _this.form.className) {
           _this.form.unfinishedStudents = classJson.students;
+          _this.form.startTime=new Date().toLocaleString();
           break;
         }
       }
@@ -112,7 +113,6 @@ export default {
         } else {
           webServer.start(_this.port);
           Loading.service({ fullscreen: true }).close();
-          console.log("成功");
         }
       };
       let classToJobDb = getClassToJobDb();

@@ -3,7 +3,7 @@
     #gak-main-head
       i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title Class
+      span#gak-main-head-title 班级管理
     el-scrollbar#gak-main-content-class
       el-collapse(v-model='activeNames', value=2)
         el-collapse-item(title='新增班级', name='1')
@@ -80,8 +80,8 @@ export default {
                 _this.$router.push({
                   name: "student",
                   params: {
-                    className: row.className,
-                    studentNum: row.studentNum
+                    className: classJson.className,
+                    studentNum: classJson.students.length
                   }
                 });
               }
@@ -117,8 +117,7 @@ export default {
     },
     handleDelete(index, row) {
       let _this = this;
-      let ClassDb = remote.getGlobal("ClassDb");
-      let classDb = new ClassDb();
+      let classDb = getClassDb();
       _this
         .$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
           confirmButtonText: "确定",

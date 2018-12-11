@@ -24,7 +24,7 @@
               el-col(:span='12') {{ time }}
         el-tab-pane(label='服务管理', name='second')
           #gak-main-monitor-time
-            countdown(:time='interval', ref="countdown", :transform="transform", @start="changStatus", @abort="changStatus",
+            countdown(:time='time', ref="countdown", :transform="transform", @start="changStatus", @abort="changStatus",
             @end="end" )
               template(slot-scope='props')
                 | {{ props.hours }} : {{ props.minutes }} : {{ props.seconds }}
@@ -68,7 +68,6 @@ const { error, success, warning } = require("@/api/message");
 export default {
   data() {
     return {
-      interval: 125000,
       activeName: "first",
       // 当计时器开始时，会默认调用一次 changStatus 方法
       // 默认为false，初始时会变成 true
@@ -83,7 +82,7 @@ export default {
       className: null,
       jobName: null,
       startTime: null,
-      time: 30,
+      time: null,
       finishedStudents: [],
       unfinishedStudents: [],
       option: {
@@ -211,7 +210,9 @@ export default {
         _this.className = classToJobJson.className;
         _this.jobName = classToJobJson.jobName;
         _this.startTime = classToJobJson.startTime;
-        _this.time = classToJobJson.time;
+        _this.time =
+          classToJobJson.time * 60 * 1000 -
+          (new Date() - new Date(classToJobJson.startTime));
         let ipDb = getIpDb();
         ipDb.findAll().exec((e, ipJsons) => {
           if (e) {
@@ -226,6 +227,7 @@ export default {
             );
             _this.charts = myChart;
             myChart.setOption(_this.option);
+            setInterval(synchronization(_this), 5000);
           }
         });
       }
@@ -259,13 +261,17 @@ export default {
     tabChange: function(item) {
       // 加载图标
       let _this = this;
-      console.log("aaaa");
-      console.log(item);
       if (item.index === "3") {
         // 重置动画效果
         _this.charts.clear();
         _this.charts.setOption(_this.option);
       }
+    },
+    /**
+     * 同步操作
+     */
+    synchronization: function(_this) {
+      
     }
   }
 };

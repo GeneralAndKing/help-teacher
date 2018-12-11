@@ -1,61 +1,58 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1);")
+      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
       i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title Server
-    el-table(:data="tableData4" style="width: 100%" max-height="250")
-      el-table-column(fixed prop="id" label="学号" width="150")
-      el-table-column(prop="name" label="姓名" width="120")
-      el-table-column(prop="performance" label="成绩" width="120")
-      el-table-column(fixed="right" label="操作" width="120")
-        template(slot-scope="scope")
-          el-button(@click.native.prevent="deleteRow(scope.$index, tableData4)"
-            type="text" size="small") 移除
+      span#gak-main-head-title 其他工具
+    #gak-main-tools
+      template(v-for="(tool, index) in toolList")
+        el-col(:span='8')
+          el-card.gak-main-tool(:body-style="{ padding: '0px' }", shadow="hover")
+            div(@click="routeGoto(tool.route)")
+              v-icon.gak-main-tool-icon
+                v-icon.gak-main-tool-icon-bg(name='circle', scale='6', v-bind:style="{color:tool.iconBg}")
+                v-icon.alert.gak-main-tool-icon-content(:name='tool.iconImg', scale='4')
+              .gak-main-tool-name {{ tool.name }}
+
 </template>
 
 <script>
-export default {
-  methods: {
-    deleteRow(index, rows) {
-      rows.splice(index, 1);
+  export default {
+    data() {
+      return {
+        /**
+         * name: 显示名字
+         * iconBg: 背景颜色
+         * iconImg: 显示图标
+         * route: 路由地址
+         */
+        toolList: [
+          {
+            name: "随机点名",
+            iconBg: "hotpink",
+            iconImg: "hand-paper",
+            route: "call"
+          }
+        ]
+      };
+    },
+    methods: {
+
+      /**
+       * 工具路由跳转
+       *
+       * @param path 路径
+       */
+      routeGoto: function (path) {
+        let _this = this;
+        _this.$router.push({
+          name: path
+        });
+      }
     }
-  },
-  data() {
-    return {
-      tableData4: [
-        {
-          id: "201607010244",
-          name: "樊国睿",
-          performance: 3.72
-        },
-        {
-          id: "201607010244",
-          name: "樊国睿",
-          performance: 3.72
-        },
-        {
-          id: "201607010244",
-          name: "樊国睿",
-          performance: 3.72
-        },
-        {
-          id: "201607010244",
-          name: "樊国睿",
-          performance: 3.72
-        },
-        {
-          id: "201607010244",
-          name: "樊国睿",
-          performance: 3.72
-        },
-        {
-          id: "201607010244",
-          name: "樊国睿",
-          performance: 3.72
-        }
-      ]
-    };
-  }
-};
+  };
 </script>
+
+<style lang="stylus">
+  @import "../../styles/tool/index.styl"
+</style>
