@@ -90,7 +90,7 @@ export default {
       let students = classJson.students;
       for (const student of students) {
         _this.tableData.push({
-          id: student.id,
+          id: student.id.toString(),
           name: student.name,
           sex: student.sex,
           edit: false
