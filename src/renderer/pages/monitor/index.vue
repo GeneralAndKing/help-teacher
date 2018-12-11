@@ -270,7 +270,9 @@ export default {
     /**
      * 同步操作
      */
-    synchronization: function(_this) {}
+    synchronization: function(_this) {
+      
+    }
   }
 };
 </script>
