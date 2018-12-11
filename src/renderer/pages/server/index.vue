@@ -103,6 +103,7 @@ export default {
       for (const classJson of _this.classJsons) {
         if (classJson.className == _this.form.className) {
           _this.form.unfinishedStudents = classJson.students;
+          _this.form.startTime=new Date().toLocaleString();
           break;
         }
       }
@@ -112,7 +113,6 @@ export default {
         } else {
           webServer.start(_this.port);
           Loading.service({ fullscreen: true }).close();
-          console.log("成功");
         }
       };
       let classToJobDb = getClassToJobDb();
