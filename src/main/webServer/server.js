@@ -1,20 +1,21 @@
 export default class webServer {
 	constructor() {
 		this.app = require('./app');
-		this.debug = require('debug')('webServer:server');
 		this.http = require('http');
-		this.server = this.http.createServer(this.app);
+		this.port = null;
 		this.status = false;
 	}
-	setUrl(url) {
-		this.url = url;
-	}
 	start(port) {
-		this.app.set('port', port);
-		this.server.listen(port);
-		this.status = true;
+		this.port = port;
+		this.restart();
 		// this.server.on('error', onError);
 		// this.server.on('listening', onListening);
+	}
+	restart() {
+		this.app.set('port', this.port);
+		this.server = this.http.createServer(this.app);
+		this.server.listen(this.port);
+		this.status = true;
 	}
 	stop() {
 		this.server.close();

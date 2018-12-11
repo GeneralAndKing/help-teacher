@@ -9,6 +9,9 @@ const getJobDb = () => {
 const getClassToJobDb = () => {
     return remote.getGlobal("classToJobDb");
 }
+const getIpDb = () => {
+    return remote.getGlobal("ipDb");
+}
 export {
-    getClassDb, getJobDb, getClassToJobDb
+    getClassDb, getJobDb, getClassToJobDb, getIpDb
 }

@@ -21,10 +21,10 @@
               el-col(:span='12') {{ startTime }}
             el-row(:gutter='20')
               el-col(:span='12') 时间间隔
-              el-col(:span='12') {{ stopTime }}
+              el-col(:span='12') {{ time }}
         el-tab-pane(label='服务管理', name='second')
           #gak-main-monitor-time
-            countdown(:time='time', ref="countdown", :transform="transform", @start="changStatus", @abort="changStatus",
+            countdown(:time='interval', ref="countdown", :transform="transform", @start="changStatus", @abort="changStatus",
             @end="end" )
               template(slot-scope='props')
                 | {{ props.hours }} : {{ props.minutes }} : {{ props.seconds }}
@@ -63,275 +63,214 @@
 </template>
 
 <script>
-
-  export default {
-    data() {
-      return {
-        time: 125000,
-        activeName: 'first',
-        // 当计时器开始时，会默认调用一次 changStatus 方法
-        // 默认为false，初始时会变成 true
-        status: false,
-        disabled: false,
-        clock: false,
-        search: "",
-        title: "您的服务已成功开启，学生访问地址为：10.2.21.25:8888",
-        // true为显示已完成的，false为显示未完成的
-        finishedShow: true,
-        tableData: [],
-        className: "2016级软件工程二班",
-        jobName: "作业名字",
-        startTime: "时间戳",
-        stopTime: 30,
-        finishedStudents: [
+const { getClassToJobDb, getClassDb, getJobDb, getIpDb } = require("@/api/db");
+const { error, success, warning } = require("@/api/message");
+export default {
+  data() {
+    return {
+      interval: 125000,
+      activeName: "first",
+      // 当计时器开始时，会默认调用一次 changStatus 方法
+      // 默认为false，初始时会变成 true
+      status: false,
+      disabled: false,
+      clock: false,
+      search: "",
+      title: "您的服务已成功开启，学生访问地址为：10.2.21.25:8888",
+      // true为显示已完成的，false为显示未完成的
+      finishedShow: true,
+      tableData: [],
+      className: null,
+      jobName: null,
+      startTime: null,
+      time: 30,
+      finishedStudents: [],
+      unfinishedStudents: [],
+      option: {
+        title: {
+          text: "IP 地址上传整图",
+          subtext: "通过此数据，您可以查看到某个ip地址下上传的作业数量。"
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} : {c}"
+        },
+        xAxis: {
+          axisLabel: {
+            interval: 0
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          z: 10,
+          // x 轴的数据
+          data: [
+            "10.0.0.1",
+            "10.2.1.2",
+            "10.5.23.1",
+            "10.24.15.112",
+            "10.52.121.44",
+            "10.62.20.25"
+          ]
+        },
+        color: ["#39b0f2"],
+        yAxis: {
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            textStyle: {
+              color: "#999"
+            }
+          }
+        },
+        dataZoom: [
           {
-            id: "201607010244",
-            name: "睿睿睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿哥",
-            address: "127.0.0.1",
-            sex: "男"
+            type: "inside"
           }
         ],
-        unfinishedStudents: [
+        series: [
           {
-            id: "201607010244",
-            name: "睿阿斯顿仿盛大睿睿哥",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "萨达仿盛大发睿哥",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿萨达发萨达哥",
-            sex: "男"
-          }, {
-            id: "201607010244",
-            name: "睿萨达发哥",
-            sex: "男"
-          }
-        ],
-        option: {
-          title: {
-            text: 'IP 地址上传整图',
-            subtext: '通过此数据，您可以查看到某个ip地址下上传的作业数量。'
-          },
-          tooltip: {
-            trigger: "item",
-            formatter: "{a} : {c}"
-          },
-          xAxis: {
-            axisLabel: {
-              interval: 0
-            },
-            axisTick: {
-              show: false
-            },
-            axisLine: {
-              show: false
-            },
-            z: 10,
-            // x 轴的数据
-            data: ["10.0.0.1", "10.2.1.2", "10.5.23.1", "10.24.15.112", "10.52.121.44", "10.62.20.25"]
-          },
-          color: ['#39b0f2'],
-          yAxis: {
-            axisLine: {
-              show: false
-            },
-            axisTick: {
-              show: false
-            },
-            axisLabel: {
-              textStyle: {
-                color: '#999'
-              }
-            }
-          },
-          dataZoom: [
-            {
-              type: 'inside'
-            }
-          ],
-          series: [{
-            name: '上传量',
-            type: 'bar',
+            name: "上传量",
+            type: "bar",
             itemStyle: {
-              normal: {color: 'rgba(0,0,0,0.05)'}
+              normal: { color: "rgba(0,0,0,0.05)" }
             },
             // 阴影数据
             data: [20, 20, 20, 20, 20, 20],
             radius: "100%",
-            barGap: '-100%',
-            barCategoryGap: '40%',
+            barGap: "-100%",
+            barCategoryGap: "40%",
             center: ["80%", "80%"]
-          }, {
-            type: 'bar',
+          },
+          {
+            type: "bar",
             itemStyle: {
               normal: {
-                color: ''
+                color: ""
               },
               emphasis: {
-                color: ''
+                color: ""
               }
             },
             // y 轴的数据
             data: [5, 1, 2, 10, 2, 5]
-          }],
-          charts: null
-        },
+          }
+        ],
+        charts: null
       }
-    },
-    watch: {
-      finishedShow: function (newFinished, oldFinished) {
-        let _this = this;
-        if (newFinished) {
-          _this.tableData = _this.finishedStudents;
-        } else {
-          _this.tableData = _this.unfinishedStudents;
-        }
-      }
-    },
-    mounted: function () {
+    };
+  },
+  watch: {
+    finishedShow: function(newFinished, oldFinished) {
       let _this = this;
-      _this.tableData = _this.finishedStudents;
-      let myChart = _this.$echarts.init(
-        document.getElementById("gak-main-monitor-chart")
-      );
-      _this.charts = myChart;
-      _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
-        0, 0, 0, 1,
-        [
-          {offset: 0, color: '#83bff6'},
-          {offset: 0.5, color: '#188df0'},
-          {offset: 1, color: '#188df0'}
-        ]
-      );
-      _this.option.series[1].itemStyle.emphasis.color = new _this.$echarts.graphic.LinearGradient(
-        0, 0, 0, 1,
-        [
-          {offset: 0, color: '#2378f7'},
-          {offset: 0.7, color: '#2378f7'},
-          {offset: 1, color: '#83bff6'}
-        ]
-      );
-      myChart.setOption(_this.option);
-    },
-    methods: {
-      transform: function (props) {
-        Object.entries(props).forEach(([key, value]) => {
-          const digits = value < 10 ? `0${value}` : value;
-          props[key] = `${digits} `;
-        });
-        return props;
-      },
-      changStatus: function () {
-        let _this = this;
-        _this.status = !_this.status;
-      },
-      end: function () {
-        let _this = this;
-        _this.status = !_this.status;
-        _this.disabled = true;
-      },
-      /**
-       * 切换显示
-       */
-      switchChange: function () {
+      if (newFinished) {
+        _this.tableData = _this.finishedStudents;
+      } else {
+        _this.tableData = _this.unfinishedStudents;
+      }
+    }
+  },
+  mounted: function() {
+    let _this = this;
+    _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
+      0,
+      0,
+      0,
+      1,
+      [
+        { offset: 0, color: "#83bff6" },
+        { offset: 0.5, color: "#188df0" },
+        { offset: 1, color: "#188df0" }
+      ]
+    );
+    _this.option.series[1].itemStyle.emphasis.color = new _this.$echarts.graphic.LinearGradient(
+      0,
+      0,
+      0,
+      1,
+      [
+        { offset: 0, color: "#2378f7" },
+        { offset: 0.7, color: "#2378f7" },
+        { offset: 1, color: "#83bff6" }
+      ]
+    );
+    let classToJobDb = getClassToJobDb();
+    classToJobDb.findByStatus("1").exec((e, classToJobJsons) => {
+      if (e || classToJobJsons.length != 1) {
+        error(_this, "数据出错");
+      } else {
+        classToJobJson = classToJobJsons[0];
+        _this.unfinishedStudents = classToJobJson.unfinishedStudents;
+        _this.className = classToJobJson.className;
+        _this.jobName = classToJobJson.jobName;
+        _this.startTime = classToJobJson.startTime;
+        _this.time = classToJobJson.time;
+        let ipDb = getIpDb();
+        ipDb.findAll().exec((e, ipJsons) => {
+          if (e) {
+            error(_this, "数据出错");
+          } else {
+            _this.finishedStudents = ipJsons;
 
-      },
-      /**
-       *
-       */
-      tabChange: function (item) {
-        // 加载图标
-        let _this = this;
-        console.log("aaaa");
-        console.log(item);
-        if (item.index === "3"){
-          // 重置动画效果
-          _this.charts.clear();
-          _this.charts.setOption(_this.option);
-        }
+            //数据库的值获取完毕后进行其他操作;
+            _this.tableData = _this.finishedStudents;
+            let myChart = _this.$echarts.init(
+              document.getElementById("gak-main-monitor-chart")
+            );
+            _this.charts = myChart;
+            myChart.setOption(_this.option);
+          }
+        });
+      }
+    });
+    _this.tableData = _this.finishedStudents;
+  },
+  methods: {
+    transform: function(props) {
+      Object.entries(props).forEach(([key, value]) => {
+        const digits = value < 10 ? `0${value}` : value;
+        props[key] = `${digits} `;
+      });
+      return props;
+    },
+    changStatus: function() {
+      let _this = this;
+      _this.status = !_this.status;
+    },
+    end: function() {
+      let _this = this;
+      _this.status = !_this.status;
+      _this.disabled = true;
+    },
+    /**
+     * 切换显示
+     */
+    switchChange: function() {},
+    /**
+     *
+     */
+    tabChange: function(item) {
+      // 加载图标
+      let _this = this;
+      console.log("aaaa");
+      console.log(item);
+      if (item.index === "3") {
+        // 重置动画效果
+        _this.charts.clear();
+        _this.charts.setOption(_this.option);
       }
     }
   }
+};
 </script>
 
 <style scoped lang="stylus">
-  @import "../../styles/monitor/index.styl"
+@import '../../styles/monitor/index.styl';
 </style>
