@@ -65,6 +65,8 @@
 <script>
 const { getClassToJobDb, getClassDb, getJobDb, getIpDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
+const os = require("os");
+const { remote } = require("electron");
 export default {
   data() {
     return {
@@ -178,6 +180,15 @@ export default {
   },
   mounted: function() {
     let _this = this;
+    /**
+     * 同步操作
+     */
+    let synchronization = () => {
+      console.log(_this.activeName);
+    };
+    let webServer = remote.getGlobal("webServer");
+    let networkInterfaces = os.networkInterfaces();
+    console.log(networkInterfaces["WLAN"][1].address + ":" + webServer.getPort());
     _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
       0,
       0,
@@ -227,7 +238,7 @@ export default {
             );
             _this.charts = myChart;
             myChart.setOption(_this.option);
-            setInterval(synchronization(_this), 5000);
+            setInterval(synchronization(), 5000);
           }
         });
       }
@@ -266,12 +277,6 @@ export default {
         _this.charts.clear();
         _this.charts.setOption(_this.option);
       }
-    },
-    /**
-     * 同步操作
-     */
-    synchronization: function(_this) {
-      
     }
   }
 };

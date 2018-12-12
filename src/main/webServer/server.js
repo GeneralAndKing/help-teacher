@@ -24,6 +24,9 @@ export default class webServer {
 	getStatus() {
 		return this.status;
 	}
+	getPort() {
+		return this.port;
+	}
 }
 
 

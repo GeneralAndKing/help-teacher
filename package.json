@@ -39,7 +39,7 @@
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
     "body-parser": "^1.15.2",
-    "connect-multiparty":"^2.2.0"
+    "connect-multiparty": "^2.2.0"
   },
   "devDependencies": {
     "@chenfengyuan/vue-countdown": "^1.0.1",
