@@ -2,23 +2,23 @@ import Datastore from 'nedb';
 import path from 'path';
 /*
 {
-    className:2016计算机科学与技术,
-    jobName:作业名字,
-    startTime:时间戳,
-    stopTime:30分钟(计算时间戳),
-    studentNum:68(总人数),
-    status: 0(未开启) 1(收取中) 2(收取完成)
-    unfinishedStudents:
+    "className":"2016计算机科学与技术",
+    "jobName":"作业名字",
+    "startTime":"时间戳",
+    "stopTime":30分钟(计算时间戳),
+    "studentNum":68(总人数),
+    "status": 0(未开启) 1(收取中) 2(收取完成)
+    "unfinishedStudents":
     [
         {
-            name:樊总,
-            id:201607010244,
-            sex:男
+            "name":"樊总",
+            "id":"201607010244",
+            "sex":"男"
         }
         {
-            name:睿总,
-            id:201607010244,
-            sex:男
+            "name":"睿总",
+            "id":"201607010244",
+            "sex":"男"
         }
         ...
     ]

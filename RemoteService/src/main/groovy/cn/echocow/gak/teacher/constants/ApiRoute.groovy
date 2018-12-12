@@ -30,4 +30,9 @@ final class ApiRoute {
      * 插入的文档名称 —— 数据
      */
     public static final String DOCUMENT_DATA = "teacher_data"
+
+    /**
+     * 密码最小长度
+     */
+    public static final Integer MIN_LENGTH = 6
 }

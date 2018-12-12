@@ -4,6 +4,8 @@ import cn.echocow.gak.teacher.common.ReasultBuilder;
 import cn.echocow.gak.teacher.common.RestfulApiVerticle;
 import cn.echocow.gak.teacher.common.Runner;
 import cn.echocow.gak.teacher.constants.ApiRoute;
+import com.sun.istack.internal.NotNull;
+import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
@@ -73,9 +75,27 @@ public class WebVerticle extends RestfulApiVerticle {
      * @param routingContext 上下文
      */
     private void handlePost(RoutingContext routingContext) {
-        System.out.println("post");
-        routingContext.response().end("hello");
-
+        try {
+            JsonObject data = routingContext.getBodyAsJson();
+            DeliveryOptions options = new DeliveryOptions().addHeader("action", "post");
+            eventBus.<JsonObject>send(WebDbVerticle.class.getName(), data, options, reply -> {
+                if (reply.succeeded()){
+                    JsonObject body = reply.result().body();
+                    Integer code = body.getInteger("code");
+                    if (code == ReasultBuilder.SUCCESS_CODE) {
+                        ok(routingContext);
+                    } else {
+                        internalError(routingContext, body.toString());
+                    }
+                } else {
+                    LOGGER.error("Event Bus Get Error!" + reply.cause().getMessage());
+                    routingContext.fail(reply.cause());
+                    internalError(routingContext, reply.cause());
+                }
+            });
+        } catch (Exception e) {
+            internalError(routingContext, e);
+        }
     }
 
     /**
@@ -84,8 +104,26 @@ public class WebVerticle extends RestfulApiVerticle {
      * @param routingContext 上下文
      */
     private void handleGetTeacher(RoutingContext routingContext) {
-        System.out.println("get");
-
+        try {
+            DeliveryOptions options = new DeliveryOptions().addHeader("action", "get");
+            eventBus.<JsonObject>send(WebDbVerticle.class.getName(), null, options, reply -> {
+                if (reply.succeeded()){
+                    JsonObject body = reply.result().body();
+                    Integer code = body.getInteger("code");
+                    if (code == ReasultBuilder.SUCCESS_CODE) {
+                        ok(routingContext);
+                    } else {
+                        internalError(routingContext, body.toString());
+                    }
+                } else {
+                    LOGGER.error("Event Bus Get Error!" + reply.cause().getMessage());
+                    routingContext.fail(reply.cause());
+                    internalError(routingContext, reply.cause());
+                }
+            });
+        } catch (Exception e) {
+            internalError(routingContext, e);
+        }
     }
 
     /**
@@ -95,7 +133,7 @@ public class WebVerticle extends RestfulApiVerticle {
      */
     private void handlePostLogin(RoutingContext routingContext) {
         try {
-            JsonObject user = routingContext.getBodyAsJson();
+            @NotNull JsonObject user = routingContext.getBodyAsJson();
             DeliveryOptions options = new DeliveryOptions().addHeader("action", "login");
             eventBus.<JsonObject>send(WebDbVerticle.class.getName(), user, options, reply -> {
                 if (reply.succeeded()) {
@@ -119,12 +157,11 @@ public class WebVerticle extends RestfulApiVerticle {
                             break;
                     }
                 } else {
-                    LOGGER.error("Route Error!" + reply.cause().getMessage());
+                    LOGGER.error("Event Bus PassWord Error!" + reply.cause().getMessage());
                     routingContext.fail(reply.cause());
                     internalError(routingContext, reply.cause());
                 }
             });
-
         } catch (Exception e) {
             internalError(routingContext, e);
         }

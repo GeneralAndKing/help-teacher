@@ -82,6 +82,9 @@ public class ReasultBuilder {
     public static JsonObject buildBadRequest() {
         return buildError(null, BAD_REQUEST, "Bad Request");
     }
+    public static JsonObject buildBadRequest(String msg) {
+        return buildError(null, BAD_REQUEST, msg);
+    }
     public static JsonObject buildNoAuth() {
         return buildError(null, NO_AUTH, "No auth");
     }

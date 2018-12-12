@@ -70,9 +70,38 @@ public class WebDbVerticle extends AbstractVerticle {
     }
 
     private void post(Message<JsonObject> message) {
-
+        JsonObject data = message.body();
+        client.findOne(ApiRoute.DOCUMENT_DATA, new JsonObject().put("username",
+                data.getString("username")), null, res -> {
+            if (res.succeeded()) {
+                JsonObject document = res.result();
+                if (document != null) {
+                    client.replaceDocuments(ApiRoute.DOCUMENT_DATA, new JsonObject().put("username",
+                            data.getString("username")), data, ar -> {
+                        if (ar.succeeded()) {
+                            message.reply(ReasultBuilder.buildSuccess());
+                        } else {
+                            message.reply(ReasultBuilder.buildError(ar.cause().getMessage()));
+                        }
+                    });
+                } else {
+                    client.insert(ApiRoute.DOCUMENT_DATA, data, ar -> {
+                        if (ar.succeeded()) {
+                            message.reply(ReasultBuilder.buildSuccess());
+                        } else {
+                            message.reply(ReasultBuilder.buildError(ar.cause().getMessage()));
+                        }
+                    });
+                }
+            } else {
+                message.reply(ReasultBuilder.buildError(res.cause().getMessage()));
+            }
+        });
     }
 
+    /**
+     * @param message
+     */
     private void get(Message<JsonObject> message) {
 
     }
@@ -88,10 +117,10 @@ public class WebDbVerticle extends AbstractVerticle {
      */
     private void login(Message<JsonObject> message) {
         JsonObject user = message.body();
-        client.find(ApiRoute.DOCUMENT_USER, new JsonObject().put("username", user.getString("username")), res -> {
+        client.findOne(ApiRoute.DOCUMENT_USER, new JsonObject().put("username", user.getString("username")), null, res -> {
             if (res.succeeded()) {
-                if (res.result().size() > 0) {
-                    JsonObject auth = res.result().get(0);
+                if (res.result() != null) {
+                    JsonObject auth = res.result();
                     if (user.getString("password").equals(auth.getString("password"))) {
                         message.reply(ReasultBuilder.buildSuccess());
                     } else {
@@ -99,8 +128,12 @@ public class WebDbVerticle extends AbstractVerticle {
                     }
                 } else {
                     user.put("createDate", LocalDate.now().toString());
+                    if (user.getString("password").length() < ApiRoute.MIN_LENGTH) {
+                        message.reply(ReasultBuilder.buildBadRequest("密码长度过短！"));
+                        return;
+                    }
                     client.insert(ApiRoute.DOCUMENT_USER, user, ar -> {
-                        if (ar.succeeded()){
+                        if (ar.succeeded()) {
                             message.reply(ReasultBuilder.buildReg());
                         } else {
                             message.reply(ReasultBuilder.buildError(ar.cause().getMessage()));
@@ -110,6 +143,9 @@ public class WebDbVerticle extends AbstractVerticle {
             } else {
                 message.reply(ReasultBuilder.buildError(res.cause().getMessage()));
             }
+        });
+        client.find(ApiRoute.DOCUMENT_USER, new JsonObject().put("username", user.getString("username")), res -> {
+
         });
     }
 
