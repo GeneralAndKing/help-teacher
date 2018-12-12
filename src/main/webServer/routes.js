@@ -115,7 +115,6 @@ router.post('/submitHomework',function(req,res,next){
                     classToJobDb.deleteUnfinishedStudent(jobName, className, StudentId);
                     res.json({'status': 1 ,'data':'success','StudentId': StudentId});
                 } catch (error) {
-                    console.
                     res.json({'status': 0 ,'error':'文件处理失败'});
                 }
             }
