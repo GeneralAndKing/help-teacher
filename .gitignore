@@ -36,3 +36,5 @@ thumbs.db
 hs_err_pid*
 
 !/RemoteService/gradle/wrapper/gradle-wrapper.jar
+!/RemoteService/releases/
+.vertx/
