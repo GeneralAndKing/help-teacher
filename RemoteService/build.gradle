@@ -41,9 +41,11 @@ repositories {
 dependencies {
     compile rootProject.ext.dependence.libGroovy
     compile rootProject.ext.dependence.libVertxCore
+    compile rootProject.ext.dependence.libVertxGroovy
     compile rootProject.ext.dependence.libVertxWeb
     compile rootProject.ext.dependence.libVertxServiceProxy
     compile rootProject.ext.dependence.libVertxCodegen
+    compile rootProject.ext.dependence.libVertxRxJava2
 
     testCompile rootProject.ext.dependence.libVertxUnit
     testCompile rootProject.ext.dependence.libJunit
@@ -76,8 +78,8 @@ sourceSets {
 }
 
 compileJava {
-    targetCompatibility = 1.8
-    sourceCompatibility = 1.8
+    targetCompatibility = rootProject.ext.java.javaVersion
+    sourceCompatibility = rootProject.ext.java.javaVersion
 
     dependsOn annotationProcessing
 }
