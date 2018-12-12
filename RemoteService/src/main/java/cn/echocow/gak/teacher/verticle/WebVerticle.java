@@ -5,9 +5,7 @@ import cn.echocow.gak.teacher.common.RestfulApiVerticle;
 import cn.echocow.gak.teacher.common.Runner;
 import cn.echocow.gak.teacher.constants.ApiRoute;
 import com.sun.istack.internal.NotNull;
-import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
@@ -50,7 +48,6 @@ public class WebVerticle extends RestfulApiVerticle {
                 .setKeyStore(new KeyStoreOptions()
                         .setPath("keystore.jceks")
                         .setPassword("secret")));
-
         router.route("/api/*").handler(JWTAuthHandler.create(jwt));
         enableCorsSupport(router);
         eventBus = vertx.eventBus();
@@ -79,13 +76,19 @@ public class WebVerticle extends RestfulApiVerticle {
             JsonObject data = routingContext.getBodyAsJson();
             DeliveryOptions options = new DeliveryOptions().addHeader("action", "post");
             eventBus.<JsonObject>send(WebDbVerticle.class.getName(), data, options, reply -> {
-                if (reply.succeeded()){
+                if (reply.succeeded()) {
                     JsonObject body = reply.result().body();
                     Integer code = body.getInteger("code");
-                    if (code == ReasultBuilder.SUCCESS_CODE) {
-                        ok(routingContext);
-                    } else {
-                        internalError(routingContext, body.toString());
+                    switch (code) {
+                        case ReasultBuilder.SUCCESS_CODE:
+                            ok(routingContext);
+                            break;
+                        case ReasultBuilder.BAD_REQUEST:
+                            badRequest(routingContext, body.getString("message"));
+                            break;
+                        default:
+                            internalError(routingContext, body.getString("message"));
+                            break;
                     }
                 } else {
                     LOGGER.error("Event Bus Get Error!" + reply.cause().getMessage());
@@ -105,15 +108,22 @@ public class WebVerticle extends RestfulApiVerticle {
      */
     private void handleGetTeacher(RoutingContext routingContext) {
         try {
+            String username = routingContext.request().getParam("username");
             DeliveryOptions options = new DeliveryOptions().addHeader("action", "get");
-            eventBus.<JsonObject>send(WebDbVerticle.class.getName(), null, options, reply -> {
-                if (reply.succeeded()){
+            eventBus.<JsonObject>send(WebDbVerticle.class.getName(), new JsonObject().put("username", username), options, reply -> {
+                if (reply.succeeded()) {
                     JsonObject body = reply.result().body();
                     Integer code = body.getInteger("code");
-                    if (code == ReasultBuilder.SUCCESS_CODE) {
-                        ok(routingContext);
-                    } else {
-                        internalError(routingContext, body.toString());
+                    switch (code) {
+                        case ReasultBuilder.SUCCESS_CODE:
+                            ok(routingContext, body.getJsonObject("data"));
+                            break;
+                        case ReasultBuilder.BAD_REQUEST:
+                            badRequest(routingContext, body.getString("message"));
+                            break;
+                        default:
+                            internalError(routingContext, body.getString("message"));
+                            break;
                     }
                 } else {
                     LOGGER.error("Event Bus Get Error!" + reply.cause().getMessage());

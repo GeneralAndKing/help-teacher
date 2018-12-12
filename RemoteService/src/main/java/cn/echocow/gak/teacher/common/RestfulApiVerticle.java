@@ -106,6 +106,30 @@ public class RestfulApiVerticle extends AbstractVerticle {
                 .end(ReasultBuilder.buildBadRequest().toString());
     }
 
+    /**
+     * 发回状态为 400 Bad Request的回复。
+     *
+     * @param context routing context
+     */
+    protected void badRequest(RoutingContext context, String msg) {
+        context.response().setStatusCode(ReasultBuilder.BAD_REQUEST)
+                .putHeader("content-type", "application/json")
+                .end(ReasultBuilder.buildBadRequest(msg).toString());
+    }
+
+
+    /**
+     * 发回状态为 400 Bad Request的回复。
+     *
+     * @param context routing context
+     */
+    protected void badRequest(RoutingContext context, JsonObject content) {
+        context.response().setStatusCode(ReasultBuilder.BAD_REQUEST)
+                .putHeader("content-type", "application/json")
+                .end(ReasultBuilder.buildBadRequest(content).toString());
+    }
+
+
 
     /**
      * 发回状态为 401 Password Error 的回复。
