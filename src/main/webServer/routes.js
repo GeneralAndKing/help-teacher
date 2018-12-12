@@ -127,7 +127,7 @@ router.post('/submitHomework',function(req,res,next){
                                     let i = 0;
                                     //查找学生信息
                                     for(;i < students.length;i++){
-                                        if(student.id == StudentId){
+                                        if(students.id == StudentId){
                                             break;
                                         }
                                     }
