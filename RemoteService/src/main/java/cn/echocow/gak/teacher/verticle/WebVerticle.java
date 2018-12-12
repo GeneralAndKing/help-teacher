@@ -4,7 +4,6 @@ import cn.echocow.gak.teacher.common.ReasultBuilder;
 import cn.echocow.gak.teacher.common.RestfulApiVerticle;
 import cn.echocow.gak.teacher.common.Runner;
 import cn.echocow.gak.teacher.constants.ApiRoute;
-import com.sun.istack.internal.NotNull;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
@@ -143,7 +142,7 @@ public class WebVerticle extends RestfulApiVerticle {
      */
     private void handlePostLogin(RoutingContext routingContext) {
         try {
-            @NotNull JsonObject user = routingContext.getBodyAsJson();
+            JsonObject user = routingContext.getBodyAsJson();
             DeliveryOptions options = new DeliveryOptions().addHeader("action", "login");
             eventBus.<JsonObject>send(WebDbVerticle.class.getName(), user, options, reply -> {
                 if (reply.succeeded()) {
