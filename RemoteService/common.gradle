@@ -1,0 +1,17 @@
+def vertx_version = '3.6.0'
+ext {
+
+    java = ['javaVersion': JavaVersion.VERSION_1_8]
+
+    dependence = [
+            'libGroovy': "org.codehaus.groovy:groovy-all:2.5.4",
+            'libJunit': "org.junit.jupiter:junit-jupiter-api:5.3.2",
+            'libLombok': "org.projectlombok:lombok:1.18.4",
+            'libVertxCore': "io.vertx:vertx-core:${vertx_version}",
+            'libVertxWeb': "io.vertx:vertx-web:${vertx_version}",
+            'libVertxUnit': "io.vertx:vertx-unit:${vertx_version}",
+            'libVertxCodegen': "io.vertx:vertx-codegen:${vertx_version}",   
+            'libVertxServiceProxy': "io.vertx:vertx-service-proxy:${vertx_version}"
+
+    ]
+}   
