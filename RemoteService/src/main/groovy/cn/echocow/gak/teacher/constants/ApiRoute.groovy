@@ -16,9 +16,18 @@ final class ApiRoute {
     /**
      * 下载
      */
-    public static final String API_GET = "/teacher/:username"
+    public static final String API_GET = "/api/teacher/:username"
     /**
      * 上传或更新
      */
-    public static final String API_POST = "/teacher"
+    public static final String API_POST = "/api/teacher"
+
+    /**
+     * 插入的文档名称 —— 登录
+     */
+    public static final String DOCUMENT_USER = "user"
+    /**
+     * 插入的文档名称 —— 数据
+     */
+    public static final String DOCUMENT_DATA = "teacher_data"
 }

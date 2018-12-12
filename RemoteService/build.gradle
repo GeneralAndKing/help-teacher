@@ -3,14 +3,12 @@ buildscript {
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
     }
     dependencies {
-
     }
 }
 
 plugins {
     id 'groovy'
 }
-
 apply from: this.file("common.gradle")
 group 'cn.echocow.gak'
 version '1.0-SNAPSHOT'
@@ -18,14 +16,14 @@ targetCompatibility = rootProject.ext.java.javaVersion
 sourceCompatibility = rootProject.ext.java.javaVersion
 
 jar {
-    // by default fat jar
     archiveName = 'gak-help-teacher-fat.jar'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest {
         attributes 'Main-Class': 'io.vertx.core.Launcher'
-//        attributes 'Main-Verticle': 'io.vertx.blueprint.todolist.verticle.RxTodoVerticle'
+//        attributes 'Main-Verticle': 'io.vertx.blueprint.todolist.teacher.RxTodoVerticle'
     }
 }
+
 
 allprojects {
     repositories {
@@ -45,7 +43,9 @@ dependencies {
     compile rootProject.ext.dependence.libVertxWeb
     compile rootProject.ext.dependence.libVertxServiceProxy
     compile rootProject.ext.dependence.libVertxCodegen
-    compile rootProject.ext.dependence.libVertxRxJava2
+    compile rootProject.ext.dependence.libVertxMongoDb
+    compile rootProject.ext.dependence.libVertxHazelcast
+    compile rootProject.ext.dependence.libVertxJwt
 
     testCompile rootProject.ext.dependence.libVertxUnit
     testCompile rootProject.ext.dependence.libJunit
