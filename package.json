@@ -23,7 +23,10 @@
     "postinstall": ""
   },
   "dependencies": {
+    "archiver": "^3.0.0",
     "axios": "^0.18.0",
+    "body-parser": "^1.15.2",
+    "connect-multiparty": "^2.2.0",
     "cookie-parser": "^1.4.3",
     "echarts": "^4.2.0-rc.2",
     "electron-store": "^2.0.0",
@@ -37,9 +40,7 @@
     "stylus-loader": "^3.0.2",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
-    "vue-router": "^3.0.1",
-    "body-parser": "^1.15.2",
-    "connect-multiparty": "^2.2.0"
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "@chenfengyuan/vue-countdown": "^1.0.1",

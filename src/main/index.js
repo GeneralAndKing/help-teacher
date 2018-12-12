@@ -4,7 +4,11 @@ import ClassDb from "./dbServer/classDb"
 import JobDb from "./dbServer/jobDb"
 import ClassToJobDb from "./dbServer/classToJobDb"
 import IpDb from "./dbServer/ipDb"
-
+// const compress = require("./compress");
+// let callBack=function () {
+//   console.log("111");
+// }
+// compress("111", "222", callBack, callBack, callBack);
 global.classDb = new ClassDb();
 global.jobDb = new JobDb();
 global.classToJobDb = new ClassToJobDb();
