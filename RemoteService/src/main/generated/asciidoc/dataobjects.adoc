@@ -1,0 +1,36 @@
+= Cheatsheets
+
+[[TeacherData]]
+== TeacherData
+
+++++
+ TeacherData
+++++
+'''
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[classDate]]`@classDate`|`String`|-
+|[[classToJob]]`@classToJob`|`String`|-
+|[[jobDate]]`@jobDate`|`String`|-
+|[[username]]`@username`|`String`|-
+|===
+
+[[User]]
+== User
+
+++++
+ User
+++++
+'''
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[password]]`@password`|`String`|-
+|[[username]]`@username`|`String`|-
+|===
+

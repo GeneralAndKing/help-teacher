@@ -1,0 +1,85 @@
+buildscript {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    }
+    dependencies {
+    }
+}
+
+plugins {
+    id 'groovy'
+}
+apply from: this.file("common.gradle")
+group 'cn.echocow.gak'
+version '1.0-SNAPSHOT'
+targetCompatibility = rootProject.ext.java.javaVersion
+sourceCompatibility = rootProject.ext.java.javaVersion
+
+jar {
+    archiveName = 'gak-help-teacher-fat.jar'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Main-Class': 'io.vertx.core.Launcher'
+//        attributes 'Main-Verticle': 'io.vertx.blueprint.todolist.teacher.RxTodoVerticle'
+    }
+}
+
+
+allprojects {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    }
+}
+repositories {
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    maven { url 'http://maven.oschina.net/content/groups/public/' }
+    mavenCentral()
+}
+
+dependencies {
+    compile rootProject.ext.dependence.libGroovy
+    compile rootProject.ext.dependence.libVertxCore
+    compile rootProject.ext.dependence.libVertxGroovy
+    compile rootProject.ext.dependence.libVertxWeb
+    compile rootProject.ext.dependence.libVertxServiceProxy
+    compile rootProject.ext.dependence.libVertxCodegen
+    compile rootProject.ext.dependence.libVertxMongoDb
+    compile rootProject.ext.dependence.libVertxHazelcast
+    compile rootProject.ext.dependence.libVertxJwt
+
+    testCompile rootProject.ext.dependence.libVertxUnit
+    testCompile rootProject.ext.dependence.libJunit
+}
+/**
+ * 生成
+ */
+task annotationProcessing(type: JavaCompile, group: 'build') {
+    source = sourceSets.main.java
+    classpath = configurations.compile + configurations.compileOnly
+    destinationDir = project.file('src/main/generated')
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", "io.vertx.codegen.CodeGenProcessor",
+            "-Acodegen.output=${destinationDir.absolutePath}"
+    ]
+}
+
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs += 'src/main/generated/java'
+        }
+        groovy {
+            srcDirs += 'src/main/generated/groovy'
+        }
+    }
+}
+
+compileJava {
+    targetCompatibility = rootProject.ext.java.javaVersion
+    sourceCompatibility = rootProject.ext.java.javaVersion
+
+    dependsOn annotationProcessing
+}

@@ -4,14 +4,14 @@ import path from 'path';
 /*
 jobs: [
     {
-      jobName: "第一次作业",
-      jobContent: "具体详情是做什么的",
-      jobTypes: ["excel","ppt"]
+      "jobName": "第一次作业",
+      "jobContent": "具体详情是做什么的",
+      "jobTypes": ["excel","ppt"]
     },
     {
-      jobName: "第二次作业",
-      jobContent: "具体详情是做什么的",
-      jobTypes: ["execl","ppt"]
+      "jobName": "第二次作业",
+      "jobContent": "具体详情是做什么的",
+      "jobTypes": ["execl","ppt"]
     }
   ]
 }

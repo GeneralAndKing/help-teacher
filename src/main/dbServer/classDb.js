@@ -3,17 +3,17 @@ const path = require('path')
 const Datastore = require("nedb");
 /*
 {
-    className:"2016级计算机科学与技术2班",
-    students:[
+    "className":"2016级计算机科学与技术2班",
+    "students":[
         {
-        id:"201607010244",
-        name:"睿哥",
-        sex:"男"
+          "id":"201607010244",
+          "name":"睿哥",
+          "sex":"男"
         },
         {
-        id:"201607010244",
-        name:"睿少",
-        sex:"男"
+          "id":"201607010244",
+          "name":"睿少",
+          "sex":"男"
         }
     ],
 }

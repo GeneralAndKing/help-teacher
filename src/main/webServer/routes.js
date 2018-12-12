@@ -80,12 +80,13 @@ router.post('/submitHomework',function(req,res,next){
     cursor.exec((error,docs) =>{
         let className = docs[0].className;
         let jobName = docs[0].jobName;
+        let _this = this;
         if(className || jobName){
             console.log('name:'+className);
             console.log('job:'+jobName);
             //获取客户端ip地址
             let ip = function getClientIp(req) {
-                return req.ip||
+                return req.ip|
                     req.headers['x-forwarded-for'] ||
                     req.connection.remoteAddress ||
                     req.socket.remoteAddress ||
@@ -112,10 +113,49 @@ router.post('/submitHomework',function(req,res,next){
             }else{
                 try {
                     fs.renameSync(fileTempPath,newPath);
-                    classToJobDb.deleteUnfinishedStudent(jobName, className, StudentId);
-                    res.json({'status': 1 ,'data':'success','StudentId': StudentId});
+                    //定义回调函数
+                    let callBack = function(e,docs){
+                        if(e){
+                            console.log(e);
+                            res.json({'status':0,'error':'数据操作执行失败！'});
+                        }else{
+                            //数据库执行成功后进行操作进行ipDb表的数据插入
+                            let cursor = classToJobDb.findByStatus(1);
+                            cursor.exec((error,docs) => {
+                                if(docs){
+                                    let students = docs[0].unfinishedStudents;
+                                    let i = 0;
+                                    //查找学生信息
+                                    for(;i < students.length;i++){
+                                        if(student.id == StudentId){
+                                            break;
+                                        }
+                                    }
+                                    let id = students[i].id;
+                                    let name = students[i].name;
+                                    let sex = students[i].sex;
+                                    let data = {
+                                        'address' : ip,
+                                        'id' : id,
+                                        'name' : name,
+                                        'sex' : sex
+                                    };
+                                    let callBack = function(e,docs){
+                                        if(e){
+                                            error(_this,'数据写入失败');
+                                        }else{
+                                            //操作成功的执行语句
+                                            //暂无
+                                        }
+                                    }
+                                    ipDb.insertIpJson(data,);
+                                }
+                            });
+                            res.json({'status': 1 ,'data':'success','StudentId': StudentId});
+                        }
+                    }
+                    classToJobDb.deleteUnfinishedStudent(jobName, className, StudentId,callBack);
                 } catch (error) {
-                    console.
                     res.json({'status': 0 ,'error':'文件处理失败'});
                 }
             }
