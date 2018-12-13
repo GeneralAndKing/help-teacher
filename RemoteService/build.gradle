@@ -16,15 +16,17 @@ targetCompatibility = rootProject.ext.java.javaVersion
 sourceCompatibility = rootProject.ext.java.javaVersion
 
 jar {
-    archiveName = 'gak-help-teacher-fat.jar'
-//    archiveName = 'gak-help-teacher-hazelcast-db-fat.jar'
-//    archiveName = 'gak-help-teacher-hazelcast-web-fat.jar'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    archiveName = "gak-help-teacher-${version}.jar"
+//    archiveName = "gak-help-teacher-hazelcast-db-${version}.jar"
+    archiveName = "gak-help-teacher-hazelcast-web-${version}.jar"
+    from { 
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } 
+    }
     manifest {
         attributes 'Main-Class': 'io.vertx.core.Launcher'
-        attributes "Main-Class": "cn.echocow.gak.teacher.Application"
+//        attributes "Main-Class": "cn.echocow.gak.teacher.Application"
 //        attributes "Main-Class": "cn.echocow.gak.teacher.verticle.WebDbVerticle"
-//        attributes "Main-Class": "cn.echocow.gak.teacher.verticle.WebVerticle"
+        attributes "Main-Class": "cn.echocow.gak.teacher.verticle.WebVerticle"
     }
 }
 

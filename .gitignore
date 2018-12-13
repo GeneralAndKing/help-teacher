@@ -38,3 +38,6 @@ hs_err_pid*
 !/RemoteService/gradle/wrapper/gradle-wrapper.jar
 !/RemoteService/releases/
 .vertx/
+!/RemoteService/releases/gak-help-teacher-1.0-SNAPSHOT.jar
+!/RemoteService/releases/gak-help-teacher-hazelcast-db-1.0-SNAPSHOT.jar
+!/RemoteService/releases/gak-help-teacher-hazelcast-web-1.0-SNAPSHOT.jar
