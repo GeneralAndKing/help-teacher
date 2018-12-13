@@ -1,4 +1,4 @@
-package cn.echocow.gak.teacher.constants;
+package cn.echocow.gak.teacher.constant;
 
 /**
  * ApiRoute

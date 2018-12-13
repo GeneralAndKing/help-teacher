@@ -1,9 +1,7 @@
 package cn.echocow.gak.teacher.verticle;
 
-import cn.echocow.gak.teacher.common.ReasultBuilder;
-import cn.echocow.gak.teacher.common.RestfulApiVerticle;
-import cn.echocow.gak.teacher.common.Runner;
-import cn.echocow.gak.teacher.constants.ApiRoute;
+import cn.echocow.gak.teacher.common.*;
+import cn.echocow.gak.teacher.constant.*;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.EventBus;
@@ -30,14 +28,16 @@ import static io.vertx.core.spi.resolver.ResolverProvider.DISABLE_DNS_RESOLVER_P
  */
 public class WebVerticle extends RestfulApiVerticle {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebVerticle.class);
-    private static final String HOST = "127.0.0.1";
+    private static final String HOST = "0.0.0.0";
     private static final int PORT = 8082;
     private EventBus eventBus;
     private JWTAuth jwt;
 
     public static void main(String[] args) {
         System.getProperties().setProperty(DISABLE_DNS_RESOLVER_PROP_NAME, "true");
-        Runner.runHazelcast(WebDbVerticle.class);
+//        Runner.runHazelcast(WebDbVerticle.class);
+        Runner.runWeb();
+        LOGGER.info("WebVerticle is OK!");
     }
 
     @Override
@@ -56,7 +56,8 @@ public class WebVerticle extends RestfulApiVerticle {
         String host = config().getString("http.address", HOST);
         int port = config().getInteger("http.port", PORT);
         vertx.createHttpServer().requestHandler(router)
-                .listen(port, host, rs -> {
+                .listen(config().getInteger("http.port",port),
+                        config().getString("http.host",host), rs -> {
                     if (rs.succeeded()) {
                         LOGGER.info("Http Server started on " + host + ":" + port + "!");
                     } else {
@@ -77,6 +78,7 @@ public class WebVerticle extends RestfulApiVerticle {
             eventBus.<JsonObject>send(WebDbVerticle.class.getName(), data, options, reply -> {
                 if (reply.succeeded()) {
                     JsonObject body = reply.result().body();
+                    LOGGER.info(data.toString() + " post teacher:" + body.toString());
                     Integer code = body.getInteger("code");
                     switch (code) {
                         case ReasultBuilder.SUCCESS_CODE:
@@ -112,6 +114,7 @@ public class WebVerticle extends RestfulApiVerticle {
             eventBus.<JsonObject>send(WebDbVerticle.class.getName(), new JsonObject().put("username", username), options, reply -> {
                 if (reply.succeeded()) {
                     JsonObject body = reply.result().body();
+                    LOGGER.info(username + " get teacher:" + body.toString());
                     Integer code = body.getInteger("code");
                     switch (code) {
                         case ReasultBuilder.SUCCESS_CODE:
@@ -147,6 +150,7 @@ public class WebVerticle extends RestfulApiVerticle {
             eventBus.<JsonObject>send(WebDbVerticle.class.getName(), user, options, reply -> {
                 if (reply.succeeded()) {
                     JsonObject body = reply.result().body();
+                    LOGGER.info(user.toString() + " login info:" + body.toString());
                     Integer code = body.getInteger("code");
                     String token;
                     switch (code) {
@@ -166,7 +170,7 @@ public class WebVerticle extends RestfulApiVerticle {
                             break;
                     }
                 } else {
-                    LOGGER.error("Event Bus PassWord Error!" + reply.cause().getMessage());
+                    LOGGER.error("Event Bus Login Error!" + reply.cause().getMessage());
                     routingContext.fail(reply.cause());
                     internalError(routingContext, reply.cause());
                 }
