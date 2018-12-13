@@ -148,7 +148,7 @@
         //判断是否在编辑
         if (!_this.isEdit) {
           row.edit = true;
-          _this.$set(_this.tableData, index, row);
+          _this.$set(_this.tableData, _this.tableData.indexOf(row), row);
           _this.oldStudentId = row.id;
           _this.isEdit = true;
         } else {
@@ -175,13 +175,12 @@
               } else {
                 studentId = _this.oldStudentId;
               }
-
               let callBack = function (e, docs) {
                 if (e) {
                   error(_this, "删除失败，未知错误！");
                 } else {
                   _this.isEdit = false;
-                  _this.tableData.splice(index, 1);
+                  _this.tableData.splice(_this.tableData.indexOf(row), 1);
                   _this.oldStudentId = null;
                   success(_this, "删除成功");
                 }
@@ -190,7 +189,7 @@
               classDb.deleteStudent(_this.className, row.id, callBack);
             } else {
               _this.isEdit = false;
-              _this.tableData.splice(index, 1);
+              _this.tableData.splice(_this.tableData.indexOf(row), 1);
               _this.oldStudentId = null;
               success(_this, "删除成功");
             }

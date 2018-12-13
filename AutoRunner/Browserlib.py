@@ -415,6 +415,8 @@ class Task(Browserlib):
         #点击删除
         self.click(self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr/td[5]/div/button[2]'))
 
+        #点击确认
+        self.click(self.find_display_element('dg-pull-right',BY.CLASS_NAME))
         #清空搜索框
         self.input_clear_human(element)
 

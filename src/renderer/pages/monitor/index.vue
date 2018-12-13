@@ -67,7 +67,6 @@ const { getClassToJobDb, getClassDb, getJobDb, getIpDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
 const os = require("os");
 const { remote } = require("electron");
-import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
@@ -184,18 +183,11 @@ export default {
     let webServer = remote.getGlobal("webServer");
     if (!webServer.getStatus()) {
       //提示框 跳转到主页或开启服务页面
-      _this.$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        center: true
-      })
-        .then(() => {
-          _this.$router.push({
-            name: "server"
-          });
-        })
-        .catch(() => {});
+      warning(_this,"你还没有开启服务");
+      // _this.$router.push({
+      //   name: "server"
+      // });
+      return;
     }
     /**
      * 同步操作
@@ -257,12 +249,17 @@ export default {
             );
             _this.charts = myChart;
             myChart.setOption(_this.option);
-            setInterval(synchronization(), 5000);
+            _this.interval=setInterval(synchronization(), 5000);
           }
         });
       }
     });
     _this.tableData = _this.finishedStudents;
+  },
+  beforeRouteLeave(to, from, next) {
+    let _this=this;
+    window.clearInterval(_this);
+    next();
   },
   methods: {
     transform: function(props) {

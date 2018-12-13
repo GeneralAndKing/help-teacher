@@ -66,7 +66,6 @@ export default {
         classToJob.className,
         callBack
       );
-      success(_this, "删除成功");
     },
     handleInfo: function(index, classToJob) {
       let _this = this;
