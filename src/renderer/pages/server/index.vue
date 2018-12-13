@@ -32,16 +32,21 @@
                     a.gak-job-create(@click="createClass") 点击创建
               .basicServer(v-if="active===2", :key="2")
                 el-alert.gak-text-left(title="最后一步", type="success", description="最后，您只需要设置学生端的端口就完成了。")
+                el-form-item.gak-text-left(label="地址")
+                  el-select(v-model="ip", placeholder="请选择")
+                    el-option(v-for="ipData in ips", :key="ipData.name", :label="ipData.name", :value="ipData.ip")
                 el-form-item(label="端口号")
                   el-input-number.gak-text-left(v-model='port', :step='50')
+                
+                el-button(@click="openServer", type="primary", v-if="active===2") 开启服务
 
         el-footer
           el-button-group
             transition(name="el-fade-in", mode="out-in")
-              el-button(type="primary", icon="el-icon-arrow-left", v-if="active!==0", @click="prev") 上一步
+              el-button(type="primary", icon="el-icon-arrow-left", v-bind:disabled="active==0", @click="prev") 上一步
             transition(name="el-fade-in", mode="out-in")
-              el-button(type="primary", icon="el-icon-arrow-right", v-if="active!==2", @click="next") 下一步
-              el-button(@click="openServer", type="primary", v-if="active===2") 开启服务
+              el-button(type="primary", icon="el-icon-arrow-right", v-bind:disabled="active==2", @click="next") 下一步
+              
 
 </template>
 
@@ -54,6 +59,7 @@ const { getClassToJobDb, getClassDb, getJobDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
 const { ipcRenderer, remote } = require("electron");
 const path = require("path");
+const os = require("os");
 export default {
   data() {
     return {
@@ -66,6 +72,8 @@ export default {
         status: 1,
         unfinishedStudents: null
       },
+      ip:null,
+      ips: [],
       port: 8888,
       jobJsons: [],
       classJsons: []
@@ -73,6 +81,13 @@ export default {
   },
   mounted() {
     let _this = this;
+    let networkInterfaces = os.networkInterfaces();
+    for (let networkInterface in networkInterfaces) {
+      _this.ips.push({
+        name: networkInterface,
+        ip: networkInterfaces[networkInterface][1].address
+      });
+    }
     let jobDb = getJobDb();
     //查找数据之后创建
     jobDb.findAllJob().exec((e, jobJsons) => {
@@ -94,8 +109,8 @@ export default {
   methods: {
     openServer: function(event) {
       let _this = this;
-      if (!verifyNull(_this.port)) {
-        warning(_this, "端口不能为空");
+      if (!(verifyNull(_this.port) && verifyNull(_this.ip))) {
+        warning(_this, "地址和端口不能为空");
         return;
       }
       Loading.service({ fullscreen: true });
@@ -103,7 +118,7 @@ export default {
       for (const classJson of _this.classJsons) {
         if (classJson.className == _this.form.className) {
           _this.form.unfinishedStudents = classJson.students;
-          _this.form.startTime=new Date().toLocaleString();
+          _this.form.startTime = new Date().toLocaleString();
           break;
         }
       }
@@ -111,7 +126,7 @@ export default {
         if (e) {
           error(_this, "开启服务错误");
         } else {
-          webServer.start(_this.port);
+          webServer.start(_this.ip,_this.port, _this.form.time);
           Loading.service({ fullscreen: true }).close();
         }
       };
@@ -127,13 +142,13 @@ export default {
       let _this = this;
       if (_this.active == 0) {
         if (!(verifyNull(_this.form.jobName) && verifyNull(_this.form.time))) {
-          warning(_this, "数据不能为空");
+          warning(_this, "作业不能为空");
           return;
         }
       }
       if (_this.active == 1) {
-        if (!verifyNull(_this.form.jobName)) {
-          warning(_this, "数据不能为空");
+        if (!verifyNull(_this.form.className)) {
+          warning(_this, "班级不能为空");
           return;
         }
       }

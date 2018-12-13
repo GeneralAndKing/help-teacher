@@ -2,15 +2,17 @@ export default class webServer {
 	constructor(callBack) {
 		this.app = require('./app');
 		this.http = require('http');
+		this.ip = null;
 		this.port = null;
 		this.status = false;
 		this.monitor = null;
 		this.callBack = callBack;
 	}
-	start(port, time) {
+	start(ip,port, time) {
 		if (!this.status) {
+			this.ip = ip;
 			this.port = port;
-			this.time = time;
+			this.time = time*60*1000;
 			this.app.set('port', this.port);
 			this.server = this.http.createServer(this.app);
 			this.server.listen(this.port);
@@ -26,7 +28,7 @@ export default class webServer {
 	stop() {
 		if (this.status) {
 			this.server.close();
-			window.clearTimeout(this.monitor);
+			clearTimeout(this.monitor);
 			this.monitor = null;
 			this.status = false;
 		}
@@ -37,8 +39,8 @@ export default class webServer {
 	getStatus() {
 		return this.status;
 	}
-	getPort() {
-		return this.port;
+	getAddress() {
+		return this.ip + "" + this.port + "";
 	}
 	getTime() {
 		return this.time;

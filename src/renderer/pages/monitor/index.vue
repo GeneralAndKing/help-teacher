@@ -65,7 +65,6 @@
 <script>
 const { getClassToJobDb, getClassDb, getJobDb, getIpDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
-const os = require("os");
 const { remote } = require("electron");
 export default {
   data() {
@@ -183,7 +182,7 @@ export default {
     let webServer = remote.getGlobal("webServer");
     if (!webServer.getStatus()) {
       //提示框 跳转到主页或开启服务页面
-      warning(_this,"你还没有开启服务");
+      warning(_this, "你还没有开启服务");
       // _this.$router.push({
       //   name: "server"
       // });
@@ -196,10 +195,6 @@ export default {
       console.log(_this.activeName);
     };
 
-    let networkInterfaces = os.networkInterfaces();
-    console.log(
-      networkInterfaces["WLAN"][1].address + ":" + webServer.getPort()
-    );
     _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
       0,
       0,
@@ -249,7 +244,7 @@ export default {
             );
             _this.charts = myChart;
             myChart.setOption(_this.option);
-            _this.interval=setInterval(synchronization(), 5000);
+            _this.interval = setInterval(synchronization(), 5000);
           }
         });
       }
@@ -257,7 +252,7 @@ export default {
     _this.tableData = _this.finishedStudents;
   },
   beforeRouteLeave(to, from, next) {
-    let _this=this;
+    let _this = this;
     window.clearInterval(_this);
     next();
   },
