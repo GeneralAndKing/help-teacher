@@ -42,15 +42,15 @@ public class ReasultBuilder {
     }
 
     public static JsonObject buildSuccess() {
-        return new JsonObject().put("code", SUCCESS_CODE).put("data", "null").put("msg", "请求成功！");
+        return new JsonObject().put("code", SUCCESS_CODE).putNull("data").put("msg", "请求成功！");
     }
 
     public static JsonObject buildReg() {
-        return new JsonObject().put("code", SUCCESS_REG).put("data", "null").put("msg", "注册成功！");
+        return new JsonObject().put("code", SUCCESS_REG).putNull("data").put("msg", "Registered success!");
     }
 
     public static JsonObject buildReg(JsonObject data) {
-        return new JsonObject().put("code", SUCCESS_REG).put("data", data).put("msg", "注册成功！");
+        return new JsonObject().put("code", SUCCESS_REG).put("data", data).put("msg", "Registered success!");
     }
 
     public static JsonObject buildError(JsonObject data, Integer code, String msg) {
@@ -58,7 +58,7 @@ public class ReasultBuilder {
         if (data != null) {
             result.put("data", data);
         } else {
-            result.put("data", "null");
+            result.putNull("data");
         }
         if (code == null) {
             result.put("code", ERROR_500);
@@ -84,6 +84,9 @@ public class ReasultBuilder {
     }
     public static JsonObject buildBadRequest(String msg) {
         return buildError(null, BAD_REQUEST, msg);
+    }
+    public static JsonObject buildBadRequest(JsonObject data) {
+        return buildError(data, BAD_REQUEST, null);
     }
     public static JsonObject buildNoAuth() {
         return buildError(null, NO_AUTH, "No auth");

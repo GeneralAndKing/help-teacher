@@ -3,6 +3,8 @@ package cn.echocow.gak.teacher.common;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -19,7 +21,7 @@ import java.util.Set;
  * @date 18-12-12 下午3:24
  */
 public class RestfulApiVerticle extends AbstractVerticle {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestfulApiVerticle.class);
 
     /**
      * 开启 web 跨域支持
@@ -48,6 +50,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
             ctx.response().putHeader("content-type", "application/json");
             ctx.next();
         });
+        LOGGER.info("Route success!");
     }
 
     /**
@@ -56,6 +59,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param context routing context
      */
     protected void ok(RoutingContext context) {
+        LOGGER.info("200 Success");
         context.response().setStatusCode(200)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildSuccess().toString());
@@ -68,6 +72,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param content body content in JSON format
      */
     protected void ok(RoutingContext context, JsonObject content) {
+        LOGGER.info("200 Success:" + content.toString());
         context.response().setStatusCode(ReasultBuilder.SUCCESS_CODE)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildSuccess(content).toString());
@@ -79,6 +84,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param context routing context
      */
     protected void register(RoutingContext context, JsonObject content) {
+        LOGGER.info("201 Success:" + content.toString());
         context.response().setStatusCode(ReasultBuilder.SUCCESS_REG)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildReg(content).toString());
@@ -101,10 +107,37 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param context routing context
      */
     protected void badRequest(RoutingContext context) {
+        LOGGER.info("400 Bad Request");
         context.response().setStatusCode(ReasultBuilder.BAD_REQUEST)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildBadRequest().toString());
     }
+
+    /**
+     * 发回状态为 400 Bad Request的回复。
+     *
+     * @param context routing context
+     */
+    protected void badRequest(RoutingContext context, String msg) {
+        LOGGER.info("400 Bad Request" + msg);
+        context.response().setStatusCode(ReasultBuilder.BAD_REQUEST)
+                .putHeader("content-type", "application/json")
+                .end(ReasultBuilder.buildBadRequest(msg).toString());
+    }
+
+
+    /**
+     * 发回状态为 400 Bad Request的回复。
+     *
+     * @param context routing context
+     */
+    protected void badRequest(RoutingContext context, JsonObject content) {
+        LOGGER.info("400 Bad Request: " + content.toString());
+        context.response().setStatusCode(ReasultBuilder.BAD_REQUEST)
+                .putHeader("content-type", "application/json")
+                .end(ReasultBuilder.buildBadRequest(content).toString());
+    }
+
 
 
     /**
@@ -113,6 +146,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param context routing context
      */
     protected void passwordError(RoutingContext context) {
+        LOGGER.info("401 Password Error!");
         context.response().setStatusCode(ReasultBuilder.PADDWORD_ERROR)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildPasswordError().toString());
@@ -124,6 +158,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param context routing context
      */
     protected void noAuth(RoutingContext context) {
+        LOGGER.info("403 No Auth!");
         context.response().setStatusCode(ReasultBuilder.NO_AUTH)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildNoFound().toString());
@@ -135,6 +170,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param context routing context
      */
     protected void notFound(RoutingContext context) {
+        LOGGER.info("404 Not Found!");
         context.response().setStatusCode(ReasultBuilder.NO_FOUND)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildNoFound().toString());
@@ -147,6 +183,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param ex      exception
      */
     protected void internalError(RoutingContext context, Throwable ex) {
+        LOGGER.error("500 Internal Error!" + ex.getMessage());
         context.response().setStatusCode(ReasultBuilder.ERROR_500)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildError(ex.getMessage()).encodePrettily());
@@ -159,6 +196,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param cause   error message
      */
     protected void internalError(RoutingContext context, String cause) {
+        LOGGER.error("500 Internal Error!" + cause);
         context.response().setStatusCode(ReasultBuilder.ERROR_500)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildError(cause).toString());

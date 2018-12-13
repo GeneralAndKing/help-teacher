@@ -2,17 +2,17 @@ package cn.echocow.gak.teacher.verticle;
 
 import cn.echocow.gak.teacher.common.ReasultBuilder;
 import cn.echocow.gak.teacher.common.Runner;
-import cn.echocow.gak.teacher.common.VertxSingleton;
-import cn.echocow.gak.teacher.constants.ApiRoute;
+import cn.echocow.gak.teacher.constant.ApiRoute;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.mongo.MongoClient;
 
-import java.sql.ResultSet;
 import java.time.LocalDate;
 
 import static io.vertx.core.spi.resolver.ResolverProvider.DISABLE_DNS_RESOLVER_PROP_NAME;
@@ -25,9 +25,12 @@ import static io.vertx.core.spi.resolver.ResolverProvider.DISABLE_DNS_RESOLVER_P
  * @date 18-12-12 下午4:51
  */
 public class WebDbVerticle extends AbstractVerticle {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebDbVerticle.class);
+
     public static void main(String[] args) {
         System.getProperties().setProperty(DISABLE_DNS_RESOLVER_PROP_NAME, "true");
         Runner.runHazelcast(WebDbVerticle.class);
+        LOGGER.info("DataBase Success!");
     }
 
     private MongoClient client;
@@ -49,11 +52,17 @@ public class WebDbVerticle extends AbstractVerticle {
                 .put("db_name", db);
         client = MongoClient.createShared(vertx, mongoConfig, "gak");
         eventBus.consumer(getClass().getName(), this::onMessage);
-        JsonObject user = new JsonObject();
+        LOGGER.info("Database success get:" + uri + ":" + db);
         startFuture.complete();
     }
 
+    /**
+     * 信息获取与分发
+     *
+     * @param message 消息
+     */
     private void onMessage(Message<JsonObject> message) {
+        LOGGER.info("Get action:" + message.headers().get("action"));
         switch (message.headers().get("action")) {
             case "login":
                 login(message);
@@ -69,8 +78,18 @@ public class WebDbVerticle extends AbstractVerticle {
         }
     }
 
+    /**
+     * 上传
+     *
+     * @param message 消息
+     */
     private void post(Message<JsonObject> message) {
         JsonObject data = message.body();
+        String username = data.getString("username");
+        if (username == null || username.isEmpty()) {
+            message.reply(ReasultBuilder.buildBadRequest("上传失败，用户名无效！"));
+            return;
+        }
         client.findOne(ApiRoute.DOCUMENT_DATA, new JsonObject().put("username",
                 data.getString("username")), null, res -> {
             if (res.succeeded()) {
@@ -81,7 +100,7 @@ public class WebDbVerticle extends AbstractVerticle {
                         if (ar.succeeded()) {
                             message.reply(ReasultBuilder.buildSuccess());
                         } else {
-                            message.reply(ReasultBuilder.buildError(ar.cause().getMessage()));
+                            message.reply(ReasultBuilder.buildError("上传失败..."));
                         }
                     });
                 } else {
@@ -89,7 +108,7 @@ public class WebDbVerticle extends AbstractVerticle {
                         if (ar.succeeded()) {
                             message.reply(ReasultBuilder.buildSuccess());
                         } else {
-                            message.reply(ReasultBuilder.buildError(ar.cause().getMessage()));
+                            message.reply(ReasultBuilder.buildError("上传失败..."));
                         }
                     });
                 }
@@ -100,10 +119,31 @@ public class WebDbVerticle extends AbstractVerticle {
     }
 
     /**
-     * @param message
+     * 下载数据
+     * 成功后，data 中包含数据
+     *
+     * @param message 消息
      */
     private void get(Message<JsonObject> message) {
-
+        JsonObject data = message.body();
+        String username = data.getString("username");
+        if (username == null || username.isEmpty()) {
+            message.reply(ReasultBuilder.buildBadRequest("同步失败，用户名无效！"));
+            return;
+        }
+        client.findOne(ApiRoute.DOCUMENT_DATA, new JsonObject().put("username",
+                data.getString("username")), null, res -> {
+            if (res.succeeded()) {
+                JsonObject result = res.result();
+                if (result != null) {
+                    message.reply(ReasultBuilder.buildSuccess(result));
+                } else {
+                    message.reply(ReasultBuilder.buildSuccess(null));
+                }
+            } else {
+                message.reply(ReasultBuilder.buildError(res.cause().getMessage()));
+            }
+        });
     }
 
     /**
@@ -136,7 +176,7 @@ public class WebDbVerticle extends AbstractVerticle {
                         if (ar.succeeded()) {
                             message.reply(ReasultBuilder.buildReg());
                         } else {
-                            message.reply(ReasultBuilder.buildError(ar.cause().getMessage()));
+                            message.reply(ReasultBuilder.buildError("Insert Error!"));
                         }
                     });
                 }
