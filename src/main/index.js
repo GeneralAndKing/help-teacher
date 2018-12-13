@@ -9,11 +9,6 @@ import IpDb from "./dbServer/ipDb"
 //   console.log("111");
 // }
 // compress("111", "222", callBack, callBack, callBack);
-global.classDb = new ClassDb();
-global.jobDb = new JobDb();
-global.classToJobDb = new ClassToJobDb();
-global.ipDb = new IpDb();
-global.webServer = new webServer();
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -48,6 +43,17 @@ function createWindow() {
 
   mainWindow.webContents.openDevTools('detach');
 
+  //设置停止服务的回调函数 向渲染进程发送消息
+  let callBack = function () {
+    mainWindow.webContents.send('closeWebServer');
+  }
+
+  global.classDb = new ClassDb();
+  global.jobDb = new JobDb();
+  global.classToJobDb = new ClassToJobDb();
+  global.ipDb = new IpDb();
+  global.webServer = new webServer(callBack);
+
   ipcMain.on('close', e => {
     mainWindow.close()
     mainWindow = null
@@ -78,3 +84,5 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+
