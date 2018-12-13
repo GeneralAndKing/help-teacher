@@ -12,7 +12,14 @@
 
 
 <script>
-const { ipcRenderer: ipc } = require("electron");
+const { ipcRenderer, remote } = require("electron");
+
+ipcRenderer.on("closeWebServer", (event, arg) => {
+  let webServer = remote.getGlobal("webServer");
+  webServer.stop();
+  console.log("服务已停止");
+  //跳转主页
+});
 export default {
   data() {
     return {
@@ -22,18 +29,18 @@ export default {
   mounted: function() {
     let _this = this;
     setInterval(() => {
-      _this.time =new Date().toLocaleString();
+      _this.time = new Date().toLocaleString();
     }, 1000);
   },
   methods: {
     closeWin: function() {
-      ipc.send("close");
+      ipcRenderer.send("close");
     },
     minWin: function() {
-      ipc.send("hide-window");
+      ipcRenderer.send("hide-window");
     },
     maxWin: function() {
-      ipc.send("max-window");
+      ipcRenderer.send("max-window");
     }
   }
 };

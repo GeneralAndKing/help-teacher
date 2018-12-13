@@ -145,7 +145,7 @@ export default {
       //判断是否在编辑
       if (!_this.isEdit) {
         row.edit = true;
-        _this.$set(_this.tableData, index, row);
+        _this.$set(_this.tableData, _this.tableData.indexOf(row), row);
         _this.oldStudentId = row.id;
         _this.isEdit = true;
       } else {
@@ -155,41 +155,31 @@ export default {
     handleDelete(index, row) {
       //删除操作
       let _this = this;
-      _this
-        .$confirm("还有数据未保存，是否离开", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-          center: true
-        })
-        .then(() => {
-          if (_this.oldStudentId != null || !row.edit) {
-            let studentId;
-            if (!row.edit) {
-              studentId = row.id;
-            } else {
-              studentId = _this.oldStudentId;
-            }
-            let callBack = function(e, docs) {
-              if (e) {
-                error(_this, "删除失败");
-              } else {
-                _this.isEdit = false;
-                _this.tableData.splice(index, 1);
-                _this.oldStudentId = null;
-                success(_this, "删除成功");
-              }
-            };
-            let classDb = getClassDb();
-            classDb.deleteStudent(_this.className, row.id, callBack);
+      if (_this.oldStudentId != null || !row.edit) {
+        let studentId;
+        if (!row.edit) {
+          studentId = row.id;
+        } else {
+          studentId = _this.oldStudentId;
+        }
+        let callBack = function(e, docs) {
+          if (e) {
+            error(_this, "删除失败");
           } else {
             _this.isEdit = false;
-            _this.tableData.splice(index, 1);
+            _this.tableData.splice(_this.tableData.indexOf(row), 1);
             _this.oldStudentId = null;
             success(_this, "删除成功");
           }
-        })
-        .catch(() => {});
+        };
+        let classDb = getClassDb();
+        classDb.deleteStudent(_this.className, row.id, callBack);
+      } else {
+        _this.isEdit = false;
+        _this.tableData.splice(_this.tableData.indexOf(row), 1);
+        _this.oldStudentId = null;
+        success(_this, "删除成功");
+      }
 
       //判断数据是否不可以直接删除
     },
@@ -197,7 +187,7 @@ export default {
       let _this = this;
       if (_this.isEdit) {
         let oldStudents = [..._this.tableData];
-        oldStudents.splice(index, 1);
+        oldStudents.splice(_this.tableData.indexOf(row), 1);
         oldStudents.push(row);
         if (
           !(

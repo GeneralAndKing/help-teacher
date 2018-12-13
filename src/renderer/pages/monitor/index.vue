@@ -67,6 +67,7 @@ const { getClassToJobDb, getClassDb, getJobDb, getIpDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
 const os = require("os");
 const { remote } = require("electron");
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
@@ -77,7 +78,7 @@ export default {
       disabled: false,
       clock: false,
       search: "",
-      title: "您的服务已成功开启，学生访问地址为：10.2.21.25:8888",
+      title: "您的服务已成功开启，学生访问地址为:",
       // true为显示已完成的，false为显示未完成的
       finishedShow: true,
       tableData: [],
@@ -180,15 +181,33 @@ export default {
   },
   mounted: function() {
     let _this = this;
+    let webServer = remote.getGlobal("webServer");
+    if (!webServer.getStatus()) {
+      //提示框 跳转到主页或开启服务页面
+      _this.$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true
+      })
+        .then(() => {
+          _this.$router.push({
+            name: "server"
+          });
+        })
+        .catch(() => {});
+    }
     /**
      * 同步操作
      */
     let synchronization = () => {
       console.log(_this.activeName);
     };
-    let webServer = remote.getGlobal("webServer");
+
     let networkInterfaces = os.networkInterfaces();
-    console.log(networkInterfaces["WLAN"][1].address + ":" + webServer.getPort());
+    console.log(
+      networkInterfaces["WLAN"][1].address + ":" + webServer.getPort()
+    );
     _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
       0,
       0,

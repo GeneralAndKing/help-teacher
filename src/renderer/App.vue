@@ -9,23 +9,25 @@
           router-view(@changeSide="aside=!aside")
 </template>
 
-<style lang="stylus" >
-  @import "styles/app"
-</style>
+
 
 <script>
-  import TitleBar from "./components/TitleBar.vue";
-  import SideBar from "./components/SideBar.vue";
+import TitleBar from "./components/TitleBar.vue";
+import SideBar from "./components/SideBar.vue";
 
-  export default {
-    data() {
-      return {
-        aside: false
-      }
-    },
-    components: {
-      "side-bar": SideBar,
-      "title-bar": TitleBar
-    }
-  };
+export default {
+  data() {
+    return {
+      aside: false
+    };
+  },
+  components: {
+    "side-bar": SideBar,
+    "title-bar": TitleBar
+  }
+};
 </script>
+
+<style lang="stylus" >
+@import 'styles/app';
+</style>

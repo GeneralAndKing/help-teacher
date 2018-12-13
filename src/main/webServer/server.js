@@ -1,25 +1,38 @@
 export default class webServer {
-	constructor() {
+	constructor(callBack) {
 		this.app = require('./app');
 		this.http = require('http');
 		this.port = null;
 		this.status = false;
+		this.monitor = null;
+		this.callBack = callBack;
 	}
-	start(port) {
-		this.port = port;
-		this.restart();
-		// this.server.on('error', onError);
-		// this.server.on('listening', onListening);
-	}
-	restart() {
-		this.app.set('port', this.port);
-		this.server = this.http.createServer(this.app);
-		this.server.listen(this.port);
-		this.status = true;
+	start(port, time) {
+		if (!this.status) {
+			this.port = port;
+			this.time = time;
+			this.app.set('port', this.port);
+			this.server = this.http.createServer(this.app);
+			this.server.listen(this.port);
+			this.monitor = setTimeout(this.callBack, this.time);
+			this.status = true;
+			return true;
+		}
+		else {
+			return false;
+		}
+
 	}
 	stop() {
-		this.server.close();
-		this.status = false;
+		if (this.status) {
+			this.server.close();
+			window.clearTimeout(this.monitor);
+			this.monitor = null;
+			this.status = false;
+		}
+		else {
+			return false;
+		}
 	}
 	getStatus() {
 		return this.status;
@@ -27,7 +40,12 @@ export default class webServer {
 	getPort() {
 		return this.port;
 	}
+	getTime() {
+		return this.time;
+	}
+
 }
+
 
 
 

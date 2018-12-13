@@ -394,7 +394,6 @@ class Browserlib(object):
 class Task(Browserlib):
     studentfile=os.path.dirname(__file__)+r'\student.xlsx'
     className="测试1班" +'\n'
-
     @log_time_delta
     def uploadClassFileAndChangeStudent(self):
         #点击班级管理
@@ -410,11 +409,41 @@ class Task(Browserlib):
         element=self.find_display_element('el-input__inner',BY.CLASS_NAME)
         self.input_human(element,self.className)
 
-        self.scroll_to_bottom_human()
-        self.scroll_to_top_human()
 
         element=self.find_display_element('//*[@id="student-info"]/div/div[2]/table/thead/tr/th[5]/div/div/input')
-        self.input_human(element,)
+        self.input_human(element,"王丰豪")
+        #点击删除
+        self.click(self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr/td[5]/div/button[2]'))
+
+        #清空搜索框
+        self.input_clear_human(element)
+
+        #点击编辑
+        self.click(self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr[4]/td[5]/div/button[1]'))
+
+        element=self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr[4]/td[3]/div/div/input')
+        #清空姓名
+        self.input_clear_human(element)
+        #输入姓名
+        self.input_human(element,'我是测试')
+
+        #点击性别
+        self.click(self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr[4]/td[4]/div/div/div'))
+        #点击女
+        self.click(self.find_display_element('/html/body/div[3]/div[1]/div[1]/ul/li[2]'))
+        #点击保存
+        self.click(self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr[4]/td[5]/div/button[1]'))
+        #点击主页
+        self.click(self.find_display_element('//*[@id="sideBar"]/ul/li[1]'))
+
+
+
+
+
+
+
+
+
 
 
 
