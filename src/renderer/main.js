@@ -10,8 +10,13 @@ import VueCountdown from '@chenfengyuan/vue-countdown';
 // 或者在不关心打包体积时一次引入全部图标
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
+import VuejsDialog from 'vuejs-dialog'
+// 自定义时引入
+// import VuejsDialogMixin from 'vuejs-dialog/vuejs-dialog-mixin.min.js';
+import 'vuejs-dialog/dist/vuejs-dialog.min.css'
 
 // 全局注册（在 `main .js` 文件中）
+Vue.use(VuejsDialog);
 Vue.component('v-icon', Icon);
 Vue.component(VueCountdown.name, VueCountdown);
 Vue.prototype.$echarts = echarts;
