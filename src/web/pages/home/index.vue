@@ -144,7 +144,7 @@
                                 this.$message.success('作业提交成功，重复提交相同文件会覆盖上一次提交的文件！');
                                 this.reload();
                             }else{
-                                this.$message.success('作业提交失败'+ response.data.error +'！');
+                                this.$message.error('作业提交失败'+ response.data.error +'！');
                             }
                             
                         }
