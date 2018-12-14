@@ -1,9 +1,10 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1);")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
       span#gak-main-head-title Welcome
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item 首页
 </template>
 
 

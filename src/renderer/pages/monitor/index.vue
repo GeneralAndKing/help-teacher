@@ -1,9 +1,10 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title 实时监控
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
+      span#gak-main-head-title Monitor
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item 监控
     el-scrollbar#gak-main-monitor
       el-tabs(v-model='activeName', @tab-click="tabChange")
         el-tab-pane(label='作业信息', name='first')

@@ -1,7 +1,7 @@
 
 let idReg = /^\d{1,15}$/;
 let sexReg = /^['男'|'女']$/;
-let nameReg = /^[\u4E00-\u9FA5]{2,4}$/;
+let nameReg = /^[\u4E00-\u9FA5]{2,5}$/;
 const verifyStudentUnique = (studentJsons) => {
   let hash = {};
   for (let i = 0, size = studentJsons.length; i < size; i++) {

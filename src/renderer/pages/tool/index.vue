@@ -1,9 +1,10 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title 其他工具
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
+      span#gak-main-head-title Tool
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item 工具
     #gak-main-tools
       template(v-for="(tool, index) in toolList")
         el-col(:span='8')
