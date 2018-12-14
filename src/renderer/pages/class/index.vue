@@ -1,9 +1,10 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title 班级管理
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
+      span#gak-main-head-title Class
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item 班级
     el-scrollbar#gak-main-content-class
       el-collapse(v-model='activeNames', value=2)
         el-collapse-item(title='新增班级', name='1')

@@ -1,9 +1,10 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title 作业管理
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
+      span#gak-main-head-title Job
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item 作业
     el-scrollbar#gak-main-content-job
       el-dialog(title='作业', :visible.sync='dialogFormVisible', top="20px")
         el-form(:model='form')

@@ -1,9 +1,11 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title 随机点名
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
+      span#gak-main-head-title Call
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item(:to="{ path: '/tool' }") 工具
+        el-breadcrumb-item 点名
     #gak-main-call
       #gak-main-call-class.gak-tip-blue
         span 请选择您的班级：
