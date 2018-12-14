@@ -4,11 +4,11 @@
         el-container
             el-aside(width='50%')
                 #app(width='100%')
-                    el-alert(title="作业标题:{{jobName}}",type='success')
-                    el-alert(title="作业详情:{{jobContent}}",type='success')
                     #gak-main-chart(style='width: 600px;height:400px;')
 
             el-main(class='main',width='50%') 交作业
+                span 作业标题:{{jobName}}
+                span 作业详情:{{jobContent}}
                 el-form(ref='form', :model='form', label-width='200px')
                     el-form-item(label='学号',prop='StudentId',:rules="[\
           { required: true, message: '学号不能为空'},\
