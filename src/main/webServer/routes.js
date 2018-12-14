@@ -215,7 +215,6 @@ router.get('/getJobInformation',function(req,res,next){
                     let jobContent = result[0].jobContent;
                     let jobTypes = result[0].jobTypes;
                     let jobLimitType = '';
-                    let jobTypes = result[0].jobTypes;
                     res.json({'status': 1,'data':{'jobName':jobName,'className':className,'startTime':startTime,'stopTime':stopTime,'studentNum':studentNum,'jobContent':jobContent,'jobTypes':jobTypes}});
                 }else{
                     res.json({'status': 0 ,'error':'信息查询失败'});
