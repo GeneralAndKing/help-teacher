@@ -37,7 +37,7 @@ function createWindow() {
     mainWindow = null
   })
 
-  mainWindow.webContents.openDevTools('detach');
+  mainWindow.webContents.openDevTools();
 
   //设置停止服务的回调函数 向渲染进程发送消息
   let closeCallBack = function () {

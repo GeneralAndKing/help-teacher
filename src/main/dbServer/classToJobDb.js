@@ -97,10 +97,13 @@ export default class ClassToJobDb {
         this.db.update({ "className": oldClassName, "jobName": oldJobName }, classToJobJson, callBack);
     }
     updateStatus(oldStatus, status, callBack) {
-        this.db.update({ "status": oldStatus }, { $set: { "status": status } }, { multi: true }, callBack);
+        this.db.update({ "status": oldStatus }, { $set: { "status": status } }, callBack);
     }
     deleteUnfinishedStudent(jobName, className, studentId, callBack) {
         this.db.update({ "jobName": jobName, "className": className }, { $pull: { unfinishedStudents: { id: studentId } } }, callBack);
+    }
+    deleteAllClassToJob(callBack) {
+        return this.db.remove({},callBack);
     }
 
 }

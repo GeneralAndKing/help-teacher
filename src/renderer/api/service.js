@@ -1,5 +1,6 @@
 const axios = require('axios');
-const {error, success, warning} = require("@/api/message");
+const { error, success, warning } = require("@/api/message");
+const { getClassToJobDb, getClassDb, getJobDb } = require("@/api/db");
 const instance = axios.create();
 instance.defaults.timeout = 6000; //6000的超时验证
 instance.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
@@ -40,13 +41,43 @@ const login = ($this, user, username) => {
 
 const download = ($this) => {
   let host = localStorage.getItem("host");
-  instance.get(host + "/api/teacher/" + localStorage.getItem("username"),)
+  instance.get(host + "/api/teacher/" + localStorage.getItem("username"))
     .then(response => {
       let data = response.data;
       if (data.data == null) {
         success($this, "无数据可同步......");
       } else {
-        console.log(data);
+        let classDb = getClassDb();
+        let jobDb = getJobDb();
+        let classToJobDb = getClassToJobDb();
+        let classCallBack = function (e, docs) {
+          if (e) {
+            warning($this, "class同步失败");
+          }
+          else {
+            classDb.insertClass(data.data.data.classDb);
+          }
+        }
+        classDb.deleteAllClass(classCallBack);
+        let jobCallBack = function (e, docs) {
+          if (e) {
+            warning($this, "job同步失败");
+          }
+          else {
+            jobDb.insertJob(data.data.data.jobDb);
+          }
+        }
+        jobDb.deleteAllJob(jobCallBack);
+        let classToJobCallBack = function (e, docs) {
+          if (e) {
+            warning($this, "classToJob同步失败");
+          }
+          else {
+            classToJobDb.insertClassToJob(data.data.data.classToJobDb);
+          }
+        }
+        classToJobDb.deleteAllClassToJob(classToJobCallBack);
+
         // data.data 是具体获取到的数据，在这里进行同步到本地数据库
         success($this, "数据已同步......");
       }
@@ -63,79 +94,43 @@ const download = ($this) => {
 
 const upload = ($this) => {
   let host = localStorage.getItem("host");
+  let classDb = getClassDb();
   // 在这里封装本地数据，必须携带 username 和 data
-  const data = {
-    "username": localStorage.getItem("username"),
-    "data": {
-      "classDb": {
-        "className": "2012316",
-        "students": [
-          {
-            "id": "201607010244",
-            "name": "睿哥",
-            "sex": "男"
-          },
-          {
-            "id": "201607010244",
-            "name": "睿少",
-            "sex": "男"
-          }
-        ]
-      },
-      "jobDb": [
-        {
-          "jobName": "第一次作业",
-          "jobContent": "具体详情是做什么的",
-          "jobTypes": [
-            "excel",
-            "ppt"
-          ]
-        },
-        {
-          "jobName": "第二次作业",
-          "jobContent": "具体详情是做什么的",
-          "jobTypes": [
-            "execl",
-            "ppt"
-          ]
+  classDb.findAllClass().exec((e, classJsons) => {
+    let jobDb = getJobDb();
+    jobDb.findAllJob().exec((e, jobJsons) => {
+      let classToJobDb = getClassToJobDb();
+      classToJobDb.findAllClassToJob().exec((e, classToJobJsons) => {
+        if (classJsons.length == 0 && jobJsons.length == 0 && classToJobJsons.length == 0) {
+          error($this, "无数据可备份");
+          return;
         }
-      ],
-      "classToJobDb": {
-        "className": "2016计算机科学与技术",
-        "jobName": "作业名字",
-        "startTime": "时间戳",
-        "stopTime": 30,
-        "studentNum": 68,
-        "status": 0,
-        "unfinishedStudents": [
-          {
-            "name": "樊总",
-            "id": "201607010244",
-            "sex": "男"
-          },
-          {
-            "name": "睿总",
-            "id": "201607010244",
-            "sex": "男"
+        const data = {
+          "username": localStorage.getItem("username"),
+          "data": {
+            "classDb": classJsons,
+            "jobDb": jobJsons,
+            "classToJobDb": classToJobJsons
           }
-        ]
-      }
-    }
-  };
-  instance.post(host + "/api/teacher", JSON.stringify(data))
-    .then(response => {
-      let data = response.data;
-      console.log(data);
-      success($this, "数据已备份至服务器......");
-    })
-    .catch(error => {
-      let response = error.response;
-      if (response.status === 400) {
-        _error($this, "备份失败，请求参数不合法！");
-      } else {
-        _error($this, "备份失败，服务器内部错误！");
-      }
-    })
+        };
+        instance.post(host + "/api/teacher", JSON.stringify(data))
+          .then(response => {
+            let data = response.data;
+            console.log(data);
+            success($this, "数据已备份至服务器......");
+          })
+          .catch(error => {
+            let response = error.response;
+            if (response.status === 400) {
+              _error($this, "备份失败，请求参数不合法！");
+            } else {
+              _error($this, "备份失败，服务器内部错误！");
+            }
+          })
+      })
+
+    });
+  });
 };
 
 
