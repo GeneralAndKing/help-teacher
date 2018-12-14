@@ -69,10 +69,12 @@ export default {
         jobName: null,
         startTime: null,
         time: null,
+        timestamp: null,
         status: 1,
-        unfinishedStudents: null
+        unfinishedStudents: null,
+        studentNum: null
       },
-      ip:null,
+      ip: null,
       ips: [],
       port: 8888,
       jobJsons: [],
@@ -117,8 +119,11 @@ export default {
       let webServer = remote.getGlobal("webServer");
       for (const classJson of _this.classJsons) {
         if (classJson.className == _this.form.className) {
+          let time = new Date();
           _this.form.unfinishedStudents = classJson.students;
-          _this.form.startTime = new Date().toLocaleString();
+          _this.form.startTime = time.toLocaleString();
+          _this.form.timestamp = time.getTime();
+          _this.studentNum = classJson.students.length;
           break;
         }
       }
@@ -126,7 +131,13 @@ export default {
         if (e) {
           error(_this, "开启服务错误");
         } else {
-          webServer.start(_this.ip,_this.port, _this.form.time);
+          webServer.start(
+            _this.ip,
+            _this.port,
+            _this.form.time,
+            _this.form.jobName,
+            _this.form.className
+          );
           Loading.service({ fullscreen: true }).close();
         }
       };

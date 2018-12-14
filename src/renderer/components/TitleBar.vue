@@ -13,6 +13,7 @@
 
 <script>
 const { ipcRenderer, remote } = require("electron");
+const { getClassToJobDb } = require("@/api/db");
 export default {
   data() {
     return {
@@ -21,22 +22,38 @@ export default {
   },
   mounted: function() {
     let _this = this;
+    let webServer = remote.getGlobal("webServer");
     ipcRenderer.on("closeWebServer", (event, arg) => {
-      let webServer = remote.getGlobal("webServer");
       webServer.stop();
-      _this.$alert(
-        "收取服务已结束,可到对应的作业管理查看收取详情(打包作业正在进行中)",
-        "提示",
-        {
-          confirmButtonText: "跳转到主页",
-          callback: action => {
-            _this.$router.push({
-              name: "home"
-            });
-          }
-        }
-      );
+      _this.$dialog.alert("服务结束,正在打包文件");
       //跳转主页
+    });
+    ipcRenderer.on("compress", message => {
+      if (message) {
+        _this.$notify({
+          title: "打包通知",
+          message: "打包文件成功",
+          position: "top-left",
+          type: "success"
+        });
+      } else {
+        _this.$notify.error({
+          title: "打包通知",
+          message: "打包文件错误,可到upload下查看",
+          position: "top-left"
+        });
+      }
+    });
+    let classToJobDb = getClassToJobDb();
+    classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
+      if (classToJobJsons.length > 0) {
+        classToJobDb.updateStatus(1, 0, (e, docs) => {});
+        _this.$notify.error({
+          title: "服务异常",
+          message: "上次程序运行服务未关闭,已异常暂停",
+          position: "top-left"
+        });
+      }
     });
     setInterval(() => {
       _this.time = new Date().toLocaleString();

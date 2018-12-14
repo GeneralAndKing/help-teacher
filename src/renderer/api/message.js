@@ -1,22 +1,16 @@
 const error = ($this, message) => {
-    $this.$notify.error({
-        title: "错误",
-        message: message,
-        position: "bottom-right"
-      });
+    $this.$message.error(message);
 }
 const success = ($this, message) => {
-    $this.$notify.success({
-        title: "成功",
+    $this.$message({
         message: message,
-        position: "bottom-right"
+        type: 'success'
       });
 }
 const warning = ($this, message) => {
-    $this.$notify.warning({
-        title: "警告",
+    $this.$message({
         message: message,
-        position: "bottom-right"
+        type: 'warning'
       });
 }
 export {

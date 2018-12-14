@@ -7,7 +7,8 @@ import path from 'path';
     "startTime":"时间戳",
     "stopTime":30分钟(计算时间戳),
     "studentNum":68(总人数),
-    "status": 0(未开启) 1(收取中) 2(收取完成)
+    "timestamp":时间毫秒,
+    "status": 0(异常暂停) 1(收取中) 2(收取完成)
     "unfinishedStudents":
     [
         {
@@ -55,8 +56,8 @@ export default class ClassToJobDb {
             className: null,
             jobName: null,
             startTime: null,
-            stopTime: null,
-            peopleNum: null,
+            time: null,
+            studentNum: null,
             status: null,
             unfinishedStudents:
                 [
@@ -94,6 +95,9 @@ export default class ClassToJobDb {
     }
     updateClassAndJob(oldJobName, oldClassName, classToJobJson, callBack) {
         this.db.update({ "className": oldClassName, "jobName": oldJobName }, classToJobJson, callBack);
+    }
+    updateStatus(oldStatus, status, callBack) {
+        this.db.update({ "status": oldStatus }, { $set: { "status": status } }, { multi: true }, callBack);
     }
     deleteUnfinishedStudent(jobName, className, studentId, callBack) {
         this.db.update({ "jobName": jobName, "className": className }, { $pull: { unfinishedStudents: { id: studentId } } }, callBack);

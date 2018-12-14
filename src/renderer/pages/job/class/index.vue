@@ -41,6 +41,7 @@ export default {
   mounted() {
     let _this = this;
     let classToJobDb = getClassToJobDb();
+    console.log(_this.$route.params.jobName);
     classToJobDb
       .findByJobName(_this.$route.params.jobName)
       .exec((error, classToJobJsons) => {

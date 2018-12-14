@@ -21,7 +21,7 @@
               el-col(:span='12') {{ startTime }}
             el-row(:gutter='20')
               el-col(:span='12') 时间间隔
-              el-col(:span='12') {{ time }}
+              el-col(:span='12') {{ waitTime }}
         el-tab-pane(label='服务管理', name='second')
           #gak-main-monitor-time
             countdown(:time='time', ref="countdown", :transform="transform", @start="changStatus", @abort="changStatus",
@@ -66,6 +66,7 @@
 const { getClassToJobDb, getClassDb, getJobDb, getIpDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
 const { remote } = require("electron");
+const { verifyNull } = require("@/api/judge");
 export default {
   data() {
     return {
@@ -84,6 +85,7 @@ export default {
       jobName: null,
       startTime: null,
       time: null,
+      waitTime: null,
       finishedStudents: [],
       unfinishedStudents: [],
       option: {
@@ -180,9 +182,14 @@ export default {
   mounted: function() {
     let _this = this;
     let webServer = remote.getGlobal("webServer");
-    if (!webServer.getStatus()) {
+    if (
+      !(
+        verifyNull(webServer.getClassName()) &&
+        verifyNull(webServer.getJobName())
+      )
+    ) {
       //提示框 跳转到主页或开启服务页面
-      warning(_this, "你还没有开启服务");
+      warning(_this, "你还没有开启过服务");
       // _this.$router.push({
       //   name: "server"
       // });
@@ -218,20 +225,22 @@ export default {
       ]
     );
     let classToJobDb = getClassToJobDb();
-    classToJobDb.findByStatus("1").exec((e, classToJobJsons) => {
+    classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
+      console.log(classToJobJsons);
       if (e || classToJobJsons.length != 1) {
         error(_this, "数据出错");
       } else {
-        classToJobJson = classToJobJsons[0];
+        let classToJobJson = classToJobJsons[0];
         _this.unfinishedStudents = classToJobJson.unfinishedStudents;
         _this.className = classToJobJson.className;
         _this.jobName = classToJobJson.jobName;
         _this.startTime = classToJobJson.startTime;
+        _this.waitTime = classToJobJson.time;
         _this.time =
           classToJobJson.time * 60 * 1000 -
-          (new Date() - new Date(classToJobJson.startTime));
+          (new Date().getTime() - classToJobJson.timestamp);
         let ipDb = getIpDb();
-        ipDb.findAll().exec((e, ipJsons) => {
+        ipDb.findAllAddress().exec((e, ipJsons) => {
           if (e) {
             error(_this, "数据出错");
           } else {
