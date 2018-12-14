@@ -35,14 +35,7 @@
 
 <script>
 const { ipcRenderer, remote } = require("electron");
-const service = require("@/api/service");
-const Base64 = require("js-base64").Base64;
-ipcRenderer.on("closeWebServer", (event, arg) => {
-  let webServer = remote.getGlobal("webServer");
-  webServer.stop();
-  console.log("服务已停止");
-  //跳转主页\
-});
+const { getClassToJobDb } = require("@/api/db");
 export default {
   data() {
     let validatePassword = (rule, value, callback) => {
@@ -94,6 +87,39 @@ export default {
   },
   mounted: function() {
     let _this = this;
+    let webServer = remote.getGlobal("webServer");
+    ipcRenderer.on("closeWebServer", (event, arg) => {
+      webServer.stop();
+      _this.$dialog.alert("服务结束,正在打包文件");
+      //跳转主页
+    });
+    ipcRenderer.on("compress", message => {
+      if (message) {
+        _this.$notify({
+          title: "打包通知",
+          message: "打包文件成功",
+          position: "top-left",
+          type: "success"
+        });
+      } else {
+        _this.$notify.error({
+          title: "打包通知",
+          message: "打包文件错误,可到upload下查看",
+          position: "top-left"
+        });
+      }
+    });
+    let classToJobDb = getClassToJobDb();
+    classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
+      if (classToJobJsons.length > 0) {
+        classToJobDb.updateStatus(1, 0, (e, docs) => {});
+        _this.$notify.error({
+          title: "服务异常",
+          message: "上次程序运行服务未关闭,已异常暂停",
+          position: "top-left"
+        });
+      }
+    });
     setInterval(() => {
       _this.time = new Date().toLocaleString();
     }, 1000);

@@ -34,6 +34,7 @@ const { verifyStudentUnique } = require("@/api/judge");
 const { getClassDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
 const { ipcRenderer, remote } = require("electron");
+const { MessageBox } = require("element-ui");
 export default {
   data() {
     return {
@@ -61,13 +62,12 @@ export default {
       let flag = results[0];
       let classJson = results[1];
       if (flag && verifyStudentUnique(classJson.students)) {
-        _this
-          .$prompt("请输入班级名称", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            inputPattern: /\S/,
-            inputErrorMessage: "输入不能为空"
-          })
+        MessageBox.prompt("请输入班级名称", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputPattern: /\S/,
+          inputErrorMessage: "输入不能为空"
+        })
           .then(({ value }) => {
             classJson.className = value;
             let classDb = getClassDb();
@@ -98,7 +98,6 @@ export default {
     },
     handleStudent(index, row) {
       let _this = this;
-      // 实现本地存储，使得跳转过去的页面刷新后数据依旧存在
       _this.$router.push({
         name: "student",
         params: {
@@ -119,14 +118,19 @@ export default {
     handleDelete(index, row) {
       let _this = this;
       let classDb = getClassDb();
-      _this
-        .$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-          center: true
-        })
-        .then(() => {
+      _this.$dialog
+        .confirm(
+          {
+            title: "提示",
+            body: "删除后不可恢复，确认删除此数据吗？"
+          },
+          {
+            loader: true,
+            okText: "确认",
+            cancelText: "取消"
+          }
+        )
+        .then(dialog => {
           let callBack = function(e, docs) {
             if (e) {
               error(_this, "删除失败");
@@ -134,6 +138,7 @@ export default {
               _this.tableData.splice(index, 1);
               success(_this, "删除成功");
             }
+            dialog.close();
           };
           classDb.deleteClass(row.className, callBack);
         })

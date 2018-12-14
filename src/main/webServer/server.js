@@ -1,22 +1,27 @@
 export default class webServer {
-	constructor(callBack) {
+	constructor(closeCallBack, compressCallBack) {
 		this.app = require('./app');
 		this.http = require('http');
 		this.ip = null;
 		this.port = null;
 		this.status = false;
 		this.monitor = null;
-		this.callBack = callBack;
+		this.closeCallBack = closeCallBack;
+		this.jobName = null;
+		this.className = null;
+		this.compressCallBack = compressCallBack;
 	}
-	start(ip,port, time) {
+	start(ip, port, time, jobName, className) {
 		if (!this.status) {
+			this.jobName = jobName;
+			this.className = className;
 			this.ip = ip;
 			this.port = port;
-			this.time = time*60*1000;
+			this.time = time * 60 * 1000;
 			this.app.set('port', this.port);
 			this.server = this.http.createServer(this.app);
 			this.server.listen(this.port);
-			this.monitor = setTimeout(this.callBack, this.time);
+			this.monitor = setTimeout(this.closeCallBack, this.time);
 			this.status = true;
 			return true;
 		}
@@ -29,8 +34,9 @@ export default class webServer {
 		if (this.status) {
 			this.server.close();
 			clearTimeout(this.monitor);
-			this.monitor = null;
 			this.status = false;
+			this.compressCallBack(this.jobName, this.className);
+			return true;
 		}
 		else {
 			return false;
@@ -41,6 +47,12 @@ export default class webServer {
 	}
 	getAddress() {
 		return this.ip + "" + this.port + "";
+	}
+	getJobName() {
+		return this.jobName;
+	}
+	getClassName() {
+		return this.className;
 	}
 	getTime() {
 		return this.time;

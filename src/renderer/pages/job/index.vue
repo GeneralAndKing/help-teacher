@@ -99,35 +99,30 @@ export default {
      */
     handleDelete: function(key, job) {
       let _this = this;
-      let callBack = function(e, docs) {
-        if (e) {
-          error(_this, "删除信息失败");
-        } else {
-          _this.jobs.splice(key, 1);
-          success(_this, "删除信息成功");
-        }
-      };
-      let jobDb = getJobDb();
-      jobDb.deleteJob(job.jobName, callBack);
-      // _this
-      //   .$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
-      //     confirmButtonText: "确定",
-      //     cancelButtonText: "取消",
-      //     type: "warning",
-      //     center: true
-      //   })
-      //   .then(() => {
-      //     let callBack = function(e, docs) {
-      //       if (e) {
-      //         error(_this, "删除信息失败");
-      //       } else {
-      //         _this.jobs.splice(this.jobs.indexOf(job), 1);
-      //         success(_this, "删除信息成功");
-      //       }
-      //     };
-      //     jobDb.deleteJob(job.jobName, callBack);
-      //   })
-      //   .catch(() => {});
+      _this.$dialog
+        .confirm(
+          {
+            title: "提示",
+            body: "删除后不可恢复，确认删除此数据吗？"
+          },
+          {
+            loader: true,
+            okText: "确认",
+            cancelText: "取消"
+          }
+        )
+        .then(dialog => {
+          let callBack = function(e, docs) {
+            if (e) {
+              error(_this, "删除信息失败");
+            } else {
+              _this.jobs.splice(key, 1);
+              success(_this, "删除信息成功");
+            }
+          };
+          let jobDb = getJobDb();
+          jobDb.deleteJob(job.jobName, callBack);
+        });
     },
 
     /**
@@ -146,7 +141,6 @@ export default {
           // 此时为保存作业，先进行数据封装
 
           let callBack = function(e, docs) {
-            console.log(e);
             if (e) {
               error(_this, "保存信息失败");
             } else {

@@ -199,7 +199,7 @@ router.post('/submitHomework',function(req,res,next){
 //获取作业的基本信息
 router.get('/getJobInformation',function(req,res,next){
     //执行查询
-    let cursor = classToJobDb.findByfStatus(1);
+    let cursor = classToJobDb.findByStatus(1);
     cursor.exec((error,docs)=>{
         if(docs){
             //查询到的数据
@@ -214,8 +214,14 @@ router.get('/getJobInformation',function(req,res,next){
                 if(result){
                     let jobContent = result[0].jobContent;
                     let jobTypes = result[0].jobTypes;
-                    let jobLimitType = '';
-                    res.json({'status': 1,'data':{'jobName':jobName,'className':className,'startTime':startTime,'stopTime':stopTime,'studentNum':studentNum,'jobContent':jobContent,'jobTypes':jobTypes}});
+                    let studentNum = result[0].studentNum; 
+                    let jobLimitType = [];
+                    jobTypes.forEach((v,i,a)=>{
+                        console.log(v);
+                        jobLimitType.push('.' + v);
+                    });
+                    console.log(jobLimitType.join());
+                    res.json({'status': 1,'data':{'jobName':jobName,'className':className,'startTime':startTime,'studentNum':studentNum,'jobContent':jobContent,'jobTypes':jobLimitType.join()}});
                 }else{
                     res.json({'status': 0 ,'error':'信息查询失败'});
                 }
