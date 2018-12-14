@@ -199,7 +199,8 @@
                                             typeList.push("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
                                         }
                                     }
-                                    _this.fileTypes = typeList.join();                           }
+                                    _this.fileTypes = typeList.join();
+                                }
                             }
                         })
                         .catch( error => {
