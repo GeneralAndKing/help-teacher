@@ -2,7 +2,7 @@
   el-row#titleBar(type="flex" justify="space-between")
     el-col.gak-text-left(:span="8")
       i(class="el-icon-sold-out")
-      |&nbsp;el-icon-goods
+      |&nbsp;help teacher
     el-col(:span="8")
       h5 {{time}}
     el-col.gak-text-right(:span="8")
