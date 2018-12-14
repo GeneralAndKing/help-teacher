@@ -304,8 +304,10 @@ export default {
       let _this = this;
       if (item.index === "3") {
         // 重置动画效果
-        _this.charts.clear();
-        _this.charts.setOption(_this.option);
+        if(_this.charts){
+          _this.charts.clear();
+          _this.charts.setOption(_this.option);
+        }
       }
     }
   }

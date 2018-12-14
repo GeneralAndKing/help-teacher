@@ -18,7 +18,7 @@
                 .gak-job-title {{ classToJob.jobName }}
               .gak-job-content.gak-text-hidden  {{ classToJob.startTime }}
               .gak-job-footer.gak-text-left.gak-text-hidden 状态:
-                span(v-if="classToJob.status === 0") &nbsp;异常暂停
+                span(v-if="classToJob.status === 0") &nbsp;异常
                 span(v-if="classToJob.status === 1") &nbsp;收取中
                 span(v-if="classToJob.status === 2") &nbsp;收取完成
 

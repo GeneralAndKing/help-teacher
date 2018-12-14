@@ -14,7 +14,7 @@
         el-table-column(label='开始时间', prop='startTime',  sortable, align="center")
         el-table-column(label='状态', prop='status', width="80px", sortable, align="center")
           template(slot-scope='scope')
-            el-tag(type='info', v-if="scope.row.status === 0") 异常暂停
+            el-tag(type='info', v-if="scope.row.status === 0") 异常
             el-tag(type='warning', v-if="scope.row.status === 1") 收取中
             el-tag(type='success', v-if='scope.row.status === 2') 已完成
         el-table-column(align="center")
