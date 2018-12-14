@@ -25,12 +25,11 @@
               el-col(:span='12') {{ waitTime }}
         el-tab-pane(label='服务管理', name='second')
           #gak-main-monitor-time
-            countdown(:time='time', ref="countdown", :transform="transform", @start="changStatus", @abort="changStatus",
+            countdown(:time='time', ref="countdown", :transform="transform", @start="changStatus", 
             @end="end" )
               template(slot-scope='props')
                 | {{ props.hours }} : {{ props.minutes }} : {{ props.seconds }}
           #gak-main-monitor-btn
-            el-button(v-if="status", type="warning", @click="$refs.countdown.abort()") 暂停
             el-button(v-if="status", type="danger", @click="$refs.countdown.end()") 停止
             el-button(v-if="!status", type="success", @click="$refs.countdown.start()", v-bind:disabled="disabled" ) 继续
 
@@ -288,9 +287,11 @@ export default {
       _this.status = !_this.status;
     },
     end: function() {
+      let webServer = remote.getGlobal("webServer");
       let _this = this;
       _this.status = !_this.status;
       _this.disabled = true;
+      webServer.stop();
     },
     /**
      * 切换显示
@@ -304,7 +305,7 @@ export default {
       let _this = this;
       if (item.index === "3") {
         // 重置动画效果
-        if(_this.charts){
+        if (_this.charts) {
           _this.charts.clear();
           _this.charts.setOption(_this.option);
         }

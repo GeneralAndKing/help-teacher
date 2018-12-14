@@ -84,6 +84,16 @@ export default {
   },
   mounted() {
     let _this = this;
+    let classToJobDb = getClassToJobDb();
+    classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
+      if (classToJobJsons.length > 0) {
+        error(_this, "服务已开启 切换到监控页面");
+        _this.$router.push({
+          name: "monitor"
+        });
+      }
+    });
+
     let networkInterfaces = os.networkInterfaces();
     for (let networkInterface in networkInterfaces) {
       _this.ips.push({
