@@ -46,7 +46,7 @@ export default class webServer {
 		return this.status;
 	}
 	getAddress() {
-		return this.ip + "" + this.port + "";
+		return this.ip + ":" + this.port + "";
 	}
 	getJobName() {
 		return this.jobName;

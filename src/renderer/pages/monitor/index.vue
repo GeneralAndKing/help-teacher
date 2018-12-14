@@ -184,6 +184,7 @@ export default {
       warning(_this, "你还没有开启过服务");
       return;
     }
+    _this.title += webServer.getAddress();
     _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
       0,
       0,
@@ -291,7 +292,7 @@ export default {
       let _this = this;
       _this.status = !_this.status;
       _this.disabled = true;
-      webServer.stop();
+      // webServer.stop();
     },
     /**
      * 切换显示
