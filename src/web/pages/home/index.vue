@@ -39,7 +39,7 @@
                 fileUpload: false,
                 jobName: '',
                 jobContent: '',
-                fileTypes:[],
+                fileTypes:'',
                 data: [{ value: 0, name: "未交人数" }, { value: 0, name: "已交人数" }],
                 option: {
                     title: {
@@ -183,6 +183,7 @@
                                     _this.jobContent = response.data.data.jobContent;
                                     _this.data[0].value = response.data.data.unfinishedStudentNum;
                                     _this.data[1].value = response.data.data.studentNum;
+                                    _this.fileTypes = response.data.data.jobTypes;
                                 }
                             }
                         })
