@@ -88,10 +88,11 @@ export default {
     let classToJobDb = getClassToJobDb();
     classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
       if (classToJobJsons.length > 0) {
-        error(_this, "服务已开启 切换到监控页面");
+        warning(_this, "服务已开启 切换到监控页面");
         _this.$router.push({
           name: "monitor"
         });
+        globalBus.$emit('changeMenu',"monitor");
       }
     });
 
@@ -166,6 +167,7 @@ export default {
             _this.form.className
           );
           Loading.service({ fullscreen: true }).close();
+          success(_this, "服务已开启 切换到监控页面");
           _this.$router.push({
             name: "monitor"
           });

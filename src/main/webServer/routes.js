@@ -68,7 +68,6 @@ router.post('/upload',function(req,res,next){
 //查找状态为1且未上交的人员
 router.get('/getUnfinishedStudents',function(req,res,next){
     let cursor = classToJobDb.findByStatus(1);
-    console.log(cursor);
     cursor.exec((error,docs) => {
         res.json(docs[0].unfinishedStudents);
     });
@@ -106,7 +105,6 @@ router.post('/submitHomework',function(req,res,next){
             let classList = classDb.findByClassName(className);
             classList.exec((error,result)=>{
                 if(result){
-                    console.log('查询classdb')
                     let i = 0;
                     for(;i < result[0].students.length;i++){
                         if(result[0].students[i].id == StudentId){
@@ -133,7 +131,7 @@ router.post('/submitHomework',function(req,res,next){
                         let fileName = StudentId + '_' + name + '_' + jobName;
                         //有效数据永久目录
 
-                        let dataPath = 'upload/finally/'+ className +'/'+ jobName +'/';
+                        let dataPath = 'upload/finally/'+ className +'_'+ jobName +'/';
                         let newPath = dataPath + fileName + fileType;
                         // 判断数据目录是否存在 不存在则创建目录
                         if(!fs.existsSync(dataPath)){

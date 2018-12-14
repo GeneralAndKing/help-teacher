@@ -25,13 +25,13 @@
               el-col(:span='12') {{ waitTime }}
         el-tab-pane(label='服务管理', name='second')
           #gak-main-monitor-time
-            countdown(:time='time', ref="countdown", :transform="transform", @start="changStatus", 
+            countdown(v-if="time" :time='time', ref="countdown", :transform="transform", @start="changStatus", 
             @end="end" )
               template(slot-scope='props')
                 | {{ props.hours }} : {{ props.minutes }} : {{ props.seconds }}
           #gak-main-monitor-btn
-            el-button(v-if="status", type="danger", @click="$refs.countdown.end()") 停止
-            el-button(v-if="!status", type="success", @click="$refs.countdown.start()", v-bind:disabled="disabled" ) 继续
+            el-button(v-if="status&&time", type="danger", @click="$refs.countdown.end()") 停止
+            el-button(v-if="!status&&time", type="success", @click="$refs.countdown.start()", v-bind:disabled="disabled" ) 继续
 
         el-tab-pane(label='监控进度', name='third')
           #gak-main-monitor-table
@@ -132,28 +132,8 @@ export default {
         ],
         series: [
           {
-            name: "上传量",
+            name: "上传人数",
             type: "bar",
-            itemStyle: {
-              normal: { color: "rgba(0,0,0,0.05)" }
-            },
-            // 阴影数据
-            data: [],
-            radius: "100%",
-            barGap: "-100%",
-            barCategoryGap: "40%",
-            center: ["80%", "80%"]
-          },
-          {
-            type: "bar",
-            itemStyle: {
-              normal: {
-                color: ""
-              },
-              emphasis: {
-                color: ""
-              }
-            },
             // y 轴的数据
             data: []
           }
@@ -185,28 +165,6 @@ export default {
       return;
     }
     _this.title += webServer.getAddress();
-    _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
-      0,
-      0,
-      0,
-      1,
-      [
-        { offset: 0, color: "#83bff6" },
-        { offset: 0.5, color: "#188df0" },
-        { offset: 1, color: "#188df0" }
-      ]
-    );
-    _this.option.series[1].itemStyle.emphasis.color = new _this.$echarts.graphic.LinearGradient(
-      0,
-      0,
-      0,
-      1,
-      [
-        { offset: 0, color: "#2378f7" },
-        { offset: 0.7, color: "#2378f7" },
-        { offset: 1, color: "#83bff6" }
-      ]
-    );
 
     let classToJobDb = getClassToJobDb();
     classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
@@ -248,11 +206,13 @@ export default {
                 // _this.option.series[1].data;
                 // //ip
                 // _this.option.xAxis.data;
+                _this.option.series[0].data = [];
+                _this.option.xAxis.data = [];
+
                 for (const ipJson of ipJsons) {
                   if (_this.option.xAxis.data.indexOf(ipJson.address) == -1) {
                     _this.option.xAxis.data.push(ipJson.address);
-                    _this.option.series[0].data.push(20);
-                    _this.option.series[1].data.push(1);
+                    _this.option.series[0].data.push(1);
                   } else {
                     _this.option.series[0].data[
                       _this.option.xAxis.data.indexOf(ipJson.address)
@@ -260,10 +220,10 @@ export default {
                   }
                 }
                 // myChart.clear();
-                // myChart.setOption(_this.option);
+                myChart.setOption(_this.option);
               });
             };
-            _this.interval = setInterval(synchronization(), 5000);
+            _this.interval = setInterval(synchronization, 5000);
           }
         });
       }
@@ -289,10 +249,13 @@ export default {
     },
     end: function() {
       let webServer = remote.getGlobal("webServer");
+      let classToJobDb = getClassToJobDb();
       let _this = this;
       _this.status = !_this.status;
       _this.disabled = true;
-      // webServer.stop();
+      webServer.stop();
+      classToJobDb.updateStatus(1, 2, (e, docs) => {});
+      _this.$dialog.alert("服务结束,正在打包文件","确认");
     },
     /**
      * 切换显示

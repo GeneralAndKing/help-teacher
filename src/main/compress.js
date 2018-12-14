@@ -5,7 +5,7 @@ const path = require("path")
 module.exports = function compress(className, jobName, errorCallBack, successCallBack) {
     // 创建文件输出流
     console.log(__dirname);
-    let output = fs.createWriteStream(path.join(path.resolve("."), "/" + className + jobName + ".zip"))
+    let output = fs.createWriteStream(path.join(path.resolve("."), "/" + className + "_"+jobName + ".zip"))
     let archive = archiver('zip', {
         zlib: { level: 9 } // 设置压缩级别
     })

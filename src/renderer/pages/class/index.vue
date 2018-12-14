@@ -12,7 +12,7 @@
           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           :auto-upload="false")
             i(class="el-icon-upload")
-            div(class="el-upload__text") 将文件拖到此处，或
+            div(class="el-upload__text")
               em 点击提交
             div(class="el-upload__tip" slot="tip") 只能上传excel文件
         el-collapse-item(title='查看班级', name='2')

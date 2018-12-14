@@ -12,6 +12,27 @@
 
 
 <script>
+document.addEventListener("drag",()=>{
+  event.preventDefault();
+},false);
+document.addEventListener("dragstart",()=>{
+  event.preventDefault();
+},false);
+document.addEventListener("dragend",()=>{
+  event.preventDefault();
+},false);
+document.addEventListener("dragover",()=>{
+  event.preventDefault();
+},false);
+document.addEventListener("dragenter",()=>{
+  event.preventDefault();
+},false);
+document.addEventListener("dragleave",()=>{
+  event.preventDefault();
+},false);
+document.addEventListener("drop",()=>{
+  event.preventDefault();
+},false);
 import TitleBar from "./components/TitleBar.vue";
 import SideBar from "./components/SideBar.vue";
 
