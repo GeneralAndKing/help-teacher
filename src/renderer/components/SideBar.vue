@@ -1,6 +1,6 @@
 <template lang="pug">
   el-col(:span="18", id="sideBar")
-    el-menu(router, active-text-color="#ffffff", default-active="/")
+    el-menu(router, active-text-color="#ffffff", :default-active="activeMenu")
       template(v-for="(nav, index) in navList")
         el-menu-item(:index="nav.name")
           i(v-if="nav.el", :class="nav.icon")
@@ -9,8 +9,11 @@
 </template>
 
 <script>
-
+  import { globalBus } from '@/utils/_global';
   export default {
+    created() {
+      this.total();
+    },
     data() {
       return {
         /**
@@ -29,8 +32,17 @@
           {name: '/monitor', navItem: '实时监控', icon: 'cog', spin: true},
           {name: '/tool', navItem: '其他工具', icon: 'wrench'},
           {name: '/about', navItem: '关于', icon: 'laugh-beam'}
-        ]
+        ],
+        activeMenu: '/'
       };
+    },
+    methods: {
+      total: function() {
+        let _this = this;
+        globalBus.$on('changeMenu', (name) => {
+          _this.activeMenu = "/" + name;
+        });
+      },
     }
   }
 </script>

@@ -159,62 +159,106 @@ Members {size:3, ver:3} [
 - 期望的请求数据：
 ```json
 {
-    "username": "用户名",
-    "data": {
-        "classDb": {
-            "className": "班级名称",
-            "students": [
-                {
-                    "id": "学号",
-                    "name": "学生名称",
-                    "sex": "性别"
-                },
-                {
-                    "id": "学号",
-                    "name": "学生名称",
-                    "sex": "性别"
-                }
-            ]
-        },
-        "jobDb": [
-            {
-                "jobName": "作业名称",
-                "jobContent": "作业详情",
-                "jobTypes": [
-                    "excel",
-                    "ppt"
+  "code": 200,
+  "msg": "请求成功",
+  "data": {
+      "id": "mongodb 自带",
+      "username": "用户名",
+      "data": {
+          "classDb": [
+              {
+                "className": "班级名称",
+                "students": [
+                    {
+                        "id": "学号",
+                        "name": "学生名称",
+                        "sex": "性别"
+                    },
+                    {
+                        "id": "学号",
+                        "name": "学生名称",
+                        "sex": "性别"
+                    }
                 ]
-            },
-            {
-                "jobName": "作业名称",
-                "jobContent": "作业详情",
-                "jobTypes": [
-                    "execl",
-                    "ppt"
+              },
+              {
+                "className": "班级名称",
+                "students": [
+                    {
+                        "id": "学号",
+                        "name": "学生名称",
+                        "sex": "性别"
+                    },
+                    {
+                        "id": "学号",
+                        "name": "学生名称",
+                        "sex": "性别"
+                    }
                 ]
-            }
-        ],
-        "classToJobDb": {
-            "className": "班级名称",
-            "jobName": "作业名称",
-            "startTime": "时间戳",
-            "stopTime": 30,
-            "studentNum": 68,
-            "status": 0,
-            "unfinishedStudents": [
-                {
-                    "id": "学号",
-                    "name": "姓名",
-                    "sex": "性别"
-                },
-                {
-                    "id": "学号",
-                    "name": "姓名",
-                    "sex": "性别"
-                }
-            ]
-        }
-    }
+              }
+          ],
+          "jobDb": [
+              {
+                  "jobName": "作业名称",
+                  "jobContent": "作业详情",
+                  "jobTypes": [
+                      "excel",
+                      "ppt"
+                  ]
+              },
+              {
+                  "jobName": "作业名称",
+                  "jobContent": "作业详情",
+                  "jobTypes": [
+                      "execl",
+                      "ppt"
+                  ]
+              }
+          ],
+          "classToJobDb": [
+              {
+                  "className": "班级名称",
+                  "jobName": "作业名称",
+                  "startTime": "时间戳",
+                  "stopTime": 30,
+                  "studentNum": 68,
+                  "status": 0,
+                  "unfinishedStudents": [
+                      {
+                          "id": "学号",
+                          "name": "姓名",
+                          "sex": "性别"
+                      },
+                      {
+                          "id": "学号",
+                          "name": "姓名",
+                          "sex": "性别"
+                      }
+                  ]
+              },
+              {
+                  "className": "班级名称",
+                  "jobName": "作业名称",
+                  "startTime": "时间戳",
+                  "stopTime": 30,
+                  "studentNum": 68,
+                  "status": 0,
+                  "unfinishedStudents": [
+                      {
+                          "id": "学号",
+                          "name": "姓名",
+                          "sex": "性别"
+                      },
+                      {
+                          "id": "学号",
+                          "name": "姓名",
+                          "sex": "性别"
+                      }
+                  ]
+              }          
+          ]
+      }
+  }
 }
 ```
 ### 同步接口
@@ -244,21 +288,38 @@ Members {size:3, ver:3} [
       "id": "mongodb 自带",
       "username": "用户名",
       "data": {
-          "classDb": {
-              "className": "班级名称",
-              "students": [
-                  {
-                      "id": "学号",
-                      "name": "学生名称",
-                      "sex": "性别"
-                  },
-                  {
-                      "id": "学号",
-                      "name": "学生名称",
-                      "sex": "性别"
-                  }
-              ]
-          },
+          "classDb": [
+              {
+                "className": "班级名称",
+                "students": [
+                    {
+                        "id": "学号",
+                        "name": "学生名称",
+                        "sex": "性别"
+                    },
+                    {
+                        "id": "学号",
+                        "name": "学生名称",
+                        "sex": "性别"
+                    }
+                ]
+              },
+              {
+                "className": "班级名称",
+                "students": [
+                    {
+                        "id": "学号",
+                        "name": "学生名称",
+                        "sex": "性别"
+                    },
+                    {
+                        "id": "学号",
+                        "name": "学生名称",
+                        "sex": "性别"
+                    }
+                ]
+              }
+          ],
           "jobDb": [
               {
                   "jobName": "作业名称",
@@ -277,26 +338,48 @@ Members {size:3, ver:3} [
                   ]
               }
           ],
-          "classToJobDb": {
-              "className": "班级名称",
-              "jobName": "作业名称",
-              "startTime": "时间戳",
-              "stopTime": 30,
-              "studentNum": 68,
-              "status": 0,
-              "unfinishedStudents": [
-                  {
-                      "id": "学号",
-                      "name": "姓名",
-                      "sex": "性别"
-                  },
-                  {
-                      "id": "学号",
-                      "name": "姓名",
-                      "sex": "性别"
-                  }
-              ]
-          }
+          "classToJobDb": [
+              {
+                  "className": "班级名称",
+                  "jobName": "作业名称",
+                  "startTime": "时间戳",
+                  "stopTime": 30,
+                  "studentNum": 68,
+                  "status": 0,
+                  "unfinishedStudents": [
+                      {
+                          "id": "学号",
+                          "name": "姓名",
+                          "sex": "性别"
+                      },
+                      {
+                          "id": "学号",
+                          "name": "姓名",
+                          "sex": "性别"
+                      }
+                  ]
+              },
+              {
+                  "className": "班级名称",
+                  "jobName": "作业名称",
+                  "startTime": "时间戳",
+                  "stopTime": 30,
+                  "studentNum": 68,
+                  "status": 0,
+                  "unfinishedStudents": [
+                      {
+                          "id": "学号",
+                          "name": "姓名",
+                          "sex": "性别"
+                      },
+                      {
+                          "id": "学号",
+                          "name": "姓名",
+                          "sex": "性别"
+                      }
+                  ]
+              }          
+          ]
       }
   }
 }
