@@ -27,7 +27,8 @@
           {name: '/job', navItem: '作业管理', icon: 'address-book'},
           {name: '/server', navItem: '作业收取', icon: 'laptop'},
           {name: '/monitor', navItem: '实时监控', icon: 'cog', spin: true},
-          {name: '/tool', navItem: '其他工具', icon: 'wrench'}
+          {name: '/tool', navItem: '其他工具', icon: 'wrench'},
+          {name: '/about', navItem: '关于', icon: 'laugh-beam'}
         ]
       };
     }

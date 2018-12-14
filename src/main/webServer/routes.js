@@ -98,100 +98,114 @@ router.post('/submitHomework',function(req,res,next){
             };
             // 通过正则匹配获取客户端的ip4地址
             let ipv4 = ip(req).match(/\d+.\d+.\d+.\d+/);
-            ipv4 = ipv4 ? ipv4.join('.') : null;
-            //获取未交作业的学生列表
-            let students = docs[0].unfinishedStudents;
-            // console.log(students);
-            let i = 0;
+            let id = '';
+            let name = '';
+            let sex = '';
+            //查找学生信息的标志
             let index = -1;
-            //查找学生信息
-            for(;i < students.length;i++){
-                if(students[i].id == StudentId){
-                    index = i;
-                    break;
-                }
-            }
-            if(index != -1){
-                //获取提交作业学生的信息
-                //学生id emmm 和post获取到到的studentid相同
-                let id = students[i].id;
-                let name = students[i].name;
-                let sex = students[i].sex;
-                let arr = fileTempPath.split('.');
-                let fileType = '.' + arr[arr.length-1];
-                //设置文件名格式
-                let fileName = StudentId + '_' + name + '_' + jobName;
-                //有效数据永久目录
-                let dataPath = 'upload/finally/'+ className +'/'+ jobName +'/';
-                let newPath = dataPath + fileName + fileType;
-                // 判断数据目录是否存在 不存在则创建目录
-                if(!fs.existsSync(dataPath)){
-                    //fs.mkdirSync(dataPath);
-                    mkdirsSync(dataPath);
-                    console.log('mkdir：'+ dataPath)
-                }
-                if(!StudentId || !fileTempPath){
-                    res.json({'status' : 0 , 'error' : '参数不能为空'});
-                }else{
-                    try {
-                        fs.renameSync(fileTempPath,newPath);
-                        //定义回调函数
-                        let callBack = function(e,docs){
-                            if(e){
-                                console.log(e);
-                                res.json({'status':0,'error':'数据操作执行失败！'});
-                            }else{
-                                //数据库执行成功后进行操作进行ipDb表的数据插入
-                                //封装数据
-                                let data = {
-                                    'address' : ipv4,
-                                    'id' : id,
-                                    'name' : name,
-                                    'sex' : sex
-                                };
-                                
-                                console.log(data);
-                                let insertIpInfo = function(e,docs){
-                                    if(e){  
+            let classList = classDb.findByClassName(className);
+            classList.exec((error,result)=>{
+                if(result){
+                    console.log('查询classdb')
+                    let i = 0;
+                    for(;i < result[0].students.length;i++){
+                        if(result[0].students[i].id == StudentId){
+                            index = i;
+                            console.log(index);
+                            break;
+                        }
+                    }
+
+                    ipv4 = ipv4 ? ipv4.join('.') : null;
+                    let students = docs[0].unfinishedStudents;
+                    console.log('index的值'+index);
+                    if(index != -1 && index < result[0].students.length){
+                        id = result[0].students[i].id;
+                        name = result[0].students[i].name;
+                        sex = result[0].students[i].sex;
+                        // console.log(result[0].students);
+                        console.log(id+name+sex);
+                        //获取提交作业学生的信息
+                        //学生id emmm 和post获取到到的studentid相同
+                        let arr = fileTempPath.split('.');
+                        let fileType = '.' + arr[arr.length-1];
+                        //设置文件名格式
+                        let fileName = StudentId + '_' + name + '_' + jobName;
+                        //有效数据永久目录
+
+                        let dataPath = 'upload/finally/'+ className +'/'+ jobName +'/';
+                        let newPath = dataPath + fileName + fileType;
+                        // 判断数据目录是否存在 不存在则创建目录
+                        if(!fs.existsSync(dataPath)){
+                            //fs.mkdirSync(dataPath);
+                            mkdirsSync(dataPath);
+                            console.log('mkdir：'+ dataPath)
+                        }
+                        if(!StudentId || !fileTempPath){
+                            res.json({'status' : 0 , 'error' : '参数不能为空'});
+                        }else{
+                            try {
+                                fs.renameSync(fileTempPath,newPath);
+                                //定义回调函数
+                                let callBack = function(e,docs){
+                                    if(e){
+                                        console.log(e);
                                         res.json({'status':0,'error':'数据操作执行失败！'});
                                     }else{
-                                        //操作成功的执行语句
-                                        console.log('向数据库添加数据');
-                                        res.json({'status': 1 ,'data':'success','StudentId': StudentId});
+                                        //数据库执行成功后进行操作进行ipDb表的数据插入
+                                        //封装数据
+                                        let data = {
+                                            'address' : ipv4,
+                                            'id' : StudentId,
+                                            'name' : name,
+                                            'sex' : sex
+                                        };
+
+                                        console.log(data);
+                                        let insertIpInfo = function(e,docs){
+                                            if(e){
+                                                res.json({'status':0,'error':'数据操作执行失败！'});
+                                            }else{
+                                                //操作成功的执行语句
+                                                console.log('向数据库添加数据');
+                                                res.json({'status': 1 ,'data':'success','StudentId': StudentId});
+                                            }
+                                        }
+                                        //更新新的地址 实际上是删除后重新添加
+                                        let reinsert = function(e,docs){
+                                            if(!e){
+                                                ipDb.insertIpJson(data,insertIpInfo);
+                                            }
+                                        }
+                                        //向ipDb中添加数据
+                                        let info =  ipDb.findById(StudentId);
+                                        info.exec((error,docs)=>{
+                                            //判断数据库中是否有信息
+                                            if(docs.length > 0){
+                                                //如果存在信息则更新数据表（删除重新插入
+                                                console.log('数据库中存在信息');
+                                                console.log(docs);
+                                                ipDb.deleteStudent(StudentId,reinsert);
+                                            }else{
+                                                // 数据库中不存在信息则插入数据
+                                                ipDb.insertIpJson(data,insertIpInfo);
+                                            }
+                                        });
+
                                     }
                                 }
-                                //更新新的地址 实际上是删除后重新添加
-                                let reinsert = function(e,docs){
-                                    if(!e){
-                                        ipDb.insertIpJson(data,insertIpInfo);
-                                    }
-                                }
-                                //向ipDb中添加数据
-                                let info =  ipDb.findById(id);
-                                info.exec((error,docs)=>{
-                                    //判断数据库中是否有信息
-                                    if(docs.length > 0){
-                                        //如果存在信息则更新数据表（删除重新插入
-                                        console.log('数据库中存在信息');
-                                        console.log(docs);
-                                        ipDb.deleteStudent(id,reinsert);
-                                    }else{
-                                        // 数据库中不存在信息则插入数据
-                                        ipDb.insertIpJson(data,insertIpInfo);
-                                    }
-                                });
-                            
+                                //从未完成列表中删除提交作业的学生的信息
+                                classToJobDb.deleteUnfinishedStudent(jobName, className, StudentId,callBack);
+                            } catch (error) {
+                                res.json({'status': 0 ,'error':'文件处理失败'});
                             }
                         }
-                        //从未完成列表中删除提交作业的学生的信息
-                        classToJobDb.deleteUnfinishedStudent(jobName, className, StudentId,callBack);
-                    } catch (error) {
-                        res.json({'status': 0 ,'error':'文件处理失败'});
+                    }else{
+                        res.json({'status': 0 ,'error':'找不到该学生信息！'});
                     }
                 }
-            }else{
-                res.json({'status': 0 ,'error':'找不到该学生信息！'});
-            }
+            });
+
         }
 
     });
@@ -206,6 +220,7 @@ router.get('/getJobInformation',function(req,res,next){
             let className = docs[0].className;
             let jobName = docs[0].jobName;
             let startTime = docs[0].startTime;
+            let unfinishedStudentNum = docs[0].studentNum - docs[0].unfinishedStudents.length;
             // let stopTime = docs[0].stopTime;
             // let studentNum = docs[0].studentNum;
             console.log(docs);
@@ -221,7 +236,7 @@ router.get('/getJobInformation',function(req,res,next){
                         jobLimitType.push('.' + v);
                     });
                     console.log(jobLimitType.join());
-                    res.json({'status': 1,'data':{'jobName':jobName,'className':className,'startTime':startTime,'studentNum':studentNum,'jobContent':jobContent,'jobTypes':jobLimitType.join()}});
+                    res.json({'status': 1,'data':{'jobName':jobName,'className':className,'startTime':startTime,'studentNum':studentNum,'unfinishedStudentNum':unfinishedStudentNum,'jobContent':jobContent,'jobTypes':jobLimitType.join()}});
                 }else{
                     res.json({'status': 0 ,'error':'信息查询失败'});
                 }

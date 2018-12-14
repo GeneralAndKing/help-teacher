@@ -4,10 +4,11 @@
         el-container
             el-aside(width='50%')
                 #app(width='100%')
-                    el-alert(title="作业标题:{{jobName}}",type='success')
-                    el-alert(title="作业详情:{{jobContent}}",type='success')
+                    #gak-main-chart(style='width: 600px;height:400px;')
 
             el-main(class='main',width='50%') 交作业
+                #title 作业标题:{{jobName}}
+                #content 作业详情:{{jobContent}}
                 el-form(ref='form', :model='form', label-width='200px')
                     el-form-item(label='学号',prop='StudentId',:rules="[\
           { required: true, message: '学号不能为空'},\
@@ -15,7 +16,7 @@
           ]")
                         el-input(type='StudentId',v-model.number='form.StudentId')
                     el-form-item(label='作业文件')
-                        el-upload.upload-demo(ref='upload', action='/upload', :on-preview='handlePreview',:on-success="submitForm",:on-error="handleError",:on-exceed="handleExceed",:before-remove="beforeRemove" ,:on-change='handleChange',:on-remove='handleRemove', :file-list='fileList',:auto-upload='false',:limit=1,accept='.txt,.ppt,zip,rar')
+                        el-upload.upload-demo(ref='upload', action='/upload', :on-preview='handlePreview',:on-success="submitForm",:on-error="handleError",:on-exceed="handleExceed",:before-remove="beforeRemove" ,:on-change='handleChange',:on-remove='handleRemove', :file-list='fileList',:auto-upload='false',:limit=1)
                             el-button(slot='trigger', size='small', type='primary') 选取文件
                             .el-upload__tip(slot='tip') 只能上传格式为{{fileTypes}}的文件。
                     el-form-item
@@ -38,7 +39,40 @@
                 fileUpload: false,
                 jobName: '',
                 jobContent: '',
-                fileTypes:[]
+                fileTypes:'',
+                data: [{ value: 0, name: "未交人数" }, { value: 0, name: "已交人数" }],
+                option: {
+                    title: {
+                        text: "",
+                        x: "center"
+                    },
+                    tooltip: {
+                        trigger: "item",
+                        formatter: "{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: "vertical",
+                        left: "left",
+                        data: ["已交人数", "未交人数"]
+                    },
+                    color: ["#F66", "#9CF"],
+                    series: [
+                        {
+                            name: "作业情况",
+                            type: "pie",
+                            radius: "80%",
+                            center: ["50%", "55%"],
+                            data: [],
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: "rgba(0, 0, 0, 0.5)"
+                                }
+                            }
+                        }
+                    ]
+                }
             }
         },
         methods: {
@@ -110,7 +144,7 @@
                                 this.$message.success('作业提交成功，重复提交相同文件会覆盖上一次提交的文件！');
                                 this.reload();
                             }else{
-                                this.$message.success('作业提交失败'+ response.data.error +'！');
+                                this.$message.error('作业提交失败'+ response.data.error +'！');
                             }
                             
                         }
@@ -143,18 +177,13 @@
                         .then(response => {
                             if(response.status == 200){
                                 console.log("成功访问数据接口");
-                                // for(const student of response.data){
-                                //     _this.tableData.push({
-                                //         'id' : student.id,
-                                //         'name' : student.name,
-                                //         'sex' : student.sex,
-                                //         'state': '未交'
-                                //     });
-                                // }
                                 console.log(response.data);
                                 if(response.data){
                                     _this.jobName = response.data.data.jobName;
                                     _this.jobContent = response.data.data.jobContent;
+                                    _this.data[0].value = response.data.data.unfinishedStudentNum;
+                                    _this.data[1].value = response.data.data.studentNum;
+                                    _this.fileTypes = response.data.data.jobTypes;
                                 }
                             }
                         })
@@ -164,8 +193,21 @@
                     
             }
         },
+        created() {
+            // let _this = this;
+            // _this.classToJob = _this.$route.params.classToJob;
+            // _this.data[0].value = _this.classToJob.unfinishedStudents.length;
+            // _this.data[1].value = _this.classToJob.studentNum - _this.data[0].value;
+        },
         mounted() {
             this.getInfo();
+            let _this = this;
+            let myChart = _this.$echarts.init(
+                document.getElementById("gak-main-chart")
+            );
+            //设置图表option
+            _this.option.series[0].data = _this.data;
+            myChart.setOption(_this.option);
         }
     }
 
