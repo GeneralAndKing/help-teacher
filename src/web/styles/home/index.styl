@@ -1,9 +1,55 @@
 .container
-    width 80%
-    margin 0 auto
+  width 80%
+  margin 0 auto
+
 .header
-    text-align center
-    color green
+  text-align center
+  color green
+
 #gak-main-chart
+  margin 0 auto
+  overflow-x hidden
+
+#el-header-title
+  font-size 40px
+  font-weight bolder
+  text-decoration underline
+  font-style italic
+
+.el-container
+  margin 0
+  width 100%
+  .el-main
     margin 0 auto
-    overflow-x hidden
+    #gak-main-name
+      margin-bottom 20px
+      margin-top 20px
+      font-size 25px
+      font-weight bolder
+    #gak-main-title
+      margin-bottom 10px
+    #gak-main-content
+      margin-bottom 10px
+    #gak-main-time
+      margin-bottom 10px
+
+.el-aside,aside
+  overflow hidden !important
+
+.gak-tip-blue
+  padding 8px 16px
+  background-color #ecf8ff
+  border-radius 4px
+  border-left 5px solid #50bfff
+  margin 20px 0
+  font-size normal-size
+  color #5e6d82
+  line-height 1.5em
+  text-align left
+
+// 小屏幕，标题居中
+@media screen and (max-width: small-size )
+  #el-header-title
+    font-size 30px
+  #el-header-logo
+    display none
