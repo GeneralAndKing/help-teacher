@@ -114,7 +114,6 @@ export default {
         });
       }
     }
-    console.log(_this.ips);
     let jobDb = getJobDb();
     //查找数据之后创建
     jobDb.findAllJob().exec((e, jobJsons) => {
@@ -153,12 +152,12 @@ export default {
         }
       }
       let callBack = function(e, docs) {
-        let _this = this;
         if (e) {
           error(_this, "开启服务错误");
         } else {
           let ipDb = getIpDb();
           ipDb.deleteAllIp(() => {});
+          console.log(_this.ip,_this.port,_this.form);
           webServer.start(
             _this.ip,
             _this.port,
