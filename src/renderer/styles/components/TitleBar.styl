@@ -12,9 +12,55 @@
   h5
     line-height 2.2
 
-  .right
-    -webkit-app-region no-drag
+  .el-col
+    -webkit-app-region drag
+    margin-left 8px
+    #login
+      cursor pointer
 
+      margin-right 5px
+
+  .gak-text-right
+    -webkit-app-region drag
+    span
+      margin-right 5px
+      cursor pointer
+      border-radius 10px
+      padding 2px 4px 4px 2px
+      transition all 0.2s
+      &:hover
+        color rgba(27, 146, 236, 1)
+        background white
     .el-button
+      border 0
       padding 0.25rem
+      background-color #1b92ec
       margin-left 0.4rem
+      transition all 0.2s
+    #min
+      &:hover
+        background-color primary
+    #max
+      &:hover
+        background-color warning
+    #close
+      &:hover
+        background-color danger
+
+.el-button, span
+  -webkit-app-region no-drag
+
+.el-dialog__wrapper
+  .el-dialog
+    max-width 500px
+    margin-top 5vh !important
+    .el-col
+      -webkit-app-region no-drag !important
+    label
+      width full-size
+      text-align left
+    .el-dialog__body
+      padding-top 0
+      padding-bottom 0
+    .gak-tip-blue
+      margin 0
