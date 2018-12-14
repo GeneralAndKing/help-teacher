@@ -5,7 +5,7 @@ process.env.BABEL_ENV = 'main'
 const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
 
 // 模块配置
@@ -48,10 +48,10 @@ let mainConfig = {
     path: path.join(__dirname, '../dist/electron')
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new BundleAnalyzerPlugin({
-      openAnalyzer: false
-    })
+    new webpack.NoEmitOnErrorsPlugin()
+    // new BundleAnalyzerPlugin({
+    //   openAnalyzer: false
+    // })
   ],
   resolve: {
     extensions: ['.js', '.json', '.node']
