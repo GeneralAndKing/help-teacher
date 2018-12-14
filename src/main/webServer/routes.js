@@ -214,7 +214,6 @@ router.get('/getJobInformation',function(req,res,next){
                 if(result){
                     let jobContent = result[0].jobContent;
                     let jobTypes = result[0].jobTypes;
-<<<<<<< HEAD
                     let studentNum = result[0].studentNum; 
                     let jobLimitType = [];
                     jobTypes.forEach((v,i,a)=>{
@@ -223,10 +222,6 @@ router.get('/getJobInformation',function(req,res,next){
                     });
                     console.log(jobLimitType.join());
                     res.json({'status': 1,'data':{'jobName':jobName,'className':className,'startTime':startTime,'studentNum':studentNum,'jobContent':jobContent,'jobTypes':jobLimitType.join()}});
-=======
-                    let jobLimitType = '';
-                    res.json({'status': 1,'data':{'jobName':jobName,'className':className,'startTime':startTime,'stopTime':stopTime,'studentNum':studentNum,'jobContent':jobContent,'jobTypes':jobTypes}});
->>>>>>> 65f686adf21235578fde4229a1721e02b92b40d8
                 }else{
                     res.json({'status': 0 ,'error':'信息查询失败'});
                 }
