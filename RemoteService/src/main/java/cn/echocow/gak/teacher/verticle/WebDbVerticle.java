@@ -184,9 +184,6 @@ public class WebDbVerticle extends AbstractVerticle {
                 message.reply(ReasultBuilder.buildError(res.cause().getMessage()));
             }
         });
-        client.find(ApiRoute.DOCUMENT_USER, new JsonObject().put("username", user.getString("username")), res -> {
-
-        });
     }
 
 }
