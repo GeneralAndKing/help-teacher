@@ -23,7 +23,7 @@ const readClassXlsx = (filePath) => {
         }
         for (const studentData of classData.data) {
             if (verifyStudent(studentData[0], studentData[1], studentData[2])) {
-                students.push(classDb.createStudentJson(studentData[0], studentData[1], studentData[2]));
+                students.push(classDb.createStudentJson(studentData[0]+"", studentData[1], studentData[2]));
             }
             else {
                 return [false, null];

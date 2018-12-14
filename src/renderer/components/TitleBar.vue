@@ -13,13 +13,6 @@
 
 <script>
 const { ipcRenderer, remote } = require("electron");
-
-ipcRenderer.on("closeWebServer", (event, arg) => {
-  let webServer = remote.getGlobal("webServer");
-  webServer.stop();
-  console.log("服务已停止");
-  //跳转主页
-});
 export default {
   data() {
     return {
@@ -28,6 +21,23 @@ export default {
   },
   mounted: function() {
     let _this = this;
+    ipcRenderer.on("closeWebServer", (event, arg) => {
+      let webServer = remote.getGlobal("webServer");
+      webServer.stop();
+      _this.$alert(
+        "收取服务已结束,可到对应的作业管理查看收取详情(打包作业正在进行中)",
+        "提示",
+        {
+          confirmButtonText: "跳转到主页",
+          callback: action => {
+            _this.$router.push({
+              name: "home"
+            });
+          }
+        }
+      );
+      //跳转主页
+    });
     setInterval(() => {
       _this.time = new Date().toLocaleString();
     }, 1000);

@@ -26,5 +26,8 @@ export default class IpDb {
     findAllAddress() {
         return this.db.find();
     }
+    findById(studentId) {
+        return this.db.find({ "id": studentId });
+    }
 
 }

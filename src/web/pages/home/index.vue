@@ -23,7 +23,7 @@
                     el-form-item(label='作业文件')
                         el-upload.upload-demo(ref='upload', action='/upload', :on-preview='handlePreview',:on-success="submitForm",:on-error="handleError",:on-exceed="handleExceed",:before-remove="beforeRemove" ,:on-change='handleChange',:on-remove='handleRemove', :file-list='fileList',:auto-upload='false',:limit=1)
                             el-button(slot='trigger', size='small', type='primary') 选取文件
-                            .el-upload__tip(slot='tip') 只能上传office和压缩文件，且不超过200MB
+                            .el-upload__tip(slot='tip') 只能上传格式为的文件。
                     el-form-item
                         el-button(type='primary', @click='onSubmit(\'form\')') 提交作业
                         el-button(@click="resetForm(\'form\')") 重置
@@ -41,35 +41,14 @@
                     StudentId: ''
                 },
                 tableData: [],
+                pagesize: 10,
+                currpage: 1,
                 fileCount: 0,
                 fileUpload: false,
                 loading: true,
-                jobName: '测试作业',
-                jobContent: '作业详情'
+                jobName: '',
+                jobContent: ''
             }
-        },
-        mounted() {
-            console.log('test')
-            let _this = this;
-            // 获取未交学生列表
-            this.$http.get('/getUnfinishedStudents')
-                .then(response => {
-                    if(response.status == 200){
-                        console.log("成功访问数据接口");
-                        for(const student of response.data){
-                            _this.tableData.push({
-                                'id' : student.id,
-                                'name' : student.name,
-                                'sex' : student.sex,
-                                'state': '未交'
-                            })
-                        }
-                        _this.loading = false;
-                    }
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
         },
         methods: {
             onSubmit(formName) {
@@ -154,7 +133,40 @@
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+            },
+            handleCurrentChange(cpage) {
+                this.currpage = cpage;
+            },
+            handleSizeChange(psize) {
+                this.pagesize = psize;
+            },
+            getlist(){
+                let _this = this;
+                    // 获取未交学生列表
+                    this.$http.get('/getUnfinishedStudents')
+                        .then(response => {
+                            if(response.status == 200){
+                                console.log("成功访问数据接口");
+                                // for(const student of response.data){
+                                //     _this.tableData.push({
+                                //         'id' : student.id,
+                                //         'name' : student.name,
+                                //         'sex' : student.sex,
+                                //         'state': '未交'
+                                //     });
+                                // }
+                                _this.tableData = response.data; 
+                                _this.loading = false;
+                            }
+                        })
+                        .catch( error => {
+                            console.log(error);
+                        });
+                    
             }
+        },
+        mounted() {
+            this.getlist();
         }
     }
 
