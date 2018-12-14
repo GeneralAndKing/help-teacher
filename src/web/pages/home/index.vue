@@ -16,7 +16,7 @@
           ]")
                         el-input(type='StudentId',v-model.number='form.StudentId')
                     el-form-item(label='作业文件')
-                        el-upload.upload-demo(ref='upload', action='/upload', :on-preview='handlePreview',:on-success="submitForm",:on-error="handleError",:on-exceed="handleExceed",:before-remove="beforeRemove" ,:on-change='handleChange',:on-remove='handleRemove', :file-list='fileList',:auto-upload='false',:limit=1)
+                        el-upload.upload-demo(ref='upload', action='/upload', :on-preview='handlePreview',:on-success="submitForm",:on-error="handleError",:on-exceed="handleExceed",:before-remove="beforeRemove" ,:on-change='handleChange',:on-remove='handleRemove', :file-list='fileList',:auto-upload='false',:limit=1,accept='{{ fileTypes }}')
                             el-button(slot='trigger', size='small', type='primary') 选取文件
                             .el-upload__tip(slot='tip') 只能上传格式为{{fileTypes}}的文件。
                     el-form-item
@@ -39,7 +39,7 @@
                 fileUpload: false,
                 jobName: '',
                 jobContent: '',
-                fileTypes:'',
+                fileTypes:[],
                 data: [{ value: 0, name: "未交人数" }, { value: 0, name: "已交人数" }],
                 option: {
                     title: {
@@ -118,10 +118,6 @@
                     this.fileCount = 1;
                 }
                 this.fileUpload = false;
-                // console.log(file);
-                // console.log('---------------');
-                // console.log(fileList);
-                // console.log(this.fileCount);
             },
             submitForm(response, file, fileList){
                 //文件上传成功以后提交表单
@@ -183,8 +179,27 @@
                                     _this.jobContent = response.data.data.jobContent;
                                     _this.data[0].value = response.data.data.unfinishedStudentNum;
                                     _this.data[1].value = response.data.data.studentNum;
-                                    _this.fileTypes = response.data.data.jobTypes;
-                                }
+                                    types = response.data.data.jobTypes;
+                                    typeList = [];
+                                    //遍历文件列表 限制文件类型
+                                    for(const type of types){
+                                        console.log(type);
+                                        if(type == 'zip'){
+                                            typeList.push("application/zip");
+                                        }else if(type == 'rar'){
+                                            typeList.push("application/x-rar");
+                                        }else if(type =='ppt'){
+                                            typeList.push("application/vnd.ms-powerpoint");
+                                            typeList.push("application/vnd.openxmlformats-officedocument.presentationml.presentation");
+                                        }else if(type == 'xls'){
+                                            typeList.push("application/vnd.ms-excel");
+                                            typeList.push("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                                        }else if(type == 'word'){
+                                            typeList.push("application/msword");
+                                            typeList.push("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+                                        }
+                                    }
+                                    _this.fileTypes = typeList.join();                           }
                             }
                         })
                         .catch( error => {
