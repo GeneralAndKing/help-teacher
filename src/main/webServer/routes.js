@@ -218,7 +218,7 @@ router.get('/getJobInformation', function (req, res, next) {
             let className = docs[0].className;
             let jobName = docs[0].jobName;
             let startTime = docs[0].startTime;
-            let unfinishedStudentNum = docs[0].studentNum - docs[0].unfinishedStudents.length;
+            let unfinishedStudentNum = docs[0].unfinishedStudents.length;
             let time = docs[0].time * 60 * 1000 - (new Date().getTime() - docs[0].timestamp);
             let studentNum = docs[0].studentNum;
             console.log(docs);
