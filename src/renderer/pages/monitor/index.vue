@@ -110,14 +110,7 @@ export default {
           },
           z: 10,
           // x 轴的数据
-          data: [
-            "10.0.0.1",
-            "10.2.1.2",
-            "10.5.23.1",
-            "10.24.15.112",
-            "10.52.121.44",
-            "10.62.20.25"
-          ]
+          data: []
         },
         color: ["#39b0f2"],
         yAxis: {
@@ -146,7 +139,7 @@ export default {
               normal: { color: "rgba(0,0,0,0.05)" }
             },
             // 阴影数据
-            data: [20, 20, 20, 20, 20, 20],
+            data: [],
             radius: "100%",
             barGap: "-100%",
             barCategoryGap: "40%",
@@ -163,7 +156,7 @@ export default {
               }
             },
             // y 轴的数据
-            data: [5, 1, 2, 10, 2, 5]
+            data: []
           }
         ],
         charts: null
@@ -189,20 +182,9 @@ export default {
         verifyNull(webServer.getJobName())
       )
     ) {
-      //提示框 跳转到主页或开启服务页面
       warning(_this, "你还没有开启过服务");
-      // _this.$router.push({
-      //   name: "server"
-      // });
       return;
     }
-    /**
-     * 同步操作
-     */
-    let synchronization = () => {
-      console.log(_this.activeName);
-    };
-
     _this.option.series[1].itemStyle.normal.color = new _this.$echarts.graphic.LinearGradient(
       0,
       0,
@@ -225,9 +207,9 @@ export default {
         { offset: 1, color: "#83bff6" }
       ]
     );
+
     let classToJobDb = getClassToJobDb();
     classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
-      console.log(classToJobJsons);
       if (e || classToJobJsons.length != 1) {
         error(_this, "数据出错");
       } else {
@@ -254,6 +236,33 @@ export default {
             );
             _this.charts = myChart;
             myChart.setOption(_this.option);
+            /**
+             * 同步操作
+             */
+            let ipDb = getIpDb();
+            let synchronization = () => {
+              ipDb.findAllAddress().exec((e, ipJsons) => {
+                // //阴影部分
+                // _this.option.series[0].data;
+                // //数据
+                // _this.option.series[1].data;
+                // //ip
+                // _this.option.xAxis.data;
+                for (const ipJson of ipJsons) {
+                  if (_this.option.xAxis.data.indexOf(ipJson.address) == -1) {
+                    _this.option.xAxis.data.push(ipJson.address);
+                    _this.option.series[0].data.push(20);
+                    _this.option.series[1].data.push(1);
+                  } else {
+                    _this.option.series[0].data[
+                      _this.option.xAxis.data.indexOf(ipJson.address)
+                    ] += 1;
+                  }
+                }
+                // myChart.clear();
+                // myChart.setOption(_this.option);
+              });
+            };
             _this.interval = setInterval(synchronization(), 5000);
           }
         });

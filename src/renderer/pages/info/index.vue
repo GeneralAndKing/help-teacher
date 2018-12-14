@@ -16,7 +16,7 @@
               el-tag(:type="scope.row.sex === '男' ? 'primary' : 'danger'") {{scope.row.sex}}
           el-table-column(label='操作' align="center")
             template(slot-scope='scope')
-              el-button(size='mini', type='danger', @click='handleDelete(scope.$index, scope.row)') 已收取
+              el-button(size='mini', type='danger', @click='handleDelete(scope.$index, scope.row)') 未收取
 
 
 </template>

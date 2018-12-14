@@ -14,14 +14,14 @@
         el-table-column(label='开始时间', prop='startTime',  sortable, align="center")
         el-table-column(label='状态', prop='status', width="80px", sortable, align="center")
           template(slot-scope='scope')
-            el-tag(type='info', v-if="scope.row.status === 0") 未开启
+            el-tag(type='info', v-if="scope.row.status === 0") 异常暂停
             el-tag(type='warning', v-if="scope.row.status === 1") 收取中
             el-tag(type='success', v-if='scope.row.status === 2') 已完成
         el-table-column(align="center")
           template(slot='header', slot-scope='scope')
             el-input(v-model='search', size='mini', placeholder='输入班级搜索', style="max-width:250px;float:right;", clearable)
           template(slot-scope='scope')
-            el-button(size='mini', @click='handleInfo($event,scope.$index, scope.row)' ) 详情
+            el-button(size='mini', @click='handleInfo(scope.$index, scope.row)' ) 详情
             el-button(size='mini', type='danger', @click='handleDelete(scope.$index, scope.row)' ) 删除
 
 </template>
@@ -43,7 +43,6 @@ export default {
   mounted() {
     let _this = this;
     let classToJobDb = getClassToJobDb();
-    console.log(_this.$route.params.jobName);
     classToJobDb
       .findByJobName(_this.$route.params.jobName)
       .exec((error, classToJobJsons) => {
@@ -72,6 +71,7 @@ export default {
     },
     handleInfo: function(index, classToJob) {
       let _this = this;
+      console.log(index);
       _this.$router.push({
         name: "class-job-info",
         params: {

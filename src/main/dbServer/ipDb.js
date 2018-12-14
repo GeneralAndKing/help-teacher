@@ -20,6 +20,9 @@ export default class IpDb {
     deleteStudent(studentId, callBack) {
         this.db.remove({ 'id': studentId }, callBack);
     }
+    deleteAllIp(callBack) {
+        return this.db.remove({}, callBack);
+    }
     findByAddress(address) {
         return this.db.find({ "address": address });
     }

@@ -56,7 +56,7 @@ import { Loading } from "element-ui";
 import { runInNewContext } from "vm";
 import { clearInterval } from "timers";
 const { verifyNull } = require("@/api/judge");
-const { getClassToJobDb, getClassDb, getJobDb } = require("@/api/db");
+const { getClassToJobDb, getClassDb, getJobDb, getIpDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
 const { ipcRenderer, remote } = require("electron");
 const path = require("path");
@@ -121,10 +121,10 @@ export default {
       for (const classJson of _this.classJsons) {
         if (classJson.className == _this.form.className) {
           let time = new Date();
+          _this.form.studentNum = classJson.students.length;
           _this.form.unfinishedStudents = classJson.students;
           _this.form.startTime = time.toLocaleString();
           _this.form.timestamp = time.getTime();
-          _this.studentNum = classJson.students.length;
           break;
         }
       }
@@ -132,6 +132,8 @@ export default {
         if (e) {
           error(_this, "开启服务错误");
         } else {
+          let ipDb = getIpDb();
+          ipDb.deleteAllIp(() => {});
           webServer.start(
             _this.ip,
             _this.port,

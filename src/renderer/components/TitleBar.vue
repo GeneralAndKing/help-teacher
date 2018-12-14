@@ -83,9 +83,11 @@ export default {
   },
   mounted: function() {
     let _this = this;
+    let classToJobDb = getClassToJobDb();
     let webServer = remote.getGlobal("webServer");
     ipcRenderer.on("closeWebServer", (event, arg) => {
       webServer.stop();
+      classToJobDb.updateStatus(1, 2, (e, docs) => {});
       _this.$dialog.alert("服务结束,正在打包文件");
       //跳转主页
     });
@@ -105,7 +107,6 @@ export default {
         });
       }
     });
-    let classToJobDb = getClassToJobDb();
     classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
       if (classToJobJsons.length > 0) {
         classToJobDb.updateStatus(1, 0, (e, docs) => {});

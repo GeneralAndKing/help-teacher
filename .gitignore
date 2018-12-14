@@ -5,6 +5,7 @@ build/help-teacher-win32-x64/*
 userData/
 npm-debug.log
 npm-debug.log.*
+upload/*
 /AutoRunner/__pycache__
 thumbs.db
 !.gitkeep
