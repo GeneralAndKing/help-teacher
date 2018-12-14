@@ -34,20 +34,20 @@
               .basicServer(v-if="active===2", :key="2")
                 el-alert.gak-text-left(title="最后一步", type="success", description="最后，您只需要设置学生端的端口就完成了。")
                 el-form-item.gak-text-left(label="地址")
-                  el-select(v-model="ip", placeholder="请选择")
-                    el-option(v-for="ipData in ips", :key="ipData.name", :label="ipData.name", :value="ipData.ip")
-                el-form-item(label="端口号")
+                  el-select(v-model="ip", placeholder="请选择", style="width:100%")
+                    el-option(v-for="ipData in ips", :key="ipData.name", :label="ipData.info", :value="ipData.ip")
+                el-form-item(label="端口号", style="text-align:left;")
                   el-input-number.gak-text-left(v-model='port', :step='50')
-                
+
                 el-button(@click="openServer", type="primary", v-if="active===2") 开启服务
 
         el-footer
           el-button-group
             transition(name="el-fade-in", mode="out-in")
-              el-button(type="primary", icon="el-icon-arrow-left", v-bind:disabled="active==0", @click="prev") 上一步
+              el-button(type="primary", icon="el-icon-arrow-left", v-bind:disabled="active===0", @click="prev") 上一步
             transition(name="el-fade-in", mode="out-in")
-              el-button(type="primary", icon="el-icon-arrow-right", v-bind:disabled="active==2", @click="next") 下一步
-              
+              el-button(type="primary", icon="el-icon-arrow-right", v-bind:disabled="active===2", @click="next") 下一步
+
 
 </template>
 
@@ -55,6 +55,7 @@
 import { Loading } from "element-ui";
 import { runInNewContext } from "vm";
 import { clearInterval } from "timers";
+import { globalBus } from '@/utils/_global';
 const { verifyNull } = require("@/api/judge");
 const { getClassToJobDb, getClassDb, getJobDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
@@ -85,12 +86,25 @@ export default {
   mounted() {
     let _this = this;
     let networkInterfaces = os.networkInterfaces();
+    console.log(networkInterfaces);
     for (let networkInterface in networkInterfaces) {
-      _this.ips.push({
-        name: networkInterface,
-        ip: networkInterfaces[networkInterface][1].address
-      });
+      const reg = "(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))";
+      if (networkInterfaces[networkInterface][0].address.search(reg) >= 0){
+        _this.ips.push({
+          name: networkInterface,
+          ip: networkInterfaces[networkInterface][0].address,
+          info: "网卡：" + networkInterface + "（" + networkInterfaces[networkInterface][0].address + "）"
+        });
+      }
+      if (networkInterfaces[networkInterface][1].address.search(reg) >= 0){
+        _this.ips.push({
+          name: networkInterface,
+          ip: networkInterfaces[networkInterface][1].address,
+          info: "网卡：" + networkInterface + "（" + networkInterfaces[networkInterface][1].address + "）"
+        });
+      }
     }
+    console.log(_this.ips);
     let jobDb = getJobDb();
     //查找数据之后创建
     jobDb.findAllJob().exec((e, jobJsons) => {
@@ -129,6 +143,7 @@ export default {
         }
       }
       let callBack = function(e, docs) {
+        let _this = this;
         if (e) {
           error(_this, "开启服务错误");
         } else {
@@ -140,6 +155,10 @@ export default {
             _this.form.className
           );
           Loading.service({ fullscreen: true }).close();
+          _this.$router.push({
+            name: "monitor"
+          });
+          globalBus.$emit('changeMenu',"monitor");
         }
       };
       let classToJobDb = getClassToJobDb();
@@ -172,11 +191,13 @@ export default {
       this.$router.push({
         name: "job"
       });
+      globalBus.$emit('changeMenu',"job");
     },
     createClass: function() {
       this.$router.push({
         name: "class"
       });
+      globalBus.$emit('changeMenu',"class");
     }
   }
 };

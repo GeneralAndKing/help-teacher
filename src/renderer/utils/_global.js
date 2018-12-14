@@ -1,10 +1,2 @@
-let aside = true;
-
-let classDb = {
-  className: "",
-  studentNum: ""
-};
-export default {
-  aside,
-  classDb
-}
+import Vue from 'vue';
+export const globalBus = new Vue();
