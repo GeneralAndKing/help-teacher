@@ -168,7 +168,7 @@ router.post('/submitHomework',function(req,res,next){
                             info.exec((error,docs)=>{
                                 //判断数据库中是否有信息
                                 if(docs){
-                                    //如果存在信息则更新数据表（删除重新插入如）
+                                    //如果存在信息则更新数据表（删除重新插入
                                     console.log('数据库中存在信息');
                                     console.log(docs);
                                     ipDb.deleteStudent(id,reinsert);
