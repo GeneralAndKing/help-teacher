@@ -59,32 +59,32 @@ dependencies {
 /**
  * 生成
  */
-task annotationProcessing(type: JavaCompile, group: 'build') {
-    source = sourceSets.main.java
-    classpath = configurations.compile + configurations.compileOnly
-    destinationDir = project.file('src/main/generated')
-    options.compilerArgs = [
-            "-proc:only",
-            "-processor", "io.vertx.codegen.CodeGenProcessor",
-            "-Acodegen.output=${destinationDir.absolutePath}"
-    ]
-}
-
-
-sourceSets {
-    main {
-        java {
-            srcDirs += 'src/main/generated/java'
-        }
-        groovy {
-            srcDirs += 'src/main/generated/groovy'
-        }
-    }
-}
-
-compileJava {
-    targetCompatibility = rootProject.ext.java.javaVersion
-    sourceCompatibility = rootProject.ext.java.javaVersion
-
-    dependsOn annotationProcessing
-}
+//task annotationProcessing(type: JavaCompile, group: 'build') {
+//    source = sourceSets.main.java
+//    classpath = configurations.compile + configurations.compileOnly
+//    destinationDir = project.file('src/main/generated')
+//    options.compilerArgs = [
+//            "-proc:only",
+//            "-processor", "io.vertx.codegen.CodeGenProcessor",
+//            "-Acodegen.output=${destinationDir.absolutePath}"
+//    ]
+//}
+//
+//
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs += 'src/main/generated/java'
+//        }
+//        groovy {
+//            srcDirs += 'src/main/generated/groovy'
+//        }
+//    }
+//}
+//
+//compileJava {
+//    targetCompatibility = rootProject.ext.java.javaVersion
+//    sourceCompatibility = rootProject.ext.java.javaVersion
+//
+//    dependsOn annotationProcessing
+//}

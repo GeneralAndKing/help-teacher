@@ -1,17 +1,11 @@
 <template lang="pug">
     el-container(class='container')
         el-header(class='header') Help-Teacher
-            span 作业标题:{{jobName}}
-            span 作业详情:{{jobContent}}
         el-container
             el-aside(width='50%')
                 #app(width='100%')
-                    el-table(:data='tableData', stripe='', style='width: 100%',v-loading='loading',element-loading-text='拼命加载中',element-loading-spinner='el-icon-loading',element-loading-background='rgba(0, 0, 0, 0.8)')
-                        el-table-column(prop='id', label='学号', width='180')
-                        el-table-column(prop='name', label='姓名', width='100')
-                        el-table-column(prop='sex', label='性别', width='100')
-                        el-table-column(prop='state', label='状态', width='100')
-
+                    el-alert(title="作业标题:{{jobName}}",type='success')
+                    el-alert(title="作业详情:{{jobContent}}",type='success')
 
             el-main(class='main',width='50%') 交作业
                 el-form(ref='form', :model='form', label-width='200px')
@@ -21,9 +15,9 @@
           ]")
                         el-input(type='StudentId',v-model.number='form.StudentId')
                     el-form-item(label='作业文件')
-                        el-upload.upload-demo(ref='upload', action='/upload', :on-preview='handlePreview',:on-success="submitForm",:on-error="handleError",:on-exceed="handleExceed",:before-remove="beforeRemove" ,:on-change='handleChange',:on-remove='handleRemove', :file-list='fileList',:auto-upload='false',:limit=1)
+                        el-upload.upload-demo(ref='upload', action='/upload', :on-preview='handlePreview',:on-success="submitForm",:on-error="handleError",:on-exceed="handleExceed",:before-remove="beforeRemove" ,:on-change='handleChange',:on-remove='handleRemove', :file-list='fileList',:auto-upload='false',:limit=1,accept='.txt,.ppt,zip,rar')
                             el-button(slot='trigger', size='small', type='primary') 选取文件
-                            .el-upload__tip(slot='tip') 只能上传office和压缩文件，且不超过200MB
+                            .el-upload__tip(slot='tip') 只能上传格式为{{fileTypes}}的文件。
                     el-form-item
                         el-button(type='primary', @click='onSubmit(\'form\')') 提交作业
                         el-button(@click="resetForm(\'form\')") 重置
@@ -40,36 +34,12 @@
                 form: {
                     StudentId: ''
                 },
-                tableData: [],
                 fileCount: 0,
                 fileUpload: false,
-                loading: true,
-                jobName: '测试作业',
-                jobContent: '作业详情'
+                jobName: '',
+                jobContent: '',
+                fileTypes:[]
             }
-        },
-        mounted() {
-            console.log('test')
-            let _this = this;
-            // 获取未交学生列表
-            this.$http.get('/getUnfinishedStudents')
-                .then(response => {
-                    if(response.status == 200){
-                        console.log("成功访问数据接口");
-                        for(const student of response.data){
-                            _this.tableData.push({
-                                'id' : student.id,
-                                'name' : student.name,
-                                'sex' : student.sex,
-                                'state': '未交'
-                            })
-                        }
-                        _this.loading = false;
-                    }
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
         },
         methods: {
             onSubmit(formName) {
@@ -136,8 +106,13 @@
                         if(response.status == 200){
                             console.log("成功");
                             this.fileUpload = true;
-                            this.$message.success('作业提交成功，重复提交相同文件会覆盖上一次提交的文件！');
-                            this.reload();
+                            if(response.data.status == 1){
+                                this.$message.success('作业提交成功，重复提交相同文件会覆盖上一次提交的文件！');
+                                this.reload();
+                            }else{
+                                this.$message.success('作业提交失败'+ response.data.error +'！');
+                            }
+                            
                         }
                     })
                     .catch(function(error) {
@@ -154,7 +129,43 @@
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+            },
+            handleCurrentChange(cpage) {
+                this.currpage = cpage;
+            },
+            handleSizeChange(psize) {
+                this.pagesize = psize;
+            },
+            getInfo(){
+                let _this = this;
+                    // 获取未交学生列表
+                    this.$http.get('/getJobInformation')
+                        .then(response => {
+                            if(response.status == 200){
+                                console.log("成功访问数据接口");
+                                // for(const student of response.data){
+                                //     _this.tableData.push({
+                                //         'id' : student.id,
+                                //         'name' : student.name,
+                                //         'sex' : student.sex,
+                                //         'state': '未交'
+                                //     });
+                                // }
+                                console.log(response.data);
+                                if(response.data){
+                                    _this.jobName = response.data.data.jobName;
+                                    _this.jobContent = response.data.data.jobContent;
+                                }
+                            }
+                        })
+                        .catch( error => {
+                            console.log(error);
+                        });
+                    
             }
+        },
+        mounted() {
+            this.getInfo();
         }
     }
 

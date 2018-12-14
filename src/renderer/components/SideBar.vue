@@ -1,6 +1,6 @@
 <template lang="pug">
   el-col(:span="18", id="sideBar")
-    el-menu(router, active-text-color="#ffffff")
+    el-menu(router, active-text-color="#ffffff", default-active="/")
       template(v-for="(nav, index) in navList")
         el-menu-item(:index="nav.name")
           i(v-if="nav.el", :class="nav.icon")

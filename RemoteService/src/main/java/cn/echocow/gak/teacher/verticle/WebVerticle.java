@@ -146,6 +146,9 @@ public class WebVerticle extends RestfulApiVerticle {
     private void handlePostLogin(RoutingContext routingContext) {
         try {
             JsonObject user = routingContext.getBodyAsJson();
+            if (user.getString("username") == null || user.getString("password") == null){
+                badRequest(routingContext, "请求参数不合法！");
+            }
             DeliveryOptions options = new DeliveryOptions().addHeader("action", "login");
             eventBus.<JsonObject>send(WebDbVerticle.class.getName(), user, options, reply -> {
                 if (reply.succeeded()) {

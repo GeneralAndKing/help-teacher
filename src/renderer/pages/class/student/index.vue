@@ -1,9 +1,11 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title 学生管理
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
+      span#gak-main-head-title Student
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item(:to="{ path: '/class' }") 班级
+        el-breadcrumb-item 学生
     #gak-main-content
       #class-info
         el-row(:gutter="10")
@@ -217,7 +219,7 @@ export default {
             verifyStudentUnique(oldStudents)
           )
         ) {
-          warning(_this, "你输入的数据有误");
+          warning(_this, "你输入的数据有误,请检查名字是否全为中文且在2-5位.");
           return;
         }
         let callBack = function(e, docs) {

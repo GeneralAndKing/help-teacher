@@ -1,10 +1,13 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title 作业详情
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
+      span#gak-main-head-title ClassJob
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item(:to="{ path: '/class' }") 班级
+        el-breadcrumb-item 作业
     el-scrollbar#gak-main-content-job
+      el-alert(v-if='classToJobs.length === 0', title='当前班级无数据', type='info', center='', show-icon='')
       template(v-for='(classToJob, key) in classToJobs')
         el-col(:span='8')
           el-card.gak-job(shadow="hover")

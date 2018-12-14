@@ -1,9 +1,11 @@
 <template lang="pug">
   #gak-main
     #gak-main-head
-      i.el-icon-arrow-left#gak-main-head-back(@click="$router.go(-1)")
-      i.el-icon-more#gak-main-head-nav(@click="$emit('changeSide')")
-      span#gak-main-head-title 班级作业
+      i.el-icon-more#gak-main-head-back(@click="$emit('changeSide')")
+      span#gak-main-head-title JobClass
+      el-breadcrumb#gak-main-head-bread(separator='/')
+        el-breadcrumb-item(:to="{ path: '/job' }") 作业
+        el-breadcrumb-item 班级
     el-scrollbar#gak-main-content-class
       el-table(:data='classToJobs.filter(data => !search || data.className.toLowerCase().includes(search.toLowerCase()))', stripe,  v-loading="loading")
         el-table-column(type='index', width='40', align="center")

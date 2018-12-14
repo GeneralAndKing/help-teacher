@@ -36,6 +36,8 @@ public class RestfulApiVerticle extends AbstractVerticle {
         allowHeaders.add("Content-Type");
         allowHeaders.add("accept");
         allowHeaders.add("X-PINGARUNER");
+        allowHeaders.add("Authorization");
+//        allowHeaders.add("Bearer*");
         // CORS support
         router.route().handler(BodyHandler.create());
         router.route().handler(CorsHandler.create("*")
@@ -72,7 +74,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param content body content in JSON format
      */
     protected void ok(RoutingContext context, JsonObject content) {
-        LOGGER.info("200 Success:" + content.toString());
+        LOGGER.info("200 Success:" + jsonToString(content));
         context.response().setStatusCode(ReasultBuilder.SUCCESS_CODE)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildSuccess(content).toString());
@@ -84,7 +86,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param context routing context
      */
     protected void register(RoutingContext context, JsonObject content) {
-        LOGGER.info("201 Success:" + content.toString());
+        LOGGER.info("201 Success:" + jsonToString(content));
         context.response().setStatusCode(ReasultBuilder.SUCCESS_REG)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildReg(content).toString());
@@ -132,7 +134,7 @@ public class RestfulApiVerticle extends AbstractVerticle {
      * @param context routing context
      */
     protected void badRequest(RoutingContext context, JsonObject content) {
-        LOGGER.info("400 Bad Request: " + content.toString());
+        LOGGER.info("400 Bad Request: " + jsonToString(content));
         context.response().setStatusCode(ReasultBuilder.BAD_REQUEST)
                 .putHeader("content-type", "application/json")
                 .end(ReasultBuilder.buildBadRequest(content).toString());
@@ -233,5 +235,9 @@ public class RestfulApiVerticle extends AbstractVerticle {
         context.response().setStatusCode(503)
                 .putHeader("content-type", "application/json")
                 .end(new JsonObject().put("error", cause).encodePrettily());
+    }
+
+    private String jsonToString(JsonObject jsonObject){
+        return jsonObject == null? "" : jsonObject.toString();
     }
 }
