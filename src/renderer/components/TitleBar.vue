@@ -36,27 +36,29 @@
 <script>
 const { ipcRenderer, remote } = require("electron");
 const { getClassToJobDb } = require("@/api/db");
+const service = require("@/api/service");
+const Base64 = require("js-base64").Base64;
 export default {
   data() {
     let validatePassword = (rule, value, callback) => {
-      if (value.trim() === '') {
-        callback(new Error('密码不能为空！'));
+      if (value.trim() === "") {
+        callback(new Error("密码不能为空！"));
       } else if (value.length < 6) {
-        callback(new Error('密码长度最小为六位数！'));
+        callback(new Error("密码长度最小为六位数！"));
       } else {
         callback();
       }
     };
     let validateUsername = (rule, value, callback) => {
-      if (value.trim() === '') {
-        callback(new Error('用户名不能为空！'));
+      if (value.trim() === "") {
+        callback(new Error("用户名不能为空！"));
       } else {
         callback();
       }
     };
     let validateUrl = (rule, value, callback) => {
-      if (value.trim() === '') {
-        callback(new Error('服务器配置不能为空！'));
+      if (value.trim() === "") {
+        callback(new Error("服务器配置不能为空！"));
       } else {
         callback();
       }
@@ -64,32 +66,28 @@ export default {
     return {
       time: "",
       form: {
-        url: '118.24.1.170',
-        port: '8082',
-        username: '',
-        password: '',
-        input: ''
+        url: "118.24.1.170",
+        port: "8082",
+        username: "",
+        password: "",
+        input: ""
       },
       isLogin: false,
       dialogFormVisible: false,
       rules: {
-        username: [
-          {validator: validateUsername, trigger: 'blur'}
-        ],
-        input: [
-          {validator: validatePassword, trigger: 'blur'}
-        ],
-        url : [
-          {validator: validateUrl, trigger: 'blur'}
-        ]
+        username: [{ validator: validateUsername, trigger: "blur" }],
+        input: [{ validator: validatePassword, trigger: "blur" }],
+        url: [{ validator: validateUrl, trigger: "blur" }]
       }
     };
   },
   mounted: function() {
     let _this = this;
+    let classToJobDb = getClassToJobDb();
     let webServer = remote.getGlobal("webServer");
     ipcRenderer.on("closeWebServer", (event, arg) => {
       webServer.stop();
+      classToJobDb.updateStatus(1, 2, (e, docs) => {});
       _this.$dialog.alert("服务结束,正在打包文件");
       //跳转主页
     });
@@ -109,7 +107,6 @@ export default {
         });
       }
     });
-    let classToJobDb = getClassToJobDb();
     classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
       if (classToJobJsons.length > 0) {
         classToJobDb.updateStatus(1, 0, (e, docs) => {});
@@ -134,56 +131,70 @@ export default {
     maxWin: function() {
       ipcRenderer.send("max-window");
     },
-    login: function () {
+    login: function() {
       this.dialogFormVisible = true;
     },
-    loginSubmit: function () {
+    loginSubmit: function() {
       let _this = this;
-      _this.$refs.form.validate((valid) => {
+      _this.$refs.form.validate(valid => {
         if (valid) {
-          if (_this.form.port.trim() === ""){
+          if (_this.form.port.trim() === "") {
             _this.form.port = "8082";
           }
-          localStorage.setItem("host", "http://" + _this.form.url + ":" + _this.form.port);
-          _this.form.password = "gak"+ Base64.encode("gak" + Base64.encode("gak" + Base64.encode(_this.form.input) + "gak") + "gak") + "gak";
+          localStorage.setItem(
+            "host",
+            "http://" + _this.form.url + ":" + _this.form.port
+          );
+          _this.form.password =
+            "gak" +
+            Base64.encode(
+              "gak" +
+                Base64.encode("gak" + Base64.encode(_this.form.input) + "gak") +
+                "gak"
+            ) +
+            "gak";
           service.login(_this, JSON.stringify(_this.form), _this.form.username);
         } else {
           return false;
         }
-      })
+      });
     },
-    download: function () {
+    download: function() {
       this.$dialog
-        .confirm({
-          title: "提示",
-          body: "同步数据将会完全覆盖本地的所有数据，确定同步吗?"
-        }, {
-          loader: true,
-          okText: '确认',
-          cancelText: '取消'
-        })
+        .confirm(
+          {
+            title: "提示",
+            body: "同步数据将会完全覆盖本地的所有数据，确定同步吗?"
+          },
+          {
+            loader: true,
+            okText: "确认",
+            cancelText: "取消"
+          }
+        )
         .then(dialog => {
           service.download(this);
           dialog.close();
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     },
-    upload: function () {
+    upload: function() {
       this.$dialog
-        .confirm({
-          title: "提示",
-          body: "备份数据将会完全覆盖远程服务器上的所有数据，确定备份吗?"
-        }, {
-          okText: '确认',
-          cancelText: '取消'
-        })
+        .confirm(
+          {
+            title: "提示",
+            body: "备份数据将会完全覆盖远程服务器上的所有数据，确定备份吗?"
+          },
+          {
+            okText: "确认",
+            cancelText: "取消"
+          }
+        )
         .then(dialog => {
           service.upload(this);
           dialog.close();
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     }
   }
 };

@@ -59,6 +59,10 @@ export default class JobDb {
     this.db.remove({ "jobName": jobName }, callBack);
   }
 
+  deleteAllJob(callBack) {
+    return this.db.remove({},callBack);
+  }
+
 
   findByJobName(jobName) {
     return this.db.find({ "jobName": jobName });

@@ -64,6 +64,9 @@ export default class ClasstDb {
   deleteStudent(className, studentId, callBack) {
     this.db.update({ 'className': className }, { $pull: { students: { id: studentId } } }, callBack);
   }
+  deleteAllClass(callBack) {
+    return this.db.remove({},callBack);
+  }
   findByClassName(className) {
     return this.db.find({ className: className });
   }

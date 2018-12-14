@@ -5,6 +5,7 @@ build/help-teacher-win32-x64/*
 userData/
 npm-debug.log
 npm-debug.log.*
+upload/*
 /AutoRunner/__pycache__
 thumbs.db
 !.gitkeep
@@ -41,4 +42,4 @@ hs_err_pid*
 !/RemoteService/releases/gak-help-teacher-1.0-SNAPSHOT.jar
 !/RemoteService/releases/gak-help-teacher-hazelcast-db-1.0-SNAPSHOT.jar
 !/RemoteService/releases/gak-help-teacher-hazelcast-web-1.0-SNAPSHOT.jar
-/package-lock.json
+package-lock.json
