@@ -36,6 +36,8 @@ public class RestfulApiVerticle extends AbstractVerticle {
         allowHeaders.add("Content-Type");
         allowHeaders.add("accept");
         allowHeaders.add("X-PINGARUNER");
+        allowHeaders.add("Authorization");
+//        allowHeaders.add("Bearer*");
         // CORS support
         router.route().handler(BodyHandler.create());
         router.route().handler(CorsHandler.create("*")
