@@ -84,74 +84,92 @@
 </template>
 
 <script>
-  const { writeCallXlsx } = require("@/api/xlsx");
-  const {getClassDb} = require("@/api/db");
-  const {error, success, warning} = require("@/api/message");
-  export default {
-    name: "CallAll",
-    data() {
-      return {
-        activeName: '0',
-        search: "",
-        classJsons: [],
-        classIndex: null,
-        students: {
-          // 已到学生
-          arriveStudents: [],
-          // 迟到学生
-          lateStudents: [],
-          // 请假学生
-          leaveStudents: [],
-          // 未到学生
-          noStudents: []
-        },
-        className: ""
-      };
-    },
-    mounted() {
-      let _this = this;
-      let classDb = getClassDb();
-      classDb.findAllClass().exec((e, classJsons) => {
-        if (e) {
-          error(_this, "数据错误");
-        } else {
-          _this.classJsons = classJsons;
-        }
-      });
-    },
-    methods: {
-      sortString: function (v1, v2) {
-        return v1.id - v2.id;
+const { writeCallXlsx } = require("@/api/xlsx");
+const { getClassDb } = require("@/api/db");
+const { error, success, warning } = require("@/api/message");
+export default {
+  name: "CallAll",
+  data() {
+    return {
+      activeName: "0",
+      search: "",
+      classJsons: [],
+      classIndex: null,
+      students: {
+        // 已到学生
+        arriveStudents: [],
+        // 迟到学生
+        lateStudents: [],
+        // 请假学生
+        leaveStudents: [],
+        // 未到学生
+        noStudents: []
       },
-      changSelect: function () {
-        let _this = this;
-        _this.students.arriveStudents = _this.classJsons[_this.classIndex].students;
-        _this.className = _this.classJsons[_this.classIndex].className;
-        _this.activeName = '1';
-      },
-      leaveStudent: function (key, row) {
-        this.students.arriveStudents.splice(this.students.arriveStudents.indexOf(row), 1);
-        this.students.leaveStudents.push(row);
-      },
-      lateStudent: function (key, row) {
-        this.students.arriveStudents.splice(this.students.arriveStudents.indexOf(row), 1);
-        this.students.lateStudents.push(row);
-      },
-      noStudent: function (key, row) {
-        this.students.arriveStudents.splice(this.students.arriveStudents.indexOf(row), 1);
-        this.students.noStudents.push(row);
-      },
-      getStudent: function (students, key, row) {
-        students.splice(students.indexOf(row), 1);
-        this.students.arriveStudents.push(row);
-      },
-      exportInfo: function () {
-        writeCallXlsx(this.students, this.className);
+      className: ""
+    };
+  },
+  mounted() {
+    let _this = this;
+    let classDb = getClassDb();
+    classDb.findAllClass().exec((e, classJsons) => {
+      if (e) {
+        error(_this, "数据错误");
+      } else {
+        _this.classJsons = classJsons;
       }
+    });
+  },
+  methods: {
+    sortString: function(v1, v2) {
+      return v1.id - v2.id;
+    },
+    changSelect: function() {
+      let _this = this;
+      _this.students.arriveStudents =
+        _this.classJsons[_this.classIndex].students;
+      _this.className = _this.classJsons[_this.classIndex].className;
+      _this.activeName = "1";
+    },
+    leaveStudent: function(key, row) {
+      this.students.arriveStudents.splice(
+        this.students.arriveStudents.indexOf(row),
+        1
+      );
+      this.students.leaveStudents.push(row);
+    },
+    lateStudent: function(key, row) {
+      this.students.arriveStudents.splice(
+        this.students.arriveStudents.indexOf(row),
+        1
+      );
+      this.students.lateStudents.push(row);
+    },
+    noStudent: function(key, row) {
+      this.students.arriveStudents.splice(
+        this.students.arriveStudents.indexOf(row),
+        1
+      );
+      this.students.noStudents.push(row);
+    },
+    getStudent: function(students, key, row) {
+      students.splice(students.indexOf(row), 1);
+      this.students.arriveStudents.push(row);
+    },
+    exportInfo: function() {
+      let _this = this;
+      let callBack = function(e) {
+        if (e) {
+          error(_this, "导出信息失败");
+        } else {
+          success(_this, "导出信息成功 可到程序目录callFile查看");
+        }
+      };
+      writeCallXlsx(this.students, this.className, callBack);
     }
-  };
+  }
+};
 </script>
 
 <style scoped lang="stylus">
-  @import "../../../styles/call/all/index.styl"
+@import '../../../styles/call/all/index.styl';
 </style>
