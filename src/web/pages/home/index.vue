@@ -9,7 +9,9 @@
           #gak-main-name 作业收取
           #gak-main-title 作业标题：{{jobName}}
           #gak-main-content 作业详情：{{jobContent}}
-          #gak-main-time 剩余时间：{{jobContent}}
+          #gak-main-time 剩余时间：
+            countdown(:time='time', :transform="transform", :auto-start="false", ref="countdown")
+              template(slot-scope='props') {{ props.hours }} : {{ props.minutes }} : {{ props.seconds }}
         el-form(:model='form', ref="form", :rules='rules')
           el-form-item(label='学号', prop='StudentId', :rules="[\
             { required: true, message: '学号不能为空'}\
@@ -37,6 +39,8 @@
         form: {
           StudentId: ''
         },
+        charts :null,
+        time: 10000,
         fileCount: 0,
         fileUpload: false,
         jobName: '',
@@ -135,7 +139,7 @@
         //封装数据
         formData.append('fileType', type);
         formData.append('fileTempPath', fileTempPath);
-        formData.append('StudentId', this.form.StudentId);
+        formData.append('StudentId', this.form.StudentId + "");
         this.$http.post('/submitHomework', formData)
           .then(response => {
             if (response.status == 200) {
@@ -182,8 +186,10 @@
               if (response.data) {
                 _this.jobName = response.data.data.jobName;
                 _this.jobContent = response.data.data.jobContent;
+                _this.time = response.data.data.time;
                 _this.data[0].value = response.data.data.unfinishedStudentNum;
-                _this.data[1].value = response.data.data.studentNum;
+                _this.data[1].value = response.data.data.studentNum - response.data.data.unfinishedStudentNum;
+                _this.$refs.countdown.start()
                 let types = response.data.data.jobTypes.split(",");
                 let typeList = [];
                 //遍历文件列表 限制文件类型
@@ -202,7 +208,8 @@
                   }
                 }
                 _this.fileTypes = typeList.join(",");
-                console.log(_this.fileTypes);
+                _this.option.series[0].data = _this.data;
+                _this.charts.setOption(_this.option);
               }
             }
           })
@@ -218,6 +225,13 @@
           this.$message.error('上传文件格式不合法，只能为' + _this.fileTypes + '格式。');
         }
         return res;
+      },
+      transform: function (props) {
+        Object.entries(props).forEach(([key, value]) => {
+          const digits = value < 10 ? `0${value}` : value;
+          props[key] = `${digits} `;
+        });
+        return props;
       }
     },
     created() {
@@ -235,6 +249,7 @@
       //设置图表option
       _this.option.series[0].data = _this.data;
       myChart.setOption(_this.option);
+      _this.charts = myChart;
     }
   }
 
