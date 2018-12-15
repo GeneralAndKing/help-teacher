@@ -208,7 +208,7 @@ export default {
                 // _this.option.xAxis.data;
                 _this.option.series[0].data = [];
                 _this.option.xAxis.data = [];
-
+                _this.finishedStudents = ipJsons;
                 for (const ipJson of ipJsons) {
                   if (_this.option.xAxis.data.indexOf(ipJson.address) == -1) {
                     _this.option.xAxis.data.push(ipJson.address);
@@ -221,6 +221,9 @@ export default {
                 }
                 // myChart.clear();
                 myChart.setOption(_this.option);
+                classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
+                  _this.unfinishedStudents = classToJobJsons[0].unfinishedStudents;
+                });
               });
             };
             _this.interval = setInterval(synchronization, 5000);
@@ -255,7 +258,7 @@ export default {
       _this.disabled = true;
       webServer.stop();
       classToJobDb.updateStatus(1, 2, (e, docs) => {});
-      _this.$dialog.alert("服务结束,正在打包文件","确认");
+      _this.$dialog.alert("服务结束,正在打包文件", "确认");
     },
     /**
      * 切换显示
