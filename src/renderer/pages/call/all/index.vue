@@ -8,18 +8,18 @@
         el-breadcrumb-item 点名
     el-scrollbar#gak-main-call
       #gak-main-call-class.gak-tip-blue
+        el-button(type='primary', style="float:right", @click="exportInfo", :disabled="className.trim() === ''") 导出点名信息
         span 请选择您的班级：
         el-select(v-model='classIndex', placeholder='请选择或输入', filterable, @change="changSelect")
           el-option(v-for='(classJson,index) in classJsons', :key='index', :label='classJson.className', :value='index')
-        span {{className}}
-        el-button(type='primary', style="float:right", @click="exportInfo", :disabled="className.trim() === ''") 导出点名信息
+        span &nbsp;&nbsp;人数： {{studentNum}}
       #gak-main-call-content
         el-collapse(v-model="activeName", accordion)
           el-collapse-item(name='1')
             template(slot='title')
               i.el-icon-circle-check.gak-icon-right
               | 已到学生
-            el-table(:default-sort="{prop: 'id',order: 'ascending'}", :data='students.arriveStudents.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', stripe)
+            el-table(:data='students.arriveStudents.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', stripe)
               el-table-column(type='index', width='40', align="center")
               el-table-column(label='学号', prop='id', :sortable="true",  :sort-method="sortString")
               el-table-column(label='姓名', prop='name')
@@ -37,7 +37,7 @@
             template(slot='title')
               i.el-icon-question.gak-icon-right
               | 请假学生
-            el-table(:default-sort="{prop: 'id',order: 'ascending'}", :data='students.leaveStudents.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', stripe)
+            el-table(:data='students.leaveStudents.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', stripe)
               el-table-column(type='index', width='40', align="center")
               el-table-column(label='学号', prop='id', :sortable="true",  :sort-method="sortString")
               el-table-column(label='姓名', prop='name')
@@ -53,7 +53,7 @@
             template(slot='title')
               i.el-icon-warning.gak-icon-right
               | 迟到学生
-            el-table(:default-sort="{prop: 'id',order: 'ascending'}", :data='students.lateStudents.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', stripe)
+            el-table(:data='students.lateStudents.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', stripe)
               el-table-column(type='index', width='40', align="center")
               el-table-column(label='学号', prop='id', :sortable="true",  :sort-method="sortString")
               el-table-column(label='姓名', prop='name')
@@ -105,7 +105,8 @@
           // 未到学生
           noStudents: []
         },
-        className: ""
+        className: "",
+        studentNum: 0
       };
     },
     mounted() {
@@ -125,8 +126,13 @@
       },
       changSelect: function () {
         let _this = this;
+        _this.students.arriveStudents = [];
+        _this.students.lateStudents = [];
+        _this.students.leaveStudents = [];
+        _this.students.noStudents = [];
         _this.students.arriveStudents = _this.classJsons[_this.classIndex].students;
         _this.className = _this.classJsons[_this.classIndex].className;
+        _this.studentNum = _this.classJsons[_this.classIndex].students.length;
         _this.activeName = '1';
       },
       leaveStudent: function (key, row) {

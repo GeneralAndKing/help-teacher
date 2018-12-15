@@ -190,6 +190,7 @@ export default {
               } else {
                 _this.isEdit = false;
                 _this.tableData.splice(_this.tableData.indexOf(row), 1);
+                _this.studentNum --;
                 _this.oldStudentId = null;
                 success(_this, "删除成功");
               }
@@ -252,6 +253,7 @@ export default {
         //插入操作
         else {
           classDb.insertStudent(_this.className, newStudent, callBack);
+          _this.studentNum ++;
         }
       } else {
         warning(_this, "请先完成您当前的编辑");
@@ -263,7 +265,7 @@ export default {
         _this.tableData.unshift({
           id: "",
           name: "",
-          sex: "",
+          sex: "男",
           edit: true
         });
         _this.isEdit = true;
