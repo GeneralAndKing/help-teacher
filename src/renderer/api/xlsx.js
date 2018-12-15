@@ -1,6 +1,7 @@
 const xlsx = require("node-xlsx");
 const { verifyStudent } = require("./judge");
 const { remote } = require("electron");
+const fs = require('fs');
 let classDb = remote.getGlobal('classDb');
 
 /*
@@ -14,7 +15,7 @@ const readClassXlsx = (filePath) => {
     for (const classData of xlsxData) {
         try {
             let xlsxHeader = classData.data.shift();
-            if (xlsxHeader[0].search('学号') == -1 || xlsxHeader[1].search('姓名') == -1 || xlsxHeader[2].search('性别') == -1) {
+            if (xlsxHeader[0].search('学号') === -1 || xlsxHeader[1].search('姓名') === -1 || xlsxHeader[2].search('性别') === -1) {
                 throw 'xlsxHeader is error';
             }
         }
@@ -32,9 +33,39 @@ const readClassXlsx = (filePath) => {
     }
     classJson.students = students;
     return [true, classJson];
+};
 
-}
+const writeCallXlsx = (students, classname) => {
+    let datas = [
+        getStudentInfo(students.arriveStudents, "已到"),
+        getStudentInfo(students.leaveStudents, "请假"),
+        getStudentInfo(students.lateStudents, "迟到"),
+        getStudentInfo(students.noStudents, "未到")
+    ];
+    let buff = xlsx.build([
+        {
+            name: "sheet1",
+            data: datas[0]
+        }
+    ]);
+    console.log(datas);
+    fs.writeFile(new Date().toLocaleDateString() + classname + "_点名信息", buff, {'flag': 'w'});
+    return true;
+};
+
+const getStudentInfo = (students, status) => {
+    let datas = [];
+    for (let value of students) {
+        let data = [];
+        data.push(value.id);
+        data.push(value.name);
+        data.push(value.sex);
+        data.push(status);
+        datas.push(data);
+    }
+    return datas;
+};
 
 export {
-    readClassXlsx
+    readClassXlsx, writeCallXlsx
 }
