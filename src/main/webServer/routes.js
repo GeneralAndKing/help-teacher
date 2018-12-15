@@ -83,6 +83,7 @@ router.post('/submitHomework', function (req, res, next) {
         //获取数据库中的信息
         let className = docs[0].className;
         let jobName = docs[0].jobName;
+        let _id = docs[0]._id;
         let _this = this;
         if (className || jobName) {
             console.log('name:' + className);
@@ -193,7 +194,7 @@ router.post('/submitHomework', function (req, res, next) {
                                     }
                                 }
                                 //从未完成列表中删除提交作业的学生的信息
-                                classToJobDb.deleteUnfinishedStudent(jobName, className, StudentId, callBack);
+                                classToJobDb.deleteUnfinishedStudentById(_id, StudentId, callBack);
                             } catch (error) {
                                 res.json({ 'status': 0, 'error': '文件处理失败' });
                             }

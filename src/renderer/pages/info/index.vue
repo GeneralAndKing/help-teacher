@@ -28,7 +28,9 @@ export default {
   name: "ClassJobInfo",
   data() {
     return {
+      chart: null,
       classToJob: {
+        _id: null,
         className: null,
         jobName: null,
         startTime: null,
@@ -74,7 +76,9 @@ export default {
   },
   created() {
     let _this = this;
-    _this.classToJob = _this.$route.params.classToJob;
+    for (const arr in _this.$route.params.classToJob) {
+      _this.classToJob[arr] = _this.$route.params.classToJob[arr];
+    }
     _this.data[0].value = _this.classToJob.unfinishedStudents.length;
     _this.data[1].value = _this.classToJob.studentNum - _this.data[0].value;
   },
@@ -86,6 +90,7 @@ export default {
     //设置图表option
     _this.option.series[0].data = _this.data;
     myChart.setOption(_this.option);
+    _this.chart = myChart;
   },
   methods: {
     bgDanger: function() {
@@ -97,14 +102,18 @@ export default {
         if (e) {
           error(_this, "设置收取失败");
         } else {
-          _this.classToJob.unfinishedStudents.splice(student, 1);
-          success(_this, "删除成功");
+          _this.classToJob.unfinishedStudents.splice(key, 1);
+          _this.data[0].value = _this.classToJob.unfinishedStudents.length;
+          _this.data[1].value =
+            _this.classToJob.studentNum - _this.data[0].value;
+          _this.option.series[0].data = _this.data;
+          _this.chart.setOption(_this.option);
+          success(_this, "收取成功");
         }
       };
       let classToJobDb = getClassToJobDb();
-      classToJobDb.deleteUnfinishedStudent(
-        _this.classToJob.jobName,
-        _this.classToJob.className,
+      classToJobDb.deleteUnfinishedStudentById(
+        _this.classToJob._id,
         student.id,
         callBack
       );

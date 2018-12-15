@@ -102,8 +102,12 @@ export default class ClassToJobDb {
     deleteUnfinishedStudent(jobName, className, studentId, callBack) {
         this.db.update({ "jobName": jobName, "className": className }, { $pull: { unfinishedStudents: { id: studentId } } }, callBack);
     }
+    deleteUnfinishedStudentById(_id, studentId, callBack) {
+        this.db.update({ "_id": _id }, { $pull: { unfinishedStudents: { id: studentId } } }, callBack);
+    }
+
     deleteAllClassToJob(callBack) {
-        return this.db.remove({},callBack);
+        return this.db.remove({}, callBack);
     }
 
 }
