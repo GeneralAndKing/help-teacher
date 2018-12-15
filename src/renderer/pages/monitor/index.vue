@@ -257,7 +257,7 @@ export default {
                 // _this.option.xAxis.data;
                 _this.option.series[0].data = [];
                 _this.option.xAxis.data = [];
-
+                _this.finishedStudents = ipJsons;
                 for (const ipJson of ipJsons) {
                   if (_this.option.xAxis.data.indexOf(ipJson.address) === -1) {
                     _this.option.xAxis.data.push(ipJson.address);
