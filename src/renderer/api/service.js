@@ -13,6 +13,7 @@ const login = ($this, user, username) => {
         success($this, "登录成功!");
         localStorage.setItem("token", response.data.data.token);
         localStorage.setItem("username", username);
+        $this.username = username;
         instance.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
         $this.dialogFormVisible = false;
         $this.isLogin = true;
@@ -20,6 +21,7 @@ const login = ($this, user, username) => {
         success($this, "注册并登录成功!");
         localStorage.setItem("token", response.data.data.token);
         localStorage.setItem("username", username);
+        $this.username = username;
         instance.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
         $this.dialogFormVisible = false;
         $this.isLogin = true;
@@ -116,7 +118,6 @@ const upload = ($this) => {
         instance.post(host + "/api/teacher", JSON.stringify(data))
           .then(response => {
             let data = response.data;
-            console.log(data);
             success($this, "数据已备份至服务器......");
           })
           .catch(error => {

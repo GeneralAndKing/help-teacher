@@ -9,13 +9,10 @@ let archive = archiver('zip', {
 
 // 文件输出流结束
 output.on('close', function () {
-    console.log(`总共 ${archive.pointer()} 字节`)
-    console.log('archiver完成文件的归档，文件输出流描述符已关闭')
 })
 
 // 数据源是否耗尽
 output.on('end', function () {
-    console.log('数据源已耗尽')
 })
 
 // 存档警告

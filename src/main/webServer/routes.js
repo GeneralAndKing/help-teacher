@@ -9,7 +9,6 @@ const path = require('path');
 router.use(mutipart({ uploadDir: './upload/temp' }));
 //创建文件夹
 let mkdirsSync = function (dirname, mode) {
-    console.log(dirname);
     if (fs.existsSync(dirname)) {
         return true;
     } else {
@@ -32,8 +31,6 @@ router.get('/getData', function (req, res, next) {
             req.socket.remoteAddress ||
             req.connection.socket.remoteAddress;
     };
-    console.log(ip(req));
-    console.log(cursor);
     cursor.exec((error, docs) => {
         res.json(docs);
     });
@@ -41,8 +38,6 @@ router.get('/getData', function (req, res, next) {
 
 //进行作业文件上传
 router.post('/upload', function (req, res, next) {
-    console.log(req.body);
-    console.log(req.files);
     //获取文件
     let file = req.files.file;
     //文件临时路径
@@ -86,8 +81,6 @@ router.post('/submitHomework', function (req, res, next) {
         let _id = docs[0]._id;
         let _this = this;
         if (className || jobName) {
-            console.log('name:' + className);
-            console.log('job:' + jobName);
             //获取客户端ip地址
             let ip = function getClientIp(req) {
                 return req.ip ||
@@ -110,20 +103,16 @@ router.post('/submitHomework', function (req, res, next) {
                     for (; i < result[0].students.length; i++) {
                         if (result[0].students[i].id == StudentId) {
                             index = i;
-                            console.log(index);
                             break;
                         }
                     }
 
                     ipv4 = ipv4 ? ipv4.join('.') : null;
                     let students = docs[0].unfinishedStudents;
-                    console.log('index的值' + index);
                     if (index != -1 && index < result[0].students.length) {
                         id = result[0].students[i].id;
                         name = result[0].students[i].name;
                         sex = result[0].students[i].sex;
-                        // console.log(result[0].students);
-                        console.log(id + name + sex);
                         //获取提交作业学生的信息
                         //学生id emmm 和post获取到到的studentid相同
                         let arr = fileTempPath.split('.');
@@ -138,7 +127,6 @@ router.post('/submitHomework', function (req, res, next) {
                         if (!fs.existsSync(dataPath)) {
                             //fs.mkdirSync(dataPath);
                             mkdirsSync(dataPath);
-                            console.log('mkdir：' + dataPath)
                         }
                         if (!StudentId || !fileTempPath) {
                             res.json({ 'status': 0, 'error': '参数不能为空' });
@@ -148,7 +136,6 @@ router.post('/submitHomework', function (req, res, next) {
                                 //定义回调函数
                                 let callBack = function (e, docs) {
                                     if (e) {
-                                        console.log(e);
                                         res.json({ 'status': 0, 'error': '数据操作执行失败！' });
                                     } else {
                                         //数据库执行成功后进行操作进行ipDb表的数据插入
@@ -160,13 +147,11 @@ router.post('/submitHomework', function (req, res, next) {
                                             'sex': sex
                                         };
 
-                                        console.log(data);
                                         let insertIpInfo = function (e, docs) {
                                             if (e) {
                                                 res.json({ 'status': 0, 'error': '数据操作执行失败！' });
                                             } else {
                                                 //操作成功的执行语句
-                                                console.log('向数据库添加数据');
                                                 res.json({ 'status': 1, 'data': 'success', 'StudentId': StudentId });
                                             }
                                         }
@@ -182,8 +167,6 @@ router.post('/submitHomework', function (req, res, next) {
                                             //判断数据库中是否有信息
                                             if (docs.length > 0) {
                                                 //如果存在信息则更新数据表（删除重新插入
-                                                console.log('数据库中存在信息');
-                                                console.log(docs);
                                                 ipDb.deleteStudent(StudentId, reinsert);
                                             } else {
                                                 // 数据库中不存在信息则插入数据
@@ -222,7 +205,6 @@ router.get('/getJobInformation', function (req, res, next) {
             let unfinishedStudentNum = docs[0].unfinishedStudents.length;
             let time = docs[0].time * 60 * 1000 - (new Date().getTime() - docs[0].timestamp);
             let studentNum = docs[0].studentNum;
-            console.log(docs);
             let info = jobDb.findByJobName(jobName);
             info.exec((error, result) => {
                 if (result) {
@@ -230,10 +212,8 @@ router.get('/getJobInformation', function (req, res, next) {
                     let jobTypes = result[0].jobTypes;
                     let jobLimitType = [];
                     jobTypes.forEach((v, i, a) => {
-                        console.log(v);
                         jobLimitType.push('.' + v);
                     });
-                    console.log(jobLimitType.join());
                     res.json({ 'status': 1, 'data': { 'jobName': jobName, 'className': className, 'time': time, 'startTime': startTime, 'studentNum': studentNum, 'unfinishedStudentNum': unfinishedStudentNum, 'jobContent': jobContent, 'jobTypes': jobLimitType.join() } });
                 } else {
                     res.json({ 'status': 0, 'error': '信息查询失败' });

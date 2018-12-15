@@ -2,7 +2,6 @@
   el-container(class='container')
     el-header(class='header')
       #el-header-title Help-Teacher
-      img#el-header-logo(src='../../assets/logo.png')
     el-container
       el-main(class='main', style="max-width:800px;")
         .gak-tip-blue
@@ -28,6 +27,10 @@
             el-button(@click="resetForm(\'form\')") 重置
         #app(width='100%')
           #gak-main-chart(style='width: 100%;height:400px;')
+    el-footer
+      hr#gak-main-about-hr
+      p#gak-main-about-content 非常感谢您使用我们的这款小而不太精致的软件，如有问题请随时反馈到github，传送门在下面。如果您觉得不错，欢迎 star，如果您是开发者，欢迎 fork 和 pull request。
+      img#gak-main-about-github(src="../../assets/github.png", @click="goGithub")
 </template>
 
 <script>
@@ -88,7 +91,6 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let form = _this.$refs['form'].$el;
-            console.log(_this.fileList.length);
             if (_this.fileCount != 1 || _this.fileUpload) {
               if (_this.fileUpload) {
                 _this.$message.warning('已经上传过了，重新选择文件再次尝试上传！！');
@@ -100,7 +102,6 @@
               _this.$refs.upload.submit();
             }
           } else {
-            console.log('error submit!!');
             _this.$message.warning('作业无法提交请检查输入是否完整！');
             _this.fileUpload = false;
             return false;
@@ -108,12 +109,9 @@
         });
       },
       handleRemove(file, fileList) {
-        // console.log(file, fileList);
         this.fileCount = 0;
-        // console.log(this.fileCount);
       },
       handlePreview(file) {
-        console.log(file);
       },
       handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
@@ -143,11 +141,13 @@
         this.$http.post('/submitHomework', formData)
           .then(response => {
             if (response.status == 200) {
-              console.log("成功");
               if (response.data.status == 1) {
                 _this.$message.success('作业提交成功，重复提交相同文件会覆盖上一次提交的文件！');
                 _this.fileUpload = true;
                 _this.reload();
+                _this.getInfo();
+                _this.form.StudentId = "";
+                _this.$refs.upload.clearFiles();
               } else {
                 _this.fileUpload = false;
                 _this.$message.error('作业提交失败,' + response.data.error + '！');
@@ -156,10 +156,12 @@
             }
           })
           .catch(function (error) {
-            console.log(error)
             this.fileUpload = false;
             this.$message.error('错了哦，无法访问接口！');
           });
+      },
+      goGithub: function () {
+        window.open("https://github.com/GeneralAndKing/help-teacher");
       },
       handleError(err, file, fileList) {
         this.fileCount = 0;
@@ -181,8 +183,6 @@
         this.$http.get('/getJobInformation')
           .then(response => {
             if (response.status == 200) {
-              console.log("成功访问数据接口");
-              console.log(response.data);
               if (response.data) {
                 _this.jobName = response.data.data.jobName;
                 _this.jobContent = response.data.data.jobContent;
@@ -214,7 +214,6 @@
             }
           })
           .catch(error => {
-            console.log(error);
           });
       },
       beforeAvatarUpload: function (file) {

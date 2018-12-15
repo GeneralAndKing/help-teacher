@@ -30,8 +30,14 @@
         toolList: [
           {
             name: "随机点名",
-            iconBg: "hotpink",
+            iconBg: "#39b0f2",
             iconImg: "hand-paper",
+            route: "call"
+          },
+          {
+            name: "班级点名",
+            iconBg: "#99CC33",
+            iconImg: "users",
             route: "call"
           }
         ]
