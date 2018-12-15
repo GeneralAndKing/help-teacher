@@ -10,11 +10,13 @@ export default class webServer {
 		this.jobName = null;
 		this.className = null;
 		this.compressCallBack = compressCallBack;
+		this.timestamp = null;
 	}
-	start(ip, port, time, jobName, className) {
+	start(ip, port, time, jobName, className,timestamp) {
 		if (!this.status) {
 			this.jobName = jobName;
 			this.className = className;
+			this.timestamp = timestamp;
 			this.ip = ip;
 			this.port = port;
 			this.time = time * 60 * 1000;
@@ -53,6 +55,9 @@ export default class webServer {
 	}
 	getClassName() {
 		return this.className;
+	}
+	getTimestamp() {
+		return this.timestamp;
 	}
 	getTime() {
 		return this.time;
