@@ -152,12 +152,20 @@
         this.students.arriveStudents.push(row);
       },
       exportInfo: function () {
-        writeCallXlsx(this.students, this.className);
+        let _this = this;
+        let callBack = function(e) {
+          if (e) {
+            error(_this, "导出信息失败");
+          } else {
+            success(_this, "导出信息成功 可到程序目录callFile查看");
+          }
+        };
+        writeCallXlsx(this.students, this.className, callBack);
       }
     }
   };
 </script>
 
 <style scoped lang="stylus">
-  @import "../../../styles/call/all/index.styl"
+@import '../../../styles/call/all/index.styl';
 </style>

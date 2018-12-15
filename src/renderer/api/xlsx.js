@@ -2,6 +2,8 @@ const xlsx = require("node-xlsx");
 const { verifyStudent } = require("./judge");
 const { remote } = require("electron");
 const fs = require('fs');
+const { error, success, warning } = require("./message");
+const path = require("path");
 let classDb = remote.getGlobal('classDb');
 
 /*
@@ -24,7 +26,7 @@ const readClassXlsx = (filePath) => {
         }
         for (const studentData of classData.data) {
             if (verifyStudent(studentData[0], studentData[1], studentData[2])) {
-                students.push(classDb.createStudentJson(studentData[0]+"", studentData[1], studentData[2]));
+                students.push(classDb.createStudentJson(studentData[0] + "", studentData[1], studentData[2]));
             }
             else {
                 return [false, null];
@@ -35,7 +37,7 @@ const readClassXlsx = (filePath) => {
     return [true, classJson];
 };
 
-const writeCallXlsx = (students, classname) => {
+const writeCallXlsx = (students, classname, callBack) => {
     let datas = [
         getStudentInfo(students.arriveStudents, "已到"),
         getStudentInfo(students.leaveStudents, "请假"),
@@ -48,9 +50,8 @@ const writeCallXlsx = (students, classname) => {
             data: datas[0]
         }
     ]);
-    console.log(datas);
-    fs.writeFile(new Date().toLocaleDateString() + classname + "_点名信息", buff, {'flag': 'w'});
-    return true;
+    mkdirsSync("./callFile");
+    fs.writeFile("callFile/" + new Date().toLocaleString().replace(/\//g, "-").replace(/\s+/g, "").replace(/:/g, " ") + classname + "_点名信息.xlsx", buff, callBack);
 };
 
 const getStudentInfo = (students, status) => {
@@ -65,7 +66,16 @@ const getStudentInfo = (students, status) => {
     }
     return datas;
 };
-
+const mkdirsSync = function (dirname, mode) {
+    if (fs.existsSync(dirname)) {
+        return true;
+    } else {
+        if (mkdirsSync(path.dirname(dirname), mode)) {
+            fs.mkdirSync(dirname, mode);
+            return true;
+        }
+    }
+};
 export {
     readClassXlsx, writeCallXlsx
 }
