@@ -38,7 +38,7 @@
             name: "班级点名",
             iconBg: "#99CC33",
             iconImg: "users",
-            route: "call"
+            route: "call-all"
           }
         ]
       };

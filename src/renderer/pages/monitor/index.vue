@@ -22,7 +22,7 @@
               el-col(:span='12') {{ startTime }}
             el-row(:gutter='20')
               el-col(:span='12') 时间间隔
-              el-col(:span='12') {{ waitTime }}
+              el-col(:span='12') {{ waitTime }} 分钟
         el-tab-pane(label='服务管理', name='second')
           #gak-main-monitor-time
             countdown(v-if="time" :time='time', ref="countdown", :transform="transform", @start="changStatus", 
@@ -38,10 +38,10 @@
             .gak-tip-blue 在这里，您可以实时查看作业上交情况，并可以选择显示的是已上交的或未上交的
               el-switch(style='display: block', v-model='finishedShow', active-color='#13ce66', inactive-color='#ff4949', active-text='已上交', inactive-text='未上交',
               active-value=true, inactive-value=false, @change="switchChange")
-            el-table(:data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))',
+            el-table(:default-sort="{prop: 'id',order: 'ascending'}", :data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))',
             style='width: 100%', stripe)
               el-table-column(type='index', width='40', align="center")
-              el-table-column(label='学号', prop='id')
+              el-table-column(label='学号', prop='id', :sortable="true",  :sort-method="sortString")
               el-table-column(label='姓名', prop='name')
               el-table-column(label='状态', width='80', align="center")
                 template(slot-scope='scope')
@@ -57,6 +57,7 @@
                   span(v-if="scope.row.address != null") {{ scope.row.address }}
                   span(v-else) 无数据
         el-tab-pane.gak-text-center(label='数据可视', name='fourth')
+          #gak-main-monitor-chart-pie(style='width: 600px;height:400px;')
           #gak-main-monitor-chart(style='width: 600px;height:400px;')
 
 
@@ -83,6 +84,7 @@ export default {
       tableData: [],
       className: null,
       jobName: null,
+      studentNum: null,
       startTime: null,
       time: null,
       waitTime: null,
@@ -138,7 +140,40 @@ export default {
             data: []
           }
         ],
-        charts: null
+      },
+      charts: null,
+      chartsPie: null,
+      optionPie: {
+        title: {
+          text: "学生作业上交情况",
+          x: "center"
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: "{b} : {c} ({d}%)"
+        },
+        legend: {
+          orient: "vertical",
+          left: "left",
+          data: ["已交人数", "未交人数"]
+        },
+        color: ["#F66", "#9CF"],
+        series: [
+          {
+            name: "作业情况",
+            type: "pie",
+            radius: "80%",
+            center: ["50%", "55%"],
+            data: [],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)"
+              }
+            }
+          }
+        ]
       }
     };
   },
@@ -168,13 +203,14 @@ export default {
 
     let classToJobDb = getClassToJobDb();
     classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
-      if (e || classToJobJsons.length != 1) {
+      if (e || classToJobJsons.length !== 1) {
         error(_this, "数据出错");
       } else {
         let classToJobJson = classToJobJsons[0];
         _this.unfinishedStudents = classToJobJson.unfinishedStudents;
         _this.className = classToJobJson.className;
         _this.jobName = classToJobJson.jobName;
+        _this.studentNum = classToJobJson.studentNum;
         _this.startTime = classToJobJson.startTime;
         _this.waitTime = classToJobJson.time;
         _this.time =
@@ -186,20 +222,33 @@ export default {
             error(_this, "数据出错");
           } else {
             _this.finishedStudents = ipJsons;
-
+            _this.optionPie.series[0].data[0]={
+              value : _this.unfinishedStudents.length,
+              name : "未交人数"
+            };
+            _this.optionPie.series[0].data[1]={
+              value : _this.studentNum - _this.unfinishedStudents.length,
+              name : "已交人数"
+            };
             //数据库的值获取完毕后进行其他操作;
             _this.tableData = _this.finishedStudents;
             let myChart = _this.$echarts.init(
               document.getElementById("gak-main-monitor-chart")
             );
+            let myChartPie = _this.$echarts.init(
+              document.getElementById("gak-main-monitor-chart-pie")
+            );
             _this.charts = myChart;
+            _this.chartsPie = myChartPie;
             myChart.setOption(_this.option);
+            myChartPie.setOption(_this.optionPie);
             /**
              * 同步操作
              */
             let ipDb = getIpDb();
             let synchronization = () => {
               ipDb.findAllAddress().exec((e, ipJsons) => {
+                console.log("123");
                 // //阴影部分
                 // _this.option.series[0].data;
                 // //数据
@@ -210,7 +259,7 @@ export default {
                 _this.option.xAxis.data = [];
 
                 for (const ipJson of ipJsons) {
-                  if (_this.option.xAxis.data.indexOf(ipJson.address) == -1) {
+                  if (_this.option.xAxis.data.indexOf(ipJson.address) === -1) {
                     _this.option.xAxis.data.push(ipJson.address);
                     _this.option.series[0].data.push(1);
                   } else {
@@ -221,6 +270,20 @@ export default {
                 }
                 // myChart.clear();
                 myChart.setOption(_this.option);
+              });
+              classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
+                let classToJobJson = classToJobJsons[0];
+                _this.unfinishedStudents = classToJobJson.unfinishedStudents;
+                _this.studentNum = classToJobJson.studentNum;
+                _this.optionPie.series[0].data[0] = {
+                  value : _this.unfinishedStudents.length,
+                  name : "未交人数"
+                };
+                _this.optionPie.series[0].data[1] = {
+                  value : _this.studentNum - _this.unfinishedStudents.length,
+                  name : "已交人数"
+                };
+                myChartPie.setOption(_this.optionPie);
               });
             };
             _this.interval = setInterval(synchronization, 5000);
@@ -236,6 +299,9 @@ export default {
     next();
   },
   methods: {
+    sortString(v1, v2){
+      return v1.id-v2.id;
+    },
     transform: function(props) {
       Object.entries(props).forEach(([key, value]) => {
         const digits = value < 10 ? `0${value}` : value;
@@ -251,11 +317,12 @@ export default {
       let webServer = remote.getGlobal("webServer");
       let classToJobDb = getClassToJobDb();
       let _this = this;
+      window.clearInterval(_this);
       _this.status = !_this.status;
       _this.disabled = true;
       webServer.stop();
       classToJobDb.updateStatus(1, 2, (e, docs) => {});
-      _this.$dialog.alert("服务结束,正在打包文件","确认");
+      _this.$dialog.alert("服务结束,正在打包文件");
     },
     /**
      * 切换显示

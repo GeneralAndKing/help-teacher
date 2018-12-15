@@ -9,11 +9,11 @@
     #gak-main-call
       #gak-main-call-class.gak-tip-blue
         span 请选择您的班级：
-        el-select(v-model='classIndex', placeholder='请选择')
+        el-select(v-model='classIndex', placeholder='请选择或输入', filterable)
           el-option(v-for='(classJson,index) in classJsons', :key='index', :label='classJson.className', :value='index')
 
       #gak-main-call-content {{ order }}
-      el-button(v-if="interval == null &&classIndex!=null", type="success", @click="start") start
+      el-button(v-if="interval == null &&classIndex!=null", type="primary", @click="start") start
       el-button(v-if="interval != null &&classIndex!=null", type="danger", @click="stop") stop
 </template>
 

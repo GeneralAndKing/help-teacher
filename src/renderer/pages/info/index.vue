@@ -7,9 +7,9 @@
       #gak-main-info-head {{ classToJob.className }}{{ classToJob.jobName }}收取情况
       #gak-main-content
         #gak-main-chart(style='width: 600px;height:400px;')
-        el-table(:data='classToJob.unfinishedStudents', style='width: 100%', :row-class-name='bgDanger')
+        el-table(:default-sort="{prop: 'id',order: 'ascending'}", :data='classToJob.unfinishedStudents', style='width: 100%', :row-class-name='bgDanger')
           el-table-column(type='index', width='50', align="center")
-          el-table-column(prop='id', label='学号')
+          el-table-column(prop='id', label='学号', :sortable="true",  :sort-method="sortString")
           el-table-column(prop='name', label='姓名')
           el-table-column(label='性别',width='80' prop='sex', sortable)
             template(slot-scope='scope')
@@ -93,6 +93,9 @@ export default {
     _this.chart = myChart;
   },
   methods: {
+    sortString(v1, v2){
+      return v1.id-v2.id;
+    },
     bgDanger: function() {
       return "bg-danger";
     },
@@ -102,7 +105,7 @@ export default {
         if (e) {
           error(_this, "设置收取失败");
         } else {
-          _this.classToJob.unfinishedStudents.splice(key, 1);
+          _this.classToJob.unfinishedStudents.splice(_this.classToJob.unfinishedStudents.indexOf(student), 1);
           _this.data[0].value = _this.classToJob.unfinishedStudents.length;
           _this.data[1].value =
             _this.classToJob.studentNum - _this.data[0].value;

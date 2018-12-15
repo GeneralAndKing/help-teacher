@@ -18,7 +18,7 @@
               .basicStart(v-if="active===0", :key="0")
                 el-alert.gak-text-left(title="开始使用", type="success", description="您只需要简单的三步即可开启本次作业的收取！现在，请选择您要开启的作业。")
                 el-form-item.gak-text-left(label="作业")
-                  el-select(v-model="form.jobName", placeholder="请选择")
+                  el-select(v-model="form.jobName", placeholder='请选择或输入', filterable)
                     el-option(v-for="jobJson in jobJsons", :key="jobJson.jobName", :label="jobJson.jobName", :value="jobJson.jobName")
                   span.gak-text-placeholder 没有作业？
                     a.gak-job-create(@click="createJob") 点击创建
@@ -27,14 +27,14 @@
               .basicData(v-if="active===1", :key="1")
                 el-alert.gak-text-left(title="设置班级", type="success", description="接下来，请选择您要开启的班级。")
                 el-form-item.gak-text-left(label="班级")
-                  el-select(v-model="form.className", placeholder="请选择")
+                  el-select(v-model="form.className", placeholder='请选择或输入', filterable)
                     el-option(v-for="classJson in classJsons", :key="classJson.className", :label="classJson.className", :value="classJson.className")
                   span.gak-text-placeholder 没有班级？
                     a.gak-job-create(@click="createClass") 点击创建
               .basicServer(v-if="active===2", :key="2")
-                el-alert.gak-text-left(title="最后一步", type="success", description="最后，您只需要设置学生端的端口就完成了。")
+                el-alert.gak-text-left(title="最后一步", type="success", description="最后，您只需要设置学生端的端口就完成了。(127.0.0.1 只能本机访问，建议选择 WIFI、 10 或 192 开头的网卡)")
                 el-form-item.gak-text-left(label="地址")
-                  el-select(v-model="ip", placeholder="请选择", style="width:100%")
+                  el-select(v-model="ip", placeholder='请选择或输入', filterable, style="width:100%")
                     el-option(v-for="ipData in ips", :key="ipData.name", :label="ipData.info", :value="ipData.ip")
                 el-form-item(label="端口号", style="text-align:left;")
                   el-input-number.gak-text-left(v-model='port', :step='50')
