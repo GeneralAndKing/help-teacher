@@ -18,7 +18,8 @@ const routeOptions = [
   {path: '/info', component: 'ClassJobInfo', name: 'class-job-info', dir: 'info'},
   {path: '/job', component: 'Job', name: 'job', dir: 'job'},
   {path: '/job/class', component: 'JobClass', name: 'job-class', dir: 'job/class'},
-  {path: '/call', component: 'Call', name: 'call', dir: 'call'}
+  {path: '/call', component: 'Call', name: 'call', dir: 'call'},
+  {path: '/call/all', component: 'CallAll', name: 'call-all', dir: 'call/all'}
 ];
 
 const routes = routeOptions.map(route => {

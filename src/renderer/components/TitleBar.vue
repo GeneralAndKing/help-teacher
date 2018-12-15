@@ -3,12 +3,13 @@
     el-col.gak-text-left(:span="8")
       i(class="el-icon-sold-out")
       |&nbsp;help teacher
-    el-col(:span="8")
+    el-col(:span="7")
       h5 {{time}}
-    el-col.gak-text-right(:span="8")
+    el-col.gak-text-right(:span="9")
       span#login(v-if="!isLogin", @click="login") 登录
-      span(v-if="isLogin", @click="download") 同步
-      span(v-if="isLogin", @click="upload") 备份
+      span#gak-title-login(v-if="isLogin") 欢迎,{{username}}
+      span.gak-title-btn(v-if="isLogin", @click="download") 同步
+      span.gak-title-btn(v-if="isLogin", @click="upload") 备份
       el-button#min(@click="minWin" type="warning" size="mini" icon="el-icon-arrow-down" circle)
       el-button#max(@click="maxWin" type="success" size="mini" icon="el-icon-arrow-up" circle)
       el-button#close(@click="closeWin" type="danger" size="mini" icon="el-icon-close" circle)
@@ -25,7 +26,7 @@
         el-form-item(label='用户名',  prop='username')
           el-input(v-model='form.username', autocomplete='off', clearable, placeholder="用户名")
         el-form-item(label='密码',  prop='input')
-          el-input(type="password", v-model='form.input', autocomplete='off', clearable, placeholder="密码")
+          el-input(type="password", v-model='form.input', autocomplete='off', clearable, placeholder="密码", @keyup.enter.native="loginSubmit")
       .dialog-footer(slot='footer')
         el-button(@click='dialogFormVisible = false') 取 消
         el-button(type='primary', @click='loginSubmit') 确 定
@@ -38,6 +39,7 @@ const { ipcRenderer, remote } = require("electron");
 const { getClassToJobDb } = require("@/api/db");
 const service = require("@/api/service");
 const Base64 = require("js-base64").Base64;
+const { error, success, warning } = require("@/api/message");
 export default {
   data() {
     let validatePassword = (rule, value, callback) => {
@@ -65,6 +67,7 @@ export default {
     };
     return {
       time: "",
+      username: "",
       form: {
         url: "118.24.1.170",
         port: "8082",
@@ -160,6 +163,11 @@ export default {
       });
     },
     download: function() {
+      let webServer = remote.getGlobal("webServer");
+      if(webServer.getStatus()){
+        warning(this,"服务正在运行，无法同步");
+        return;
+      }
       this.$dialog
         .confirm(
           {
@@ -179,6 +187,11 @@ export default {
         .catch(() => {});
     },
     upload: function() {
+      let webServer = remote.getGlobal("webServer");
+      if(webServer.getStatus()){
+        warning(this,"服务正在运行，无法备份");
+        return;
+      }
       this.$dialog
         .confirm(
           {

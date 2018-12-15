@@ -25,9 +25,9 @@
             span {{ studentNum }}
         el-alert(title='Tip:双击班级名称可以编辑哦', type='success', close-text='知道了')
       #student-info
-        el-table(:data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', height="250", border, v-loading="loading")
+        el-table(:default-sort="{prop: 'id',order: 'ascending'}" :data='tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.id.includes(search))', style='width: 100%', height="250", border, v-loading="loading")
           el-table-column(type='index', width='40', align="center")
-          el-table-column(label='学号', width="155px")
+          el-table-column(label='学号', width="155px", :sortable="true",  :sort-method="sortString" prop="id")
             template(slot-scope='scope')
               el-input(v-if="scope.row.edit", v-model='scope.row.id', clearable, show-overflow-tooltip="true")
               span(v-else) {{ scope.row.id }}
@@ -125,6 +125,9 @@ export default {
   },
   methods: {
     // 标题编辑
+    sortString(v1, v2){
+      return v1.id-v2.id;
+    },
     edit(event) {
       let _this = this;
       _this.classNameEdit = true;
@@ -135,7 +138,6 @@ export default {
       let _this = this;
       let callBack = function(e, docs) {
         if (e) {
-          console.log(e);
           error(_this, "修改错误");
         } else {
           _this.classNameEdit = false;

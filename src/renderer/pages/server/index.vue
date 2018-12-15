@@ -70,7 +70,7 @@ export default {
         className: null,
         jobName: null,
         startTime: null,
-        time: null,
+        time: 30,
         timestamp: null,
         status: 1,
         unfinishedStudents: null,
@@ -97,7 +97,6 @@ export default {
     });
 
     let networkInterfaces = os.networkInterfaces();
-    console.log(networkInterfaces);
     for (let networkInterface in networkInterfaces) {
       const reg = "(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))";
       if (networkInterfaces[networkInterface][0].address.search(reg) >= 0){
@@ -158,7 +157,6 @@ export default {
         } else {
           let ipDb = getIpDb();
           ipDb.deleteAllIp(() => {});
-          console.log(_this.ip,_this.port,_this.form);
           webServer.start(
             _this.ip,
             _this.port,

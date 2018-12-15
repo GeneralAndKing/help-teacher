@@ -46,7 +46,6 @@ export default {
     classToJobDb
       .findByJobName(_this.$route.params.jobName)
       .exec((error, classToJobJsons) => {
-        console.log(classToJobJsons);
         _this.classToJobs = classToJobJsons;
         _this.loading = false;
       });
@@ -71,7 +70,6 @@ export default {
     },
     handleInfo: function(index, classToJob) {
       let _this = this;
-      console.log(index);
       _this.$router.push({
         name: "class-job-info",
         params: {
