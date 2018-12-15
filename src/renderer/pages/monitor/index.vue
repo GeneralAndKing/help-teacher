@@ -139,7 +139,7 @@ export default {
             // y 轴的数据
             data: []
           }
-        ],
+        ]
       },
       charts: null,
       chartsPie: null,
@@ -202,105 +202,123 @@ export default {
     _this.title += webServer.getAddress();
 
     let classToJobDb = getClassToJobDb();
-    classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
-      if (e || classToJobJsons.length !== 1) {
-        error(_this, "数据出错");
-      } else {
-        let classToJobJson = classToJobJsons[0];
-        _this.unfinishedStudents = classToJobJson.unfinishedStudents;
-        _this.className = classToJobJson.className;
-        _this.jobName = classToJobJson.jobName;
-        _this.studentNum = classToJobJson.studentNum;
-        _this.startTime = classToJobJson.startTime;
-        _this.waitTime = classToJobJson.time;
-        _this.time =
-          classToJobJson.time * 60 * 1000 -
-          (new Date().getTime() - classToJobJson.timestamp);
-        let ipDb = getIpDb();
-        ipDb.findAllAddress().exec((e, ipJsons) => {
-          if (e) {
-            error(_this, "数据出错");
-          } else {
-            _this.finishedStudents = ipJsons;
-            _this.optionPie.series[0].data[0]={
-              value : _this.unfinishedStudents.length,
-              name : "未交人数"
-            };
-            _this.optionPie.series[0].data[1]={
-              value : _this.studentNum - _this.unfinishedStudents.length,
-              name : "已交人数"
-            };
-            //数据库的值获取完毕后进行其他操作;
-            _this.tableData = _this.finishedStudents;
-            let myChart = _this.$echarts.init(
-              document.getElementById("gak-main-monitor-chart")
-            );
-            let myChartPie = _this.$echarts.init(
-              document.getElementById("gak-main-monitor-chart-pie")
-            );
-            _this.charts = myChart;
-            _this.chartsPie = myChartPie;
-            myChart.setOption(_this.option);
-            myChartPie.setOption(_this.optionPie);
-            /**
-             * 同步操作
-             */
-            let ipDb = getIpDb();
-            let synchronization = () => {
-              ipDb.findAllAddress().exec((e, ipJsons) => {
-                console.log("123");
-                // //阴影部分
-                // _this.option.series[0].data;
-                // //数据
-                // _this.option.series[1].data;
-                // //ip
-                // _this.option.xAxis.data;
-                _this.option.series[0].data = [];
-                _this.option.xAxis.data = [];
-                _this.finishedStudents = ipJsons;
-                for (const ipJson of ipJsons) {
-                  if (_this.option.xAxis.data.indexOf(ipJson.address) === -1) {
-                    _this.option.xAxis.data.push(ipJson.address);
-                    _this.option.series[0].data.push(1);
-                  } else {
-                    _this.option.series[0].data[
-                      _this.option.xAxis.data.indexOf(ipJson.address)
-                    ] += 1;
+    classToJobDb
+      .findByServer(
+        webServer.getClassName(),
+        webServer.getJobName(),
+        webServer.getTimestamp()
+      )
+      .exec((e, classToJobJsons) => {
+        if (e || classToJobJsons.length !== 1) {
+          error(_this, "数据出错");
+        } else {
+          let classToJobJson = classToJobJsons[0];
+          _this.unfinishedStudents = classToJobJson.unfinishedStudents;
+          _this.className = classToJobJson.className;
+          _this.jobName = classToJobJson.jobName;
+          _this.studentNum = classToJobJson.studentNum;
+          _this.startTime = classToJobJson.startTime;
+          _this.waitTime = classToJobJson.time;
+          _this.time =
+            classToJobJson.time * 60 * 1000 -
+            (new Date().getTime() - classToJobJson.timestamp);
+          let ipDb = getIpDb();
+          ipDb.findAllAddress().exec((e, ipJsons) => {
+            if (e) {
+              error(_this, "数据出错");
+            } else {
+              _this.finishedStudents = ipJsons;
+              _this.optionPie.series[0].data[0] = {
+                value: _this.unfinishedStudents.length,
+                name: "未交人数"
+              };
+              _this.optionPie.series[0].data[1] = {
+                value: _this.studentNum - _this.unfinishedStudents.length,
+                name: "已交人数"
+              };
+              //数据库的值获取完毕后进行其他操作;
+              _this.tableData = _this.finishedStudents;
+              let myChart = _this.$echarts.init(
+                document.getElementById("gak-main-monitor-chart")
+              );
+              let myChartPie = _this.$echarts.init(
+                document.getElementById("gak-main-monitor-chart-pie")
+              );
+              _this.charts = myChart;
+              _this.chartsPie = myChartPie;
+              myChart.setOption(_this.option);
+              myChartPie.setOption(_this.optionPie);
+              /**
+               * 同步操作
+               */
+              let ipDb = getIpDb();
+              let synchronization = () => {
+                ipDb.findAllAddress().exec((e, ipJsons) => {
+                  console.log("123");
+                  // //阴影部分
+                  // _this.option.series[0].data;
+                  // //数据
+                  // _this.option.series[1].data;
+                  // //ip
+                  // _this.option.xAxis.data;
+                  _this.option.series[0].data = [];
+                  _this.option.xAxis.data = [];
+                  _this.finishedStudents = ipJsons;
+                  _this.$set(_this.finishedStudents);
+                  for (const ipJson of ipJsons) {
+                    if (
+                      _this.option.xAxis.data.indexOf(ipJson.address) === -1
+                    ) {
+                      _this.option.xAxis.data.push(ipJson.address);
+                      _this.option.series[0].data.push(1);
+                    } else {
+                      _this.option.series[0].data[
+                        _this.option.xAxis.data.indexOf(ipJson.address)
+                      ] += 1;
+                    }
                   }
-                }
-                // myChart.clear();
-                myChart.setOption(_this.option);
-              });
-              classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
-                let classToJobJson = classToJobJsons[0];
-                _this.unfinishedStudents = classToJobJson.unfinishedStudents;
-                _this.studentNum = classToJobJson.studentNum;
-                _this.optionPie.series[0].data[0] = {
-                  value : _this.unfinishedStudents.length,
-                  name : "未交人数"
-                };
-                _this.optionPie.series[0].data[1] = {
-                  value : _this.studentNum - _this.unfinishedStudents.length,
-                  name : "已交人数"
-                };
-                myChartPie.setOption(_this.optionPie);
-              });
-            };
-            _this.interval = setInterval(synchronization, 5000);
-          }
-        });
-      }
-    });
+                  // myChart.clear();
+                  myChart.setOption(_this.option);
+                });
+                classToJobDb.findByStatus(1).exec((e, classToJobJsons) => {
+                  let classToJobJson = classToJobJsons[0];
+                  _this.unfinishedStudents = classToJobJson.unfinishedStudents;
+                  if (_this.finishedShow) {
+                    _this.tableData = _this.finishedStudents;
+                  } else {
+                    _this.tableData = _this.unfinishedStudents;
+                  }
+                  _this.studentNum = classToJobJson.studentNum;
+                  _this.optionPie.series[0].data[0] = {
+                    value: _this.unfinishedStudents.length,
+                    name: "未交人数"
+                  };
+                  _this.optionPie.series[0].data[1] = {
+                    value: _this.studentNum - _this.unfinishedStudents.length,
+                    name: "已交人数"
+                  };
+                  myChartPie.setOption(_this.optionPie);
+                });
+              };
+              if (webServer.getStatus()) {
+                _this.interval = setInterval(synchronization, 5000);
+              } else {
+                _this.time = null;
+              }
+            }
+          });
+        }
+      });
     _this.tableData = _this.finishedStudents;
   },
   beforeRouteLeave(to, from, next) {
     let _this = this;
-    window.clearInterval(_this);
+    window.clearInterval(_this.interval);
     next();
   },
   methods: {
-    sortString(v1, v2){
-      return v1.id-v2.id;
+    sortString(v1, v2) {
+      return v1.id - v2.id;
     },
     transform: function(props) {
       Object.entries(props).forEach(([key, value]) => {
@@ -317,7 +335,7 @@ export default {
       let webServer = remote.getGlobal("webServer");
       let classToJobDb = getClassToJobDb();
       let _this = this;
-      window.clearInterval(_this);
+      window.clearInterval(_this.interval);
       _this.status = !_this.status;
       _this.disabled = true;
       webServer.stop();

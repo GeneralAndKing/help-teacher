@@ -55,7 +55,7 @@
 import { Loading } from "element-ui";
 import { runInNewContext } from "vm";
 import { clearInterval } from "timers";
-import { globalBus } from '@/utils/_global';
+import { globalBus } from "@/utils/_global";
 const { verifyNull } = require("@/api/judge");
 const { getClassToJobDb, getClassDb, getJobDb, getIpDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
@@ -92,25 +92,36 @@ export default {
         _this.$router.push({
           name: "monitor"
         });
-        globalBus.$emit('changeMenu',"monitor");
+        globalBus.$emit("changeMenu", "monitor");
       }
     });
 
     let networkInterfaces = os.networkInterfaces();
     for (let networkInterface in networkInterfaces) {
-      const reg = "(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))";
-      if (networkInterfaces[networkInterface][0].address.search(reg) >= 0){
+      const reg =
+        "(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))";
+      if (networkInterfaces[networkInterface][0].address.search(reg) >= 0) {
         _this.ips.push({
           name: networkInterface,
           ip: networkInterfaces[networkInterface][0].address,
-          info: "网卡：" + networkInterface + "（" + networkInterfaces[networkInterface][0].address + "）"
+          info:
+            "网卡：" +
+            networkInterface +
+            "（" +
+            networkInterfaces[networkInterface][0].address +
+            "）"
         });
       }
-      if (networkInterfaces[networkInterface][1].address.search(reg) >= 0){
+      if (networkInterfaces[networkInterface][1].address.search(reg) >= 0) {
         _this.ips.push({
           name: networkInterface,
           ip: networkInterfaces[networkInterface][1].address,
-          info: "网卡：" + networkInterface + "（" + networkInterfaces[networkInterface][1].address + "）"
+          info:
+            "网卡：" +
+            networkInterface +
+            "（" +
+            networkInterfaces[networkInterface][1].address +
+            "）"
         });
       }
     }
@@ -162,14 +173,15 @@ export default {
             _this.port,
             _this.form.time,
             _this.form.jobName,
-            _this.form.className
+            _this.form.className,
+            _this.form.timestamp
           );
           Loading.service({ fullscreen: true }).close();
           success(_this, "服务已开启 切换到监控页面");
           _this.$router.push({
             name: "monitor"
           });
-          globalBus.$emit('changeMenu',"monitor");
+          globalBus.$emit("changeMenu", "monitor");
         }
       };
       let classToJobDb = getClassToJobDb();
@@ -202,13 +214,13 @@ export default {
       this.$router.push({
         name: "job"
       });
-      globalBus.$emit('changeMenu',"job");
+      globalBus.$emit("changeMenu", "job");
     },
     createClass: function() {
       this.$router.push({
         name: "class"
       });
-      globalBus.$emit('changeMenu',"class");
+      globalBus.$emit("changeMenu", "class");
     }
   }
 };

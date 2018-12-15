@@ -93,6 +93,9 @@ export default class ClassToJobDb {
     findAllClassToJob() {
         return this.db.find();
     }
+    findByServer(className, jobName, timestamp) {
+        return this.db.find({ "jobName": jobName, "className": className, "timestamp": timestamp });
+    }
     updateClassAndJob(oldJobName, oldClassName, classToJobJson, callBack) {
         this.db.update({ "className": oldClassName, "jobName": oldJobName }, classToJobJson, callBack);
     }
