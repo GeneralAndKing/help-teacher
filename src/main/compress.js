@@ -33,7 +33,7 @@ module.exports = function compress(className, jobName, errorCallBack, successCal
     archive.on('error', errorCallBack);
 
     // 通过管道方法将输出流存档到文件
-    archive.pipe(output)
+    archive.pipe(output);
 
     // 从流中追加文件
     archive.directory(path.join(path.resolve("."), "upload/finally/" + className + "_" + jobName), false);

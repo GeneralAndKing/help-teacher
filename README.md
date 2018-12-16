@@ -8,6 +8,24 @@
 
 这是 GAK_O 的第一个完整的核心的项目，原因是因为发现现在老师处理学校和学生的事务的时候需要花费很多精力，造成老师多了很多的负担，所以借着这次大赛的机会我们将它做了出来，希望能够在实际上面将它使用，项目想法来自于 [RuiFG](https://github.com/RuiFG)，我们 GAK_O 的队长。项目开始于 2018 年 11 月 25 日开始，在我编辑此文档时已经历时两周，由我 [EchoCow](https://www.echocow.cn) 和 [RuiFG](https://github.com/RuiFG) 作为核心开发人员，[rainss](https://rainss.cn) 作为辅助人员进行开发。项目使用的技术是我们完全没有接触过的领域，边学边做，很多地方写得不是很好，很多天的熬夜，很多天的努力，一起语音写到宿舍断电，写到笔记本没有电，写到凌晨两三点，不敢说写得怎么样好，但是我们也尽力了，很感谢 [RuiFG](https://github.com/RuiFG) 让我学习到很多东西，有这么个队友真的很开心。放弃了娱乐，放弃了很多自己的时间，只是希望在此次的比赛中能够一个让人满意的收获。共勉。
 
+## releases 记录
+
+releases 下载 
+
+- [github](https://github.com/GeneralAndKing/help-teacher/releases)  
+
+- CDN 
+
+1. [linux 桌面端](http://downloads.echocow.cn/gak/help-teacher/help-teacher-linux-x64.tar.gz) 
+2. [windows 桌面端](http://downloads.echocow.cn/gak/help-teacher/help-teacher-win32-x64.zip)
+3. [Remote Service 远程服务端](http://downloads.echocow.cn/gak/help-teacher/gak-help-teacher-1.0-SNAPSHOT.jar) 
+4. [Remote Service 远程服务端 集群部署 web 端](http://downloads.echocow.cn/gak/help-teacher/gak-help-teacher-hazelcast-web-1.0-SNAPSHOT.jar) 
+5. [Remote Service 远程服务端 集群部署 db 端](http://downloads.echocow.cn/gak/help-teacher/gak-help-teacher-hazelcast-db-1.0-SNAPSHOT.jar)  
+
+记录
+
+- 2018 年 12 月 16 日： RemoteService 1.0-SNAPSHOT 版本和 help-teacher 1.0.0 版本正式发布
+
 ## 整体概述
 本项目旨在用最快的方式，帮助老师完成所需的工作量，同时为广大师生提供更快捷与方便的工具使用。
 
@@ -25,6 +43,7 @@
 ......
 
 所以，我们小组从现有的问题出发选择了为老师制作一个工具集，我们将它称为　help-teacher。以作业管理为主，同时开发其他能够帮助老师的工具。
+
 
 ### 功能介绍
 我们将从 **作业管理** 和 **其他工具** 两方面进行简述
@@ -83,18 +102,17 @@
 ### 技术选型
 - 依赖管理：npm / yarn
 - 构建工具：webpack 4
-- 运行环境：nodejs + linux/windows/mac
 - 核心框架：electron
 - 打包工具：electron-packager
 - 前端界面：vue
 - 模板引擎：pug
-- CSS 框架：element-ui
+- CSS框架：element-ui
 - 图标仓库：awesome
 - 加密算法：base64 多重加密
 - 核心编译器：babel
-- CSS 预处理：less/sass/stylus 均支持
+- CSS预处理：less/sass/stylus 均支持
 - HTTP客户端：axios
-- 应用开发框架：experss
+- Web应用程序开发框架：experss
 - 版本控制工具：git
 
 ### 软件特点
@@ -112,7 +130,7 @@
 ## 软件开发规范
 此处定义了整个过程的开发规范，开发者共同遵守
 
-## 人员分工
+### 人员分工
 - RuiFG：全名樊国睿，2016级计算机科学与技术二班学生。
     - 开发环境：win 10/Kubuntu + vscode + pycharm
     - 主要负责环境搭建，打包部署，前端数据库服务，前后端连接业务，流程构建，自动化测试构建。
@@ -124,6 +142,12 @@
 - Rainss：全名路明，2016级软件工程三班学生。
     - 开发环境：win 10 + vscode
     - 主要负责web端服务。
+    
+### 本地和远程服务
+
+- 本地： src 文件夹
+- 远程： RemoteService
+- 自动化： AutoRunner(待完善)
 
 ### 数据库设计
 使用非关系型数据库 nedb，此数据库小巧可以随身携带
