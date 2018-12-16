@@ -46,8 +46,20 @@ const writeCallXlsx = (students, classname, callBack) => {
     ];
     let buff = xlsx.build([
         {
-            name: "sheet1",
+            name: "已到",
             data: datas[0]
+        },
+        {
+            name: "请假",
+            data: datas[1]
+        },
+        {
+            name: "迟到",
+            data: datas[2]
+        },
+        {
+            name: "未到",
+            data: datas[3]
         }
     ]);
     mkdirsSync("./callFile");

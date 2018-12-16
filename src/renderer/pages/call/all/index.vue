@@ -30,9 +30,9 @@
                 template(slot='header', slot-scope='scope')
                   el-input(v-model='search', size='mini', placeholder='输入学号或姓名搜索', clearable)
                 template(slot-scope='scope')
-                  el-button(size='mini', type='primary', @click='leaveStudent(scope.$index, scope.row)') 请假
-                  el-button(size='mini', type='warning', @click='lateStudent(scope.$index, scope.row)') 迟到
-                  el-button(size='mini', type='danger', @click='noStudent(scope.$index, scope.row)') 未到
+                  el-button(size='mini', type='primary', @click='leaveStudent(students.arriveStudents, scope.$index, scope.row)') 请假
+                  el-button(size='mini', type='warning', @click='lateStudent(students.arriveStudents, scope.$index, scope.row)') 迟到
+                  el-button(size='mini', type='danger', @click='noStudent(students.arriveStudents, scope.$index, scope.row)') 未到
           el-collapse-item(title='请假学生', name='2')
             template(slot='title')
               i.el-icon-question.gak-icon-right
@@ -49,6 +49,8 @@
                   el-input(v-model='search', size='mini', placeholder='输入学号或姓名搜索', clearable)
                 template(slot-scope='scope')
                   el-button(size='mini', type='success', @click='getStudent(students.leaveStudents, scope.$index, scope.row)') 已到
+                  el-button(size='mini', type='warning', @click='lateStudent(students.leaveStudents, scope.$index, scope.row)') 迟到
+                  el-button(size='mini', type='danger', @click='noStudent(students.leaveStudents, scope.$index, scope.row)') 未到
           el-collapse-item(title='迟到学生', name='３')
             template(slot='title')
               i.el-icon-warning.gak-icon-right
@@ -65,6 +67,8 @@
                   el-input(v-model='search', size='mini', placeholder='输入学号或姓名搜索', clearable)
                 template(slot-scope='scope')
                   el-button(size='mini', type='success', @click='getStudent(students.lateStudents, scope.$index, scope.row)') 已到
+                  el-button(size='mini', type='primary', @click='leaveStudent(students.lateStudents, scope.$index, scope.row)') 请假
+                  el-button(size='mini', type='danger', @click='noStudent(students.lateStudents, scope.$index, scope.row)') 未到
           el-collapse-item(title='未到学生', name='４')
             template(slot='title')
               i.el-icon-circle-close.gak-icon-right
@@ -81,6 +85,8 @@
                   el-input(v-model='search', size='mini', placeholder='输入学号或姓名搜索', clearable)
                 template(slot-scope='scope')
                   el-button(size='mini', type='success', @click='getStudent(students.noStudents, scope.$index, scope.row)') 已到
+                  el-button(size='mini', type='primary', @click='leaveStudent(students.noStudents, scope.$index, scope.row)') 请假
+                  el-button(size='mini', type='warning', @click='lateStudent(students.noStudents, scope.$index, scope.row)') 迟到
 </template>
 
 <script>
@@ -135,16 +141,16 @@
         _this.studentNum = _this.classJsons[_this.classIndex].students.length;
         _this.activeName = '1';
       },
-      leaveStudent: function (key, row) {
-        this.students.arriveStudents.splice(this.students.arriveStudents.indexOf(row), 1);
+      leaveStudent: function (students, key, row) {
+        students.splice(students.indexOf(row), 1);
         this.students.leaveStudents.push(row);
       },
-      lateStudent: function (key, row) {
-        this.students.arriveStudents.splice(this.students.arriveStudents.indexOf(row), 1);
+      lateStudent: function (students, key, row) {
+        students.splice(students.indexOf(row), 1);
         this.students.lateStudents.push(row);
       },
-      noStudent: function (key, row) {
-        this.students.arriveStudents.splice(this.students.arriveStudents.indexOf(row), 1);
+      noStudent: function (students, key, row) {
+        students.splice(students.indexOf(row), 1);
         this.students.noStudents.push(row);
       },
       getStudent: function (students, key, row) {
