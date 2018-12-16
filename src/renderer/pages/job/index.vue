@@ -6,6 +6,7 @@
       el-breadcrumb#gak-main-head-bread(separator='/')
         el-breadcrumb-item 作业
     el-scrollbar#gak-main-content-job
+      el-alert(v-if='jobs.length === 0', title='还没有作业信息', type='info', center='', show-icon='')
       el-dialog(title='作业', :visible.sync='dialogFormVisible', top="20px")
         el-form(:model='form')
           el-form-item(label='作业名称')
@@ -119,6 +120,7 @@ export default {
               _this.jobs.splice(key, 1);
               success(_this, "删除信息成功");
             }
+            dialog.close();
           };
           let jobDb = getJobDb();
           jobDb.deleteJob(job.jobName, callBack);

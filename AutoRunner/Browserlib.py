@@ -19,9 +19,9 @@ from util import hostlog,logs,init_logging,init_png,logginginfo,loggingerror,log
 import logging
 def create_driver(options=None):
     try:
-        userProfile = os.path.dirname(os.path.dirname(__file__)) + r"\build\help-teacher-win32-x64"
-        browserpath = userProfile + r"\help-teacher.exe"
-        driverpath = os.path.dirname(__file__) + r"\chromedriver.exe"
+        userProfile = os.path.dirname(os.path.dirname(__file__)) + r"/build/help-teacher-win32-x64"
+        browserpath = userProfile + r"/help-teacher.exe"
+        driverpath = os.path.dirname(__file__) + r"/chromedriver.exe"
         chrome_options = webdriver.ChromeOptions()
         chrome_options.binary_location = browserpath
         # chrome_options.add_argument("--disk-cache-dir={}".format(userProfile))
@@ -396,6 +396,8 @@ class Task(Browserlib):
     className="测试1班" +'\n'
     @log_time_delta
     def uploadClassFileAndChangeStudent(self):
+
+
         #点击班级管理
         sidBar=self.find_display_element('//*[@id="sideBar"]/ul/li[2]')
         self.click(sidBar)
@@ -412,15 +414,15 @@ class Task(Browserlib):
 
         element=self.find_display_element('//*[@id="student-info"]/div/div[2]/table/thead/tr/th[5]/div/div/input')
         self.input_human(element,"王丰豪")
-        #点击删除
+        # 点击删除
         self.click(self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr/td[5]/div/button[2]'))
 
-        #点击确认
+        # 点击确认
         self.click(self.find_display_element('dg-pull-right',BY.CLASS_NAME))
-        #清空搜索框
-        self.input_clear_human(element)
+        # 清空搜索框
+        self.input_clear(element)
 
-        #点击编辑
+        # 点击编辑
         self.click(self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr[4]/td[5]/div/button[1]'))
 
         element=self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr[4]/td[3]/div/div/input')
@@ -437,6 +439,17 @@ class Task(Browserlib):
         self.click(self.find_display_element('//*[@id="student-info"]/div/div[3]/table/tbody/tr[4]/td[5]/div/button[1]'))
         #点击主页
         self.click(self.find_display_element('//*[@id="sideBar"]/ul/li[1]'))
+    def job(self):
+        self.click(self.find_display_element('//*[@id="sideBar"]/ul/li[3]'))
+        self.click(self.find_display_element('//*[@id="gak-main-content-menu"]/span'))
+        self.click(self.find_display_element('el-button--primary',BY.CLASS_NAME))
+        self.input_human(self.find_display_element('//*[@id="gak-main-content-job"]/div[1]/div/div[1]/div/div[2]/form/div[1]/div/div/input'),"测试作业")
+        self.input_human(self.find_display_element('//*[@id="gak-main-content-job"]/div[1]/div/div[1]/div/div[2]/form/div[2]/div/div/textarea'),"测试作业详情")
+        self.click(self.find_display_element('//*[@id="gak-main-content-job"]/div[1]/div/div[1]/div/div[2]/form/div[3]/div/div/div[2]/span/span/i'))
+        self.click(self.find_display_element('/html/body/div[3]/div[1]/div[1]/ul/li[1]'))
+        self.click(self.find_display_element('/html/body/div[3]/div[1]/div[1]/ul/li[2]'))
+        self.click(self.find_display_element('//*[@id="gak-main-content-job"]/div[1]/div/div[1]/div/div[2]/form/div[2]/div/div/textarea'))
+
 
 
 

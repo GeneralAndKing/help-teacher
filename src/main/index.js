@@ -61,7 +61,7 @@ function createWindow() {
     tray.setHighlightMode('never');
   });
   mainWindow.webContents.openDevTools();
-  let tray = new Tray(path.join(path.resolve("."), '/build/icons/icon.ico'));
+  let tray = new Tray(path.join(path.resolve("."), 'icon.ico'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '显示', click: () => {
