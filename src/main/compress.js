@@ -1,10 +1,22 @@
 const fs = require('fs')
 const archiver = require('archiver')
 const path = require("path")
+//创建文件夹
+let mkdirsSync = function (dirname, mode) {
+    if (fs.existsSync(dirname)) {
+        return true;
+    } else {
+        if (mkdirsSync(path.dirname(dirname), mode)) {
+            fs.mkdirSync(dirname, mode);
+            return true;
+        }
+    }
+};
 
 module.exports = function compress(className, jobName, errorCallBack, successCallBack) {
     // 创建文件输出流
-    let output = fs.createWriteStream(path.join(path.resolve("."), "/" + className + "_"+jobName + ".zip"))
+    mkdirsSync(path.join(path.resolve("."), "/compressFile"))
+    let output = fs.createWriteStream(path.join(path.resolve("."), "/compressFile/" + className + "_"+jobName + ".zip"))
     let archive = archiver('zip', {
         zlib: { level: 9 } // 设置压缩级别
     })
