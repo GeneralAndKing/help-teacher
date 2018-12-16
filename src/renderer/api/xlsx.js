@@ -63,7 +63,7 @@ const writeCallXlsx = (students, classname, callBack) => {
         }
     ]);
     mkdirsSync("./callFile");
-    fs.writeFile("callFile/" + new Date().toLocaleString().replace(/\//g, "-").replace(/\s+/g, "").replace(/:/g, " ") + classname + "_点名信息.xlsx", buff, callBack);
+    fs.writeFile("callFile/" + new Date().toLocaleString().replace(/\//g, "-").replace(/\s+/g, "").replace(/:/g, " ") + "_" + classname + "_点名信息.xlsx", buff, callBack);
 };
 
 const getStudentInfo = (students, status) => {
