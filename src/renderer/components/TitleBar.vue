@@ -1,8 +1,8 @@
 <template lang="pug">
   el-row#titleBar(type="flex" justify="space-between")
     el-col.gak-text-left(:span="8")
-      i(class="el-icon-sold-out")
-      |&nbsp;help teacher
+      img(src="../assets/logo.ico", style="width:30px;float:left;")
+      span &nbsp;help teacher
     el-col(:span="7")
       h5 {{time}}
     el-col.gak-text-right(:span="9")

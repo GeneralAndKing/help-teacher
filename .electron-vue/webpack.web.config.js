@@ -60,7 +60,7 @@ let webConfig = {
         }
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpe?g|gif|svg|ico)(\?.*)?$/,
         use: {
           loader: 'url-loader',
           query: {
