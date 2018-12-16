@@ -44,3 +44,4 @@ hs_err_pid*
 !/RemoteService/releases/gak-help-teacher-hazelcast-web-1.0-SNAPSHOT.jar
 package-lock.json
 /callFile/
+/package-lock.json
