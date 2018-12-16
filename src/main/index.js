@@ -34,6 +34,7 @@ function createWindow() {
 
   mainWindow.loadURL(winURL)
 
+  // 系统托盘，linux、mac 请注释掉此段
   mainWindow.on('close', (eve) => {
     mainWindow.hide();
     eve.preventDefault();
@@ -61,13 +62,13 @@ function createWindow() {
     tray.setHighlightMode('never');
   });
   mainWindow.webContents.openDevTools();
-  let tray = new Tray(path.join(path.resolve("."), 'icon.ico'));
+  let tray = new Tray(path.join(path.resolve("."), '/build/icons/icon.ico'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '显示', click: () => {
         mainWindow.show();
         mainWindow.isVisible() ? mainWindow.setSkipTaskbar(false) : mainWindow.setSkipTaskbar(true);
-        
+
       }
     },
     {
@@ -83,6 +84,9 @@ function createWindow() {
     mainWindow.show();
     mainWindow.isVisible() ? mainWindow.setSkipTaskbar(false) : mainWindow.setSkipTaskbar(true);
   })
+
+
+
   //设置停止服务的回调函数 向渲染进程发送消息
   let closeCallBack = function () {
     mainWindow.webContents.send('closeWebServer');
