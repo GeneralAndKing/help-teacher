@@ -25,6 +25,13 @@
                 el-button(size='mini', type='primary', @click='handleStudent(scope.$index, scope.row)') 管理
                 el-button(size='mini', type="warning", @click='handleHomework(scope.$index, scope.row)') 作业
                 el-button(size='mini', type='danger', @click='handleDelete(scope.$index, scope.row)') 删除
+    el-dialog(title='请输入班级名称', :visible.sync='dialogFormVisible')
+      el-form(:model='form')
+        el-form-item(label='班级名称')
+          el-input(v-model='form.className', placeholder='请输入班级名称')
+      .dialog-footer(slot='footer')
+        el-button(@click='cancelClass') 取 消
+        el-button(type='primary', @click='submitClass') 确 定
 
 </template>
 
@@ -34,12 +41,16 @@ const { verifyStudentUnique } = require("@/api/judge");
 const { getClassDb } = require("@/api/db");
 const { error, success, warning } = require("@/api/message");
 const { ipcRenderer, remote } = require("electron");
-const { MessageBox } = require("element-ui");
 export default {
   data() {
     return {
       activeNames: ["2"],
-      tableData: []
+      tableData: [],
+      form: {
+        className: "",
+      },
+      dialogFormVisible: false,
+      classJson: null
     };
   },
   mounted() {
@@ -55,6 +66,34 @@ export default {
     });
   },
   methods: {
+    cancelClass(){
+      let _this = this;
+      _this.dialogFormVisible = false;
+      error(_this, "您取消了保存");
+    },
+    submitClass(){
+      let _this = this;
+      _this.classJson.className = _this.form.className;
+      let classDb = getClassDb();
+      let callBack = function(e, docs) {
+        if (e) {
+          error(_this, "导入数据失败");
+        } else {
+          // 这里才算真的导入成功
+          success(_this, "导入信息成功");
+          _this.dialogFormVisible = false;
+          // 保存后跳转到学生界面
+          _this.$router.push({
+            name: "student",
+            params: {
+              className: _this.classJson.className,
+              studentNum: _this.classJson.students.length
+            }
+          });
+        }
+      };
+      classDb.insertClass(_this.classJson, callBack);
+    },
     fileChange(file, fileList) {
       let _this = this;
       fileList.pop(-1);
@@ -62,36 +101,8 @@ export default {
       let flag = results[0];
       let classJson = results[1];
       if (flag && verifyStudentUnique(classJson.students)) {
-        MessageBox.prompt("请输入班级名称", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          inputPattern: /\S/,
-          inputErrorMessage: "输入不能为空"
-        })
-          .then(({ value }) => {
-            classJson.className = value;
-            let classDb = getClassDb();
-            let callBack = function(e, docs) {
-              if (e) {
-                error(_this, "导入数据失败");
-              } else {
-                // 这里才算真的导入成功
-                success(_this, "导入信息成功");
-                // 保存后跳转到学生界面
-                _this.$router.push({
-                  name: "student",
-                  params: {
-                    className: classJson.className,
-                    studentNum: classJson.students.length
-                  }
-                });
-              }
-            };
-            classDb.insertClass(classJson, callBack);
-          })
-          .catch(() => {
-            error(_this, "您取消了保存");
-          });
+        _this.dialogFormVisible = true;
+        _this.classJson = classJson;
       } else {
         error(_this, "导入数据失败");
       }
