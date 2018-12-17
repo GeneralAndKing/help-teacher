@@ -28,7 +28,7 @@
     el-dialog(title='请输入班级名称', :visible.sync='dialogFormVisible')
       el-form(:model='form')
         el-form-item(label='班级名称')
-          el-input(v-model='form.className', placeholder='请输入班级名称')
+          el-input(v-model='form.className', placeholder='请输入班级名称', @keyup.enter.native="submitClass")
       .dialog-footer(slot='footer')
         el-button(@click='cancelClass') 取 消
         el-button(type='primary', @click='submitClass') 确 定
@@ -69,6 +69,7 @@ export default {
     cancelClass(){
       let _this = this;
       _this.dialogFormVisible = false;
+      _this.form.className = "";
       error(_this, "您取消了保存");
     },
     submitClass(){
